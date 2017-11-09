@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>popup</title>
+	<!-- Import Materialize min Css -->
+	<link rel="stylesheet" href="/css/materialize.min.css">
+	<!--Import Google Icon Font-->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body style="width: 500px;">
+	<!-- Import jQuery & Materialize min js -->
+	<script type="text/javascript" src="/js/jquery-3.2.1.min.js"></script>
+	<script type="text/javascript" src="/js/materialize.min.js"></script>
+	<script type="text/javascript" src="popup.js"></script>
+
+	</script>
+	<div class="container">
+		<h5>Search Entry Below</h5>
+		<nav class="blue-grey darken-4">
+			<div class="nav-wrapper">
+				<form id="search-form">
+					<div class="input-field">
+						<input type="search" id="search" />
+						<label for="search" class="label-icon">
+							<i class="material-icons">search</i>
+						</label>
+						<i class="material-icons">close</i>
+					</div>
+				</form>
+			</div>
+		</nav>
+	</div>
+	<br/>
+	<div class="divider"></div>
+	<section>
+		<div class="container result-title-div">
+			<h5>You might be looking for:</h5>
+			<div class="result-div">
+				<!-- Result here -->
+			</div>
+		</div>
+	</section>
+</body>
+</html>
