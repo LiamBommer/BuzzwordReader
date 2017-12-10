@@ -7,20 +7,15 @@
 
 #__float-div__ {
 	position: fixed;
-	display: block;
-	cursor: pointer;
-	color: white;
-	background-color: #455a64;
-	padding: 8px 5px;
-    z-index: 999;
+  z-index: 999;
 }
 
 #__result-div__ {
 	position: fixed;
 	display: none;
-	width: 200px;
+	/*width: 200px;
 	padding: 10px 8px;
 	color: white;
-	background-color: #455a64;
-    z-index: 999;
+	background-color: #455a64;*/
+  z-index: 999;
 }

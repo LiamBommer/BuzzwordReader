@@ -16,15 +16,23 @@ $('body').mouseup(function(e) {
 
 	// 若有选中文本
 	if(selected != "") {
+
 		// 提示框
-		var float_div_html = "<div id='__float-div__' class=''>BW</div>";
+		var float_div_html = "<div id='__float-div__' " +
+			" class='bw-btn'>BW</div>";
 		// 结果框
-		var result_div_html = "<div id='__result-div__' class=''></div>";
+		var result_div_html = "<iframe id='__result-div__' class=' '" +
+			" frameborder=0 width=300 height=300></iframe>";
+		var materializecss_html = "<link type='text/css' rel='stylesheet' href='/css/materialize.min.css'  media='screen,projection'/>";
+		var css_html= "<link type='text/css' rel='stylesheet' href='/css/content-css.css' />";
+		var jquery_html = "<script type='text/javascript' src='/js/jquery-3.2.1.min.js'></script>";
+		var materializejs_html = "<script type='text/javascript' src='/js/materialize.min.js'></script>";
+
 
 		// 判断浮动框是否存在
 		if($('#__float-div__').length > 0) {
 			// 存在，则改为可见，并更改位置
-			$('#__float-div__').css({'display': 'block',
+			$('#__float-div__').css({'display': 'inline-block',
 					'top': e.clientY+3+'px', 'left': e.clientX+3+'px'});
 		} else {
 			// 不存在，创建一个
@@ -36,6 +44,10 @@ $('body').mouseup(function(e) {
 		if($('#__result-div__').length == 0) {
 			$('body').append(result_div_html);
 			$('#__result-div__').css({'top': e.clientY+3+'px', 'left': e.clientX+3+'px'});
+			$('#__result-div__').contents().find('head').append(materializecss_html);
+			$('#__result-div__').contents().find('body').append(jquery_html);
+			$('#__result-div__').contents().find('body').append(materializejs_html);
+
 		}
 
 	}
@@ -59,16 +71,17 @@ $('body').delegate('#__float-div__', 'mousedown', function(event) {
 	$('#__result-div__').css({'display': 'block',
 					'top': event.clientY+3+'px', 'left': event.clientX+3+'px'});
 
+
 	// 从background-script中获得查询结果的json字符串
 	var request = {"type": "search", "keyword": selected.toString() };
 	chrome.runtime.sendMessage(request, function(result) {
 		// 将结果写入框内
-		$('#__result-div__').empty();
-		$('#__result-div__').html('<h5>You might be looking for: </h5>');
+		$('#__result-div__').contents().find('body').empty();
+		$('#__result-div__').contents().find('body').append('<h4>You might be looking for: </h4>');
 
 		// 若无词条内容，则写未找到		有内容则写入内容
 		if(result.total == 0) {
-			$('#__result-div__').append('<p>暂时未找到词条！</p>');
+			$('#__result-div__').contents().find('body').append('<p>暂时未找到词条！</p>');
 		} else {
 			for(item in result.entry_name) {
 				$('#__result-div__').append('<p>'+result.entry_name[item]+'</p>');

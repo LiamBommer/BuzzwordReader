@@ -34,8 +34,12 @@
     [
       {
         "matches": ["http://*/*", "https://*/*"],
-        "js": ["js/jquery-3.2.1.min.js", "content-scripts/content-script.js"],
-        "css": ["css/content-css.css"]
+        "js": ["js/jquery-3.2.1.min.js",
+            "js/materialize.min.js", 
+            "content-scripts/content-script.js"],
+        "css": ["css/content-css.css", "css/adapted-materializecss.css"]
       }
-    ]
+    ],
+
+    "options_page": "options-page/options.html"
 }

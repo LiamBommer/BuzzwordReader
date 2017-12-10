@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Bw | Options</title>
+  <!--Import materialize.css-->
+  <link type="text/css" rel="stylesheet" href="/css/materialize.min.css"  media="screen,projection"/>
+  <!--Import Google Icon Font-->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+  <!--Import jQuery before materialize.js-->
+  <script type="text/javascript" src="/js/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/js/materialize.min.js"></script>
+  <script type="text/javascript" src="/js/options.js"></script>
+
+  <a class="waves-effect btn modal-trigger" href="#signup-modal">注册</a>
+  <a class="waves-effect btn modal-trigger" href="#login-modal">登录</a>
+  <a class="waves-effect btn">个人信息查看</a>
+
+  <div id="signup-modal" class="modal modal-fixed-footer">
+    <form id="signup-form">
+      <div class="modal-content">
+        <h4>注册</h4>
+        <div class="divider"></div>
+        <div class="row">
+          <div class="input-field col m6">
+            <i class="material-icons prefix">account_circle</i>
+            <input type="text" id="username" name="username" class="validate">
+            <label for="username">Username</label>
+          </div>
+          <div class="input-field col m6">
+            <i class="material-icons prefix">lock</i>
+            <input type="password" id="password" name="password" class="validate">
+            <label for="passwrod">Password</label>
+          </div>
+          <div class="input-field col m6">
+            <i class="material-icons prefix">email</i>
+            <input type="email" id="email" name="email" class="validate">
+            <label for="email">Email</label>
+          </div>
+          <div class="input-field col m6">
+            <i class="material-icons prefix">phone</i>
+            <input type="text" id="phone" name="phone" class="validate">
+            <label for="phone">Phone Number</label>
+          </div>
+          <div class="input-field col m6">
+            <i class="material-icons prefix">person</i>
+            <input type="text" id="gender" name="gender" placeholder="male/female" class="validate">
+            <label for="gender">Gender</label>
+          </div>
+          <div class="input-field col m12">
+            <i class="material-icons prefix">pets</i>
+            <textarea id="profile" name="profile" class="materialize-textarea"></textarea>
+            <label for="profile">Profile</label>
+          </div>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="modal-footer">
+        <a href="#" class="modal-action modal-close waves-effect
+          waves-black btn-flat">取消</a>
+        <button id="signup-btn" type="submit" class="modal-action waves-effect
+          waves-green btn-flat">注册</a>
+      </div>
+    </form>
+  </div>
+
+  <div id="login-modal" class="modal modal-fixed-footer">
+    <form id="login-form">
+      <div class="modal-content">
+        <h4>登录</h4>
+        <div class="divider"></div>
+        <div class="row">
+          <div class="input-field col m6">
+            <i class="material-icons prefix">email</i>
+            <input type="email" id="email-login" name="email" class="validate">
+            <label for="email">Email</label>
+          </div>
+          <div class="input-field col m6">
+            <i class="material-icons prefix">phone</i>
+            <input type="text" id="phone-login" name="phone" class="validate">
+            <label for="phone">Phone Number</label>
+          </div>
+          <div class="input-field col m12">
+            <i class="material-icons prefix">account_circle</i>
+            <input type="text" id="username-login" name="username" class="validate">
+            <label for="username">Username</label>
+          </div>
+          <div class="input-field col m12">
+            <i class="material-icons prefix">lock</i>
+            <input type="password" id="password-login" name="password" class="validate">
+            <label for="passwrod">Password</label>
+          </div>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="modal-footer">
+        <a href="#" class="modal-action modal-close waves-effect
+          waves-black btn-flat">取消</a>
+        <button id="login-btn" type="submit" class="modal-action waves-effect
+          waves-green btn-flat">登录</a>
+      </div>
+    </form>
+  </div>
+</body>
+</html>
