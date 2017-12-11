@@ -77,15 +77,20 @@ $(document).ready(function() {
 	 *	输入邮箱、电话、用户名任一个进行登录
 	 *
 	 * 待完成功能：
-	 *
+	 *	鼠标离开后，进行检验
 	 */
 	$('#login-btn').click(function() {
 
 		// 输入合法性检验
-		var username = $('#username-login').val();
-		var password = $('#password-login').val();
 		var email = $('#email-login').val();
 		var phone = $('#phone-login').val();
+		var password = $('#password-login').val();
+
+		if(email == null && phone == null) {
+			alert('请填写邮箱或用户名');
+			return;
+		}
+
 
 		// ajax 传输
 		$.ajax({
@@ -96,16 +101,18 @@ $(document).ready(function() {
 			async: false,
 			dataType: 'json',
 			data: {
-				username: username,
-				password: password,
 				email: email,
-				phone: phone
+				phone: phone,
+				password: password
 			},
 			success: function(result) {
 				if(result.result == 'success') {
-					// $('.modal-content > h4').html('注册成功');
 					console.log(JSON.stringify(result));
+					// 关闭模态框，清空内容
 					$('#login-modal').modal('close');
+					$('#email-login').val('');
+					$('#phone-login').val('');
+					$('#password-login').val('');
 				}
 				if(result.result == 'failure') {
 					// $('.modal-content > h4').html('注册失败');
