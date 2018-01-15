@@ -23,7 +23,7 @@ function getSearchResult(keyword) {
 			search_result = result;
 		},
 		error: function(XMLHttpRequest, textStatus, errorThrown) {
-			alert('Ajax Error' +
+			console.log('Ajax Error' +
 				'\nXMLHttpRequest status: ' + XMLHttpRequest.status +
 				'\nXMLHttpRequest readyState: ' + XMLHttpRequest.readyState +
 				'\ntextStatus' + textStatus);

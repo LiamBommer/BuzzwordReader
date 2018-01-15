@@ -17,10 +17,12 @@ $('body').mouseup(function(e) {
 	// 若有选中文本
 	if(selected != "") {
 
-		// 提示框
+		// 提示框html代码，用于后面插入时使用
 		var float_div_html = "<div id='__float-div__' " +
 			" class='bw-btn'>BW</div>";
-		// 结果框
+		/*
+		 *	结果框html代码，用于后面插入时使用
+		 */
 		var result_div_html = "<iframe id='__result-div__' class=' '" +
 			" frameborder=0 width=300 height=300></iframe>";
 		var materializecss_html = "<link type='text/css' rel='stylesheet' href='/css/materialize.min.css'  media='screen,projection'/>";
@@ -40,13 +42,15 @@ $('body').mouseup(function(e) {
 			$('#__float-div__').css({'top': e.clientY+3+'px', 'left': e.clientX+3+'px'});
 		}
 
-		// 若结果框不存在，则创建一个，并置为不可见
+		// 若结果框不存在
+		// 创建一个，置为不可见， 并插入css与jquery文件
 		if($('#__result-div__').length == 0) {
 			$('body').append(result_div_html);
 			$('#__result-div__').css({'top': e.clientY+3+'px', 'left': e.clientX+3+'px'});
 			$('#__result-div__').contents().find('head').append(materializecss_html);
-			$('#__result-div__').contents().find('body').append(jquery_html);
-			$('#__result-div__').contents().find('body').append(materializejs_html);
+			$('#__result-div__').contents().find('head').append(css_html);
+			$('#__result-div__').contents().find('head').append(jquery_html);
+			$('#__result-div__').contents().find('head').append(materializejs_html);
 
 		}
 
@@ -77,7 +81,8 @@ $('body').delegate('#__float-div__', 'mousedown', function(event) {
 	chrome.runtime.sendMessage(request, function(result) {
 		// 将结果写入框内
 		$('#__result-div__').contents().find('body').empty();
-		$('#__result-div__').contents().find('body').append('<h4>You might be looking for: </h4>');
+		$('#__result-div__').contents().find('body').append(
+			"<div class='container'><h4>You might be looking for: </h4></div>");
 
 		// 若无词条内容，则写未找到		有内容则写入内容
 		if(result.total == 0) {

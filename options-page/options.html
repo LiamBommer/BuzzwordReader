@@ -16,9 +16,16 @@
   <script type="text/javascript" src="/js/materialize.min.js"></script>
   <script type="text/javascript" src="/js/options.js"></script>
 
-  <a class="waves-effect btn modal-trigger" href="#signup-modal">注册</a>
-  <a class="waves-effect btn modal-trigger" href="#login-modal">登录</a>
-  <a class="waves-effect btn">个人信息查看</a>
+  <div class="container">
+    <a class="waves-effect btn modal-trigger" href="#signup-modal">注册</a>
+    <a class="waves-effect btn modal-trigger" href="#login-modal">登录</a>
+    <a class="waves-effect btn" id="info-btn">个人信息查看</a>
+    <a class="waves-effect btn modal-trigger" href="#pw-modal">修改密码</a>
+  	<br/>
+  	<br/>
+  	已登录用户：
+  	<div class="chip" id="user-div"></div>
+  </div>
 
   <div id="signup-modal" class="modal modal-fixed-footer">
     <form id="signup-form">
@@ -102,6 +109,48 @@
           waves-green btn-flat">登录</a>
       </div>
     </form>
+  </div>
+
+	<div id="info-modal" class="modal">
+		<div class="modal-content">
+			<h4>个人信息</h4>
+      <ul class="collection" id="info-collec-ul">
+      </ul>
+		</div>
+		<div class="modal-footer">
+			<a class="modal-action modal-close waves-effect btn-flat">好</a>
+		</div>
+	</div>
+
+  <div id="pw-modal" class="modal">
+    <div class="modal-content">
+      <h4>修改密码</h4>
+      <div class="row">
+        <div class="input-field col m6">
+          <i class="material-icons prefix">lock</i>
+          <input type="password" id="password-origin" name="password" class="validate">
+          <label for="passwrod">Password_Origin</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col m6">
+          <i class="material-icons prefix">lock</i>
+          <input type="password" id="password-new-1" name="password" class="validate">
+          <label for="passwrod">Password_New</label>
+        </div>
+        <div class="input-field col m6">
+          <i class="material-icons prefix">lock</i>
+          <input type="password" id="password-new-2" name="password" class="validate">
+          <label for="passwrod">Password_Again</label>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <a href="#" class="modal-action modal-close waves-effect
+        waves-black btn-flat">取消</a>
+      <button id="pw-btn" type="submit" class="modal-action waves-effect
+        waves-green btn-flat">确认修改</a>
+    </div>
   </div>
 </body>
 </html>
