@@ -5,15 +5,23 @@ $(document).ready(function() {
 	$('#login-modal').modal();
 	$('#info-modal').modal();
 	$('#pw-modal').modal();
+	$('#new-entry-modal').modal();
+	$('#new-inte-modal').modal();
 
-	var server_url = 'http://116.57.53.135/BuzzwordReader/';
-	// var server_url = 'http://127.0.0.1/BuzzwordReader/';
+	// 本机测试用服务器
+	var server_url = 'http://127.0.0.1/BuzzwordReader/';
+	// 生产环境公网服务器
+	// var server_url = 'http://119.29.58.165:81/index.php/';
 
 
 	// 显示登录用户
-	chrome.storage.sync.get('BW_username',
+	chrome.storage.sync.get({
+		BW_username: 'unknown',
+		BW_userId: -1
+	},
 	 function(items) {
-		 $('#user-div').html(items.BW_username);
+		 $('#username-div').html(items.BW_username);
+		 $('#userId-div').html(items.BW_userId);
 	});
 
 
@@ -128,14 +136,21 @@ $(document).ready(function() {
 					$('#email-login').val('');
 					$('#phone-login').val('');
 					$('#password-login').val('');
-					// 将用户名存入storage
+
+					// 将用户名，用户Id存入storage
 					chrome.storage.sync.set({
-						BW_username: result.username
+						BW_username: result.row.username,
+						BW_userId: result.row.id_user
 					},function() {
 						// 更新登录用户
-						chrome.storage.sync.get('BW_username',
+						chrome.storage.sync.get({
+							// 取值： 默认值
+							BW_username: 'unknown',
+							BW_userId: -1
+						},
 						 function(items) {
-							 $('#user-div').html(items.BW_username);
+							 $('#username-div').html(items.BW_username);
+							 $('#userId-div').html(items.BW_userId);
 						});
 					});
 				}
@@ -173,7 +188,7 @@ $(document).ready(function() {
 
 		// 从存储中获取用户名
 		chrome.storage.sync.get({
-			BW_username: 'not set'
+			BW_username: 'unknown'
 		}, function(items) {
 			var username = items.BW_username;
 			// $('#info-collec-ul').append("<li class='collection-item'>"+username+"</li>");
@@ -296,8 +311,188 @@ $(document).ready(function() {
 				},
 				scriptCharset: 'utf-8'
 			});
+
 		});
 
 	});
+
+
+	/*
+	 * 搜索框提交事件
+	 * 功能：
+	 *  根据输入的关键词搜索
+	 *  并输出相关词条
+	 *
+	 * 待完成功能：
+	 *
+	 */
+	 document.getElementById('search-field').onsearch=function() {
+		 var search_content = $('#search-field').val();
+
+			$.ajax({
+				type:'GET',
+				url: server_url + 'Entry/search/',
+				timeout: 3000,
+				async: true,
+				dataType: 'json',
+				data: {
+					search_content: search_content
+				},
+				success: function(result) {
+					for(i in result) {
+						// var html = '<h6>'+result[i].name+'</h6>';
+						var html = "<div class='col m6'>" +
+								"<div class='card blue-grey darken-3'>" +
+									"<div class='card-content white-text'>" +
+										"<span class='card-title'>"+result[i].name+"</span>" +
+										"<p>id: "+result[i].id_entry+"</p>" +
+										"<p>是否已开放: "+result[i].is_open+"</p>" +
+										"<p>请求次数: "+result[i].request+"</p>" +
+										"<p>创建时间: "+result[i].datetime+"</p>" +
+									"</div>" +
+								"</div>" +
+							"</div>";
+						$('#search-result-div').append(html);
+					}
+				},
+				error: function(error) {
+					alert('查询请求错误，请重试');
+					console.log(JSON.stringify(error));
+					// error display
+					$('#search-result-div').html(error.responseText);
+					return;
+				},
+				scriptCharset: 'utf-8'
+			});
+
+	 };
+
+
+	/*
+	 * 创建词条
+	 * 功能：
+	 *  根据名字创建词条
+	 *	请求次数为1
+	 *
+	 * 待完成功能：
+	 *
+	 */
+	$('#new-entry-btn').click(function() {
+
+			var entry_name = $('#entry-name').val();
+
+			$.ajax({
+				type:'GET',
+				url: server_url + 'Entry/create',
+				timeout: 5000,
+				async: true,
+				dataType: 'json',
+				data: {
+					entry_name: entry_name
+				},
+				success: function(result) {
+					if(result.result == 'success') {
+						console.log(JSON.stringify(result));
+						alert('词条创建成功！\n可进行查询')
+						$('#new-entry-modal').modal('close');
+					}
+					if(result.result == 'failure') {
+						alert('创建词条失败!\n' + result.error_msg);
+					}
+				},
+				error: function(error) {
+					alert('创建时ajax错误，请重试');
+					console.log(JSON.stringify(error));
+					$('#new-entry-modal').html(error.responseText);
+					return;
+				},
+				scriptCharset: 'utf-8'
+			});
+
+		});
+
+
+	/*
+	 * 为词条添加释义
+	 * 功能：
+	 *  确定词条id，提取用户id
+	 *	填写释义和来源（可选）并提交
+	 *
+	 * 待完成功能：
+	 *	词条id由点击词条时自动获取
+	 *
+	 */
+	$('#new-inte-btn').click(function() {
+
+			var id_entry = $('#id-entry').val();
+			var inte = $('#inte').val();
+			var resource = $('#resource').val();
+			var id_user = -1;
+			// 获取当前登录用户id
+			/*
+			 * !!! IMPORTANT !!!
+			 *
+			 * chrome storage 事件为同步，故总是在其他异步代码(js一般都是)后执行
+			 * 故在callback函数外下一步取id_user时失败
+			 *
+			 * solution:
+			 *	将涉及到取得的值的操作，都放在callback函数里操作
+			 *
+			 * refer:
+			 *	https://stackoverflow.com/questions/12252817/how-chrome-storage-local-get-sets-a-value
+			 */
+			chrome.storage.sync.get({
+				BW_userId: -1
+			},
+			 function(items) {
+				 id_user = items.BW_userId;
+					// validate
+					if(id_entry == null || inte == null) {
+						alert('Entry Id & intepretation are required!');
+						return;
+					}
+					if(id_user == -1) {
+						alert('Cannot get correct user ID.')
+						return;
+					}
+
+					$.ajax({
+						type:'POST',
+						url: server_url + 'Entry/insert_inte/',
+						timeout: 5000,
+						async: true,
+						dataType: 'json',
+						data: {
+							id_entry: id_entry,
+							id_user: id_user,
+							inte: inte,
+							resource: resource
+						},
+						success: function(result) {
+							if(result.result == 'success') {
+								console.log(JSON.stringify(result));
+								alert('添加释义成功！')
+								$('#new-inte-modal').modal('close');
+							}
+							if(result.result == 'failure') {
+								alert('添加释义失败!\n' + result.error_msg);
+							}
+						},
+						error: function(error) {
+							alert('ajax错误，请重试');
+							console.log(JSON.stringify(error));
+							$('#new-inte-modal').html(error.responseText);
+							return;
+						},
+						scriptCharset: 'utf-8'
+					});
+
+			});
+
+					//阻止表单提交
+					return false;
+
+		});
+
 
 });

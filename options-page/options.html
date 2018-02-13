@@ -24,7 +24,32 @@
   	<br/>
   	<br/>
   	已登录用户：
-  	<div class="chip" id="user-div"></div>
+  	<div class="chip" id="username-div"></div>
+  	<div class="chip" id="userId-div"></div>
+		<br/>
+		<br/>
+		<div class="divider"></div>
+    <section class="entry-section">
+      <br>
+      <br>
+      <a class="waves-effect btn modal-trigger" href="#new-entry-modal">创建词条</a>
+      <a class="waves-effect btn modal-trigger" href="#new-inte-modal">添加释义</a>
+      <br>
+      <div class="row">
+        <div class="col m6 s12">
+          <div class="input-field">
+            <input type="search" id="search-field">
+            <label for="search-field" class="label-icon">
+              <i class="material-icons">search</i>
+            </label>
+            <i class="material-icons">close</i>
+          </div>
+          <h5>相关词条：</h5>
+          <div id="search-result-div" class="row">
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
 
   <div id="signup-modal" class="modal modal-fixed-footer">
@@ -152,5 +177,53 @@
         waves-green btn-flat">确认修改</a>
     </div>
   </div>
+
+  <div id="new-inte-modal" class="modal">
+    <form id="new-inte-form">
+      <div class="modal-content">
+        <h4>添加释义</h4>
+        <div class="divider"></div>
+        <div class="row">
+          <div class="input-field col m6">
+            <input type="text" id="id-entry" name="id-entry">
+            <label for="id-entry">Entry Id</label>
+          </div>
+          <div class="input-field col m12">
+            <textarea id="inte" name="inte" class="materialize-textarea"></textarea>
+            <label for="inte">Interpretation</label>
+          </div>
+          <div class="input-field col m12">
+            <input type="text" id="resource" name="resource">
+            <label for="resource">Resource</label>
+          </div>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="modal-footer">
+        <a href="#" class="modal-action modal-close waves-effect
+          waves-black btn-flat">取消</a>
+        <button id="new-inte-btn" type="submit" class="modal-action waves-effect
+          waves-green btn-flat">添加</a>
+      </div>
+    </form>
+  </div>
+
+  <div id="new-entry-modal" class="modal">
+    <div class="modal-content">
+      <h4>创建词条</h4>
+      <div class="row">
+        <div class="input-field col m6">
+          <input type="text" id="entry-name" name="entry-name">
+          <label for="entry-name">Entry Name</label>
+        </div>
+    </div>
+    <div class="modal-footer">
+      <a href="#" class="modal-action modal-close waves-effect
+        waves-black btn-flat">取消</a>
+      <button id="new-entry-btn" type="submit" class="modal-action waves-effect
+        waves-green btn-flat">确认创建</a>
+    </div>
+  </div>
+
 </body>
 </html>

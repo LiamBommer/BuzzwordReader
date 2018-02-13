@@ -1,7 +1,7 @@
 $(document).ready(function() {
 
-	var server_url = 'http://116.57.53.135/BuzzwordReader/';
-	// var server_url = 'http://127.0.0.1/BuzzwordReader/';
+	// var server_url = 'http://116.57.53.135/BuzzwordReader/';
+	var server_url = 'http://127.0.0.1/BuzzwordReader/';
 
 
 	/*
@@ -14,7 +14,7 @@ $(document).ready(function() {
 			url: server_url + 'User/login',
 			timeout: 5000,
 			// 同步进行
-			async: false,
+			async: true,
 			dataType: 'json',
 			data: {
 				email: $('#email').val(),
@@ -32,10 +32,11 @@ $(document).ready(function() {
 				}
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown) {
-				console.log('Ajax Error' +
+				alert('Ajax Error' +
 					'\nXMLHttpRequest status: ' + XMLHttpRequest.status +
 					'\nXMLHttpRequest readyState: ' + XMLHttpRequest.readyState +
-					'\ntextStatus' + textStatus);
+					'\nresponseText: ' + XMLHttpRequest.responseText +
+					'\ntextStatus: ' + textStatus);
 				alert('可能由于网络问题，登录失败，请重试');
 				return;
 			},
