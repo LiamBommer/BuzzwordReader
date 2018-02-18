@@ -327,6 +327,10 @@ $(document).ready(function() {
 	 *
 	 */
 	 document.getElementById('search-field').onsearch=function() {
+
+		 // 清空结果
+		 $('#search-result-div').html('');
+
 		 var search_content = $('#search-field').val();
 
 			$.ajax({
@@ -339,17 +343,35 @@ $(document).ready(function() {
 					search_content: search_content
 				},
 				success: function(result) {
-					for(i in result) {
-						// var html = '<h6>'+result[i].name+'</h6>';
-						var html = "<div class='col m6'>" +
-								"<div class='card blue-grey darken-3'>" +
-									"<div class='card-content white-text'>" +
-										"<span class='card-title'>"+result[i].name+"</span>" +
-										"<p>id: "+result[i].id_entry+"</p>" +
-										"<p>是否已开放: "+result[i].is_open+"</p>" +
-										"<p>请求次数: "+result[i].request+"</p>" +
-										"<p>创建时间: "+result[i].datetime+"</p>" +
-									"</div>" +
+					console.log(JSON.stringify(result));
+					if(result.result == 'empty') {
+						$('#search-result-div').append("<br/><h6>没有相关结果</h6>");
+						return;
+					}
+					for(i in result.entry) {
+						var html = "<div class='col l4 m6 s12'>" +
+								"<div class='card z-depth-2'>" +
+									"<div class='card-content'>" +
+										"<span class='card-title'>"+result.entry[i].name+"</span>" +
+										"<p>id: "+result.entry[i].id_entry+"</p>" +
+										"<p>是否已开放: "+result.entry[i].is_open+"</p>" +
+										"<p>请求次数: "+result.entry[i].request+"</p>" +
+										"<p>创建时间: "+result.entry[i].datetime+"</p>" +
+										"<br><div class='divider'></div><br>" +
+										"<span class='card-title'>Interpretation</span>";
+						for(j in result.inte) {
+							// 根据词条id选取词条下的释义
+							if(result.inte[j].id_entry == result.entry[i].id_entry) {
+								html += "<p>id_interpretation: "+result.inte[j].id_interpretation+"</p>" +
+										"<p>id_entry: "+result.inte[j].id_entry+"</p>" +
+										"<p>id_user: "+result.inte[j].id_user+"</p>" +
+										"<p>释义: "+result.inte[j].interpretation+"</p>" +
+										"<p>来源: "+result.inte[j].resource+"</p>" +
+										"<p>创建时间: "+result.inte[j].datetime+"</p>"
+										"<br/><br/>";
+							}
+						}
+						html += "</div>" +
 								"</div>" +
 							"</div>";
 						$('#search-result-div').append(html);
