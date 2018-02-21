@@ -6,21 +6,37 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<title>popup</title>
+
 	<!-- Import Materialize min Css -->
 	<link rel="stylesheet" href="/css/materialize.min.css">
 	<!--Import Google Icon Font-->
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+	<link rel="stylesheet" type="text/css" href="/css/popup.css">
 </head>
-<body style="width: 500px;">
+
+<body style="width: 400px;">
 	<!-- Import jQuery & Materialize min js -->
 	<script type="text/javascript" src="/js/jquery-3.2.1.min.js"></script>
 	<script type="text/javascript" src="/js/materialize.min.js"></script>
 	<script type="text/javascript" src="popup.js"></script>
 
-	</script>
+	<nav class="teal lighten-1">
+		<div class="container">
+    		<div class="nav-wrapper">
+    			<a href="#" class="brand-logo left">Buzzword</a>
+    			<ul id="nav-mobile" class="right">
+    				<li><a href="#">登录</a></li>
+    				<li><a href="#">注册</a></li>
+    			</ul>
+    		</div>
+		</div>
+    </nav>
+
 	<div class="container">
-		<h5>Search Entry Below</h5>
-		<nav class="blue-grey darken-4">
+		<p>请输入流行语关键字：</p>
+
+		<nav class="green lighten-4">
 			<div class="nav-wrapper">
 				<form id="search-form">
 					<div class="input-field">
@@ -33,16 +49,20 @@
 				</form>
 			</div>
 		</nav>
+
 	</div>
+	
 	<br/>
 	<div class="divider"></div>
+
 	<section>
 		<div class="container result-title-div">
-			<h5>You might be looking for:</h5>
+			<p>你可能寻找的是：</p>
 			<div class="result-div">
 				<!-- Result here -->
 			</div>
 		</div>
 	</section>
 </body>
+
 </html>

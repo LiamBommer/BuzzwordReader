@@ -13,8 +13,11 @@
     <!--Import Google Icon Font-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
+    <link type="text/css" rel="stylesheet" href="/css/login.css">
+
 </head>
-<body style="width: 500px">
+
+<body style="width: 400px;">
 
     <!--Import jQuery before materialize.js-->
     <script type="text/javascript" src="/js/jquery-3.2.1.min.js"></script>
@@ -22,25 +25,29 @@
     <script type="text/javascript" src="popup.js"></script>
 
 <div class="container">
-
-    <div class="row" style="margin: 50px auto;">
+    <div class="row">
         <form class="col s6 offset-s3" action="">
             <h5>BuzzwordReader</h5>
             <br/>
             <div class="input-field">
                 <input id="email" type="email" name="email"  class="validate">
-                <label for="email">Email</label>
+                <label for="email">Email或手机号</label>
             </div>
             <div class="input-field">
                 <input id="password" type="password" name="password" class="validate">
                 <label for="password">Password</label>
             </div>
-            <div class="right-align">
-                <button id="submit-btn" class="btn waves-effect waves-light" type="submit">Login
-                    <i class="material-icons right">send</i>
-                </button>
+            <div class="center">
+                <button id="submit-btn" class="btn waves-effect waves-light" type="submit">登录</button>
             </div>
+            <br>
         </form>
+    </div>
+
+    <div class="right">
+        <span><a href="#" >注册</a></span>
+        <span>&nbsp;</span>
+        <span><a href="#">忘记密码？</a></span>
     </div>
 
 </div>

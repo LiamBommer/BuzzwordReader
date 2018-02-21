@@ -46,7 +46,7 @@ $(document).ready(function() {
 		var phone = $('#phone').val();
 		var gender = $('#gender').val();
 		var profile = $('#profile').val();
-		if(gender != 'male' || gender != 'female') {
+		if(gender != 'male' && gender != 'female') {
 			alert('性别问题');
 		}else if(gender == 'male') {
 			gender = 0;
