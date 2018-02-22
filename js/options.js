@@ -7,6 +7,10 @@ $(document).ready(function() {
 	$('#pw-modal').modal();
 	$('#new-entry-modal').modal();
 	$('#new-inte-modal').modal();
+	$('#edit-entry-modal').modal();
+	$('#delete-entry-modal').modal();
+	$('#edit-inte-modal').modal();
+	$('#delete-inte-modal').modal();
 
 	// 本机测试用服务器
 	var server_url = 'http://127.0.0.1/BuzzwordReader/';

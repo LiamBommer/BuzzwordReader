@@ -32,8 +32,16 @@
     <section class="entry-section">
       <br>
       <br>
-      <a class="waves-effect btn modal-trigger" href="#new-entry-modal">创建词条</a>
-      <a class="waves-effect btn modal-trigger" href="#new-inte-modal">添加释义</a>
+      <p>
+        <a class="waves-effect btn modal-trigger" href="#new-entry-modal">创建词条</a>
+        <a class="waves-effect btn modal-trigger" href="#new-inte-modal">添加释义</a>
+      </p>
+      <p>
+        <a class="waves-effect btn modal-trigger" href="#edit-entry-modal">编辑词条</a>
+        <a class="waves-effect btn modal-trigger" href="#delete-entry-modal">删除词条</a>
+        <a class="waves-effect btn modal-trigger" href="#edit-inte-modal">编辑释义</a>
+        <a class="waves-effect btn modal-trigger" href="#delete-inte-modal">删除释义</a>
+      </p>
       <br>
       <div class="row">
         <div class="col m12 l6">
@@ -223,6 +231,23 @@
         waves-black btn-flat">取消</a>
       <button id="new-entry-btn" type="submit" class="modal-action waves-effect
         waves-green btn-flat">确认创建</a>
+    </div>
+  </div>
+
+  <div id="edit-entry-modal" class="modal">
+    <div class="modal-content">
+      <h4>编辑词条</h4>
+      <div class="row">
+        <div class="input-field col m6">
+          <input type="text" id="edit-entry-id" name="edit-entry-id">
+          <label for="edit-entry-id">Entry Id</label>
+        </div>
+    </div>
+    <div class="modal-footer">
+      <a href="#" class="modal-action modal-close waves-effect
+        waves-black btn-flat">取消</a>
+      <button id="new-entry-btn" type="submit" class="modal-action waves-effect
+        waves-green btn-flat">确认编辑</a>
     </div>
   </div>
 
