@@ -144,7 +144,13 @@ $(document).ready(function() {
 					// 将用户名，用户Id存入storage
 					chrome.storage.sync.set({
 						BW_username: result.row.username,
-						BW_userId: result.row.id_user
+						BW_userId: result.row.id_user,
+						BW_userIdentity: result.row.identity,
+						BW_userIsBanned: result.row.is_banned,
+						BW_userEmail: result.row.email,
+						BW_userPhone: result.row.phone,
+						BW_userGender: result.row.gender,
+						BW_userProfile: result.row.profile,
 					},function() {
 						// 更新登录用户
 						chrome.storage.sync.get({
@@ -161,6 +167,7 @@ $(document).ready(function() {
 				if(result.result == 'failure') {
 					// $('.modal-content > h4').html('注册失败');
 					alert('登录失败!\n' + result.error_msg);
+					$('#password-login').val('');
 				}
 			},
 			error: function(error) {
@@ -508,6 +515,91 @@ $(document).ready(function() {
 							alert('ajax错误，请重试');
 							console.log(JSON.stringify(error));
 							$('#new-inte-modal').html(error.responseText);
+							return;
+						},
+						scriptCharset: 'utf-8'
+					});
+
+			});
+
+					//阻止表单提交
+					return false;
+
+		});
+
+
+	/*
+	 * 编辑词条
+	 * 功能：
+	 *  确定词条id，验证用户身份权限
+	 *	输入词条新内容
+	 *
+	 * 待完成功能：
+	 *	词条id由点击词条时自动获取
+	 *	用户权限身份验证
+	 *
+	 */
+	$('#edit-entry-btn').click(function() {
+
+			var entry_id = $('#edit-entry-id').val();
+			var entry_name = $('#edit-entry-name').val();
+			var id_user = -1;
+			// 获取当前登录用户id
+			/*
+			 * !!! IMPORTANT !!!
+			 *
+			 * chrome storage 事件为同步，故总是在其他异步代码(js一般都是)后执行
+			 * 故在callback函数外下一步取id_user时失败
+			 *
+			 * solution:
+			 *	将涉及到取得的值的操作，都放在callback函数里操作
+			 *
+			 * refer:
+			 *	https://stackoverflow.com/questions/12252817/how-chrome-storage-local-get-sets-a-value
+			 */
+			chrome.storage.sync.get({
+				BW_userId: -1,
+				BW_userIdentity: -1
+			},
+			 function(items) {
+				 id_user = items.BW_userId;
+				 user_identity = items.BW_userIdentity;
+					// validate
+					if(entry_id == null || entry_name == null) {
+						alert('Entry Id & Entry Name are required!');
+						return;
+					}
+					if(id_user == -1 || user_identity == -1) {
+						alert('Cannot get correct user ID.\n请尝试重新登录')
+						return;
+					}
+
+					$.ajax({
+						type:'POST',
+						url: server_url + 'Entry/edit_entry/',
+						timeout: 5000,
+						async: true,
+						dataType: 'json',
+						data: {
+							entry_id: entry_id,
+							entry_name: entry_name,
+							id_user: id_user,
+							user_identity: user_identity
+						},
+						success: function(result) {
+							if(result.result == 'success') {
+								console.log(JSON.stringify(result));
+								alert('编辑词条成功！')
+								$('#edit-entry-modal').modal('close');
+							}
+							if(result.result == 'failure') {
+								alert('编辑词条失败!\n' + result.error_msg);
+							}
+						},
+						error: function(error) {
+							alert('ajax错误，请重试');
+							console.log(JSON.stringify(error));
+							$('#edit-entry-modal').html(error.responseText);
 							return;
 						},
 						scriptCharset: 'utf-8'
