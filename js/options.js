@@ -1,3 +1,16 @@
+/*
+* !!! IMPORTANT !!!
+*
+* chrome storage 事件为同步，故总是在其他异步代码(js一般都是)后执行
+* 故在callback函数外下一步取id_user时失败
+*
+* solution:
+*	将涉及到取得的值的操作，都放在callback函数里操作
+*
+* refer:
+*	https://stackoverflow.com/questions/12252817/how-chrome-storage-local-get-sets-a-value
+*/
+
 $(document).ready(function() {
 
 	// 模态框初始化
@@ -594,6 +607,221 @@ $(document).ready(function() {
 							}
 							if(result.result == 'failure') {
 								alert('编辑词条失败!\n' + result.error_msg);
+							}
+						},
+						error: function(error) {
+							alert('ajax错误，请重试');
+							console.log(JSON.stringify(error));
+							$('#edit-entry-modal').html(error.responseText);
+							return;
+						},
+						scriptCharset: 'utf-8'
+					});
+
+			});
+
+					//阻止表单提交
+					return false;
+
+		});
+
+
+	/*
+	 * 删除词条
+	 * 功能：
+	 *  确定词条id，验证用户身份权限
+	 *	确认删除词条
+	 *
+	 * 待完成功能：
+	 *	词条id由点击词条时自动获取
+	 *	用户权限身份验证
+	 *
+	 */
+	$('#delete-entry-btn').click(function() {
+
+			var entry_id = $('#delete-entry-id').val();
+			var id_user = -1;
+			chrome.storage.sync.get({
+				BW_userId: -1,
+				BW_userIdentity: -1
+			},
+			 function(items) {
+				 id_user = items.BW_userId;
+				 user_identity = items.BW_userIdentity;
+					// validate
+					if(entry_id == null) {
+						alert('Entry Id is required!');
+						return;
+					}
+					if(id_user == -1 || user_identity == -1) {
+						alert('Cannot get correct user ID.\n请尝试重新登录')
+						return;
+					}
+
+					$.ajax({
+						type:'POST',
+						url: server_url + 'Entry/delete_entry/',
+						timeout: 5000,
+						async: true,
+						dataType: 'json',
+						data: {
+							entry_id: entry_id,
+							id_user: id_user,
+							user_identity: user_identity
+						},
+						success: function(result) {
+							if(result.result == 'success') {
+								console.log(JSON.stringify(result));
+								alert('删除词条成功！')
+								$('#delete-entry-modal').modal('close');
+							}
+							if(result.result == 'failure') {
+								alert('删除词条失败!\n' + result.error_msg);
+							}
+						},
+						error: function(error) {
+							alert('ajax错误，请重试');
+							console.log(JSON.stringify(error));
+							$('#edit-entry-modal').html(error.responseText);
+							return;
+						},
+						scriptCharset: 'utf-8'
+					});
+
+			});
+
+					//阻止表单提交
+					return false;
+
+		});
+
+
+	/*
+	 * 编辑释义
+	 * 功能：
+	 *  确定释义id，验证用户身份权限
+	 *	输入释义新内容
+	 *
+	 * 待完成功能：
+	 *	释义id由点击释义时自动获取
+	 *	用户权限身份验证
+	 *
+	 */
+	$('#edit-inte-btn').click(function() {
+
+			var inte_id = $('#edit-inte-id').val();
+			var inte = $('#edit-inte').val();
+			var resource = $('#edit-resource').val();
+			var id_user = -1;
+
+			chrome.storage.sync.get({
+				BW_userId: -1,
+				BW_userIdentity: -1
+			},
+			 function(items) {
+				 id_user = items.BW_userId;
+				 user_identity = items.BW_userIdentity;
+					// validate
+					if(inte_id == null || inte == null) {
+						alert('Interpretation Id & Interpretation are required!');
+						return;
+					}
+					if(id_user == -1 || user_identity == -1) {
+						alert('Cannot get correct user ID.\n请尝试重新登录')
+						return;
+					}
+
+					$.ajax({
+						type:'POST',
+						url: server_url + 'Entry/edit_inte/',
+						timeout: 5000,
+						async: true,
+						dataType: 'json',
+						data: {
+							inte_id: inte_id,
+							inte: inte,
+							resource: resource,
+							id_user: id_user,
+							user_identity: user_identity
+						},
+						success: function(result) {
+							if(result.result == 'success') {
+								console.log(JSON.stringify(result));
+								alert('编辑释义成功！')
+								$('#edit-inte-modal').modal('close');
+							}
+							if(result.result == 'failure') {
+								alert('编辑释义失败!\n' + result.error_msg);
+							}
+						},
+						error: function(error) {
+							alert('ajax错误，请重试');
+							console.log(JSON.stringify(error));
+							$('#edit-entry-modal').html(error.responseText);
+							return;
+						},
+						scriptCharset: 'utf-8'
+					});
+
+			});
+
+					//阻止表单提交
+					return false;
+
+		});
+
+
+	/*
+	 * 删除释义
+	 * 功能：
+	 *  确定释义id，验证用户身份权限
+	 *	确认删除释义
+	 *
+	 * 待完成功能：
+	 *	释义id由点击词条时自动获取
+	 *	用户权限身份验证
+	 *
+	 */
+	$('#delete-inte-btn').click(function() {
+
+			var inte_id = $('#delete-inte-id').val();
+			var id_user = -1;
+			chrome.storage.sync.get({
+				BW_userId: -1,
+				BW_userIdentity: -1
+			},
+			 function(items) {
+				 id_user = items.BW_userId;
+				 user_identity = items.BW_userIdentity;
+					// validate
+					if(inte_id == null) {
+						alert('Interpretation Id is required!');
+						return;
+					}
+					if(id_user == -1 || user_identity == -1) {
+						alert('Cannot get correct user ID.\n请尝试重新登录')
+						return;
+					}
+
+					$.ajax({
+						type:'POST',
+						url: server_url + 'Entry/delete_inte/',
+						timeout: 5000,
+						async: true,
+						dataType: 'json',
+						data: {
+							inte_id: inte_id,
+							id_user: id_user,
+							user_identity: user_identity
+						},
+						success: function(result) {
+							if(result.result == 'success') {
+								console.log(JSON.stringify(result));
+								alert('删除释义成功！')
+								$('#delete-inte-modal').modal('close');
+							}
+							if(result.result == 'failure') {
+								alert('删除释义失败!\n' + result.error_msg);
 							}
 						},
 						error: function(error) {

@@ -257,6 +257,67 @@
     </div>
   </div>
 
+  <div id="delete-entry-modal" class="modal">
+    <div class="modal-content">
+      <h4>删除词条</h4>
+      <div class="row">
+        <div class="input-field col m6">
+          <input type="text" id="delete-entry-id" name="delete-entry-id">
+          <label for="delete-entry-id">Entry Id</label>
+        </div>
+	    </div>
+	    <div class="modal-footer">
+	      <a href="#" class="modal-action modal-close waves-effect
+	        waves-black btn-flat">取消</a>
+	      <button id="delete-entry-btn" type="submit" class="modal-action waves-effect
+	        waves-red red btn">确认删除</a>
+	    </div>
+    </div>
+  </div>
+
+  <div id="edit-inte-modal" class="modal">
+    <div class="modal-content">
+      <h4>编辑释义</h4>
+      <div class="row">
+        <div class="input-field col m6">
+          <input type="text" id="edit-inte-id" name="edit-inte-id">
+          <label for="edit-inte-id">Interpretation Id</label>
+        </div>
+          <div class="input-field col m12">
+            <textarea id="edit-inte" name="edit-inte" class="materialize-textarea"></textarea>
+            <label for="edit-inte">Interpretation</label>
+          </div>
+          <div class="input-field col m12">
+            <input type="text" id="edit-resource" name="edit-resource">
+            <label for="edit-resource">Resource</label>
+          </div>
+	    </div>
+	    <div class="modal-footer">
+	      <a href="#" class="modal-action modal-close waves-effect
+	        waves-black btn-flat">取消</a>
+	      <button id="edit-inte-btn" type="submit" class="modal-action waves-effect
+	        waves-green btn-flat">确认编辑</a>
+	    </div>
+    </div>
+  </div>
+
+  <div id="delete-inte-modal" class="modal">
+    <div class="modal-content">
+      <h4>删除释义</h4>
+      <div class="row">
+        <div class="input-field col m6">
+          <input type="text" id="delete-inte-id" name="delete-inte-id">
+          <label for="delete-inte-id">Interpretation Id</label>
+        </div>
+	    </div>
+	    <div class="modal-footer">
+	      <a href="#" class="modal-action modal-close waves-effect
+	        waves-black btn-flat">取消</a>
+	      <button id="delete-inte-btn" type="submit" class="modal-action waves-effect
+	        waves-red red btn">确认删除</a>
+	    </div>
+    </div>
+  </div>
 
 </body>
 </html>
