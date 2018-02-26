@@ -28,7 +28,7 @@
     {
         "default_icon": "img/logo-black.png",
         "default_title": "欢迎使用BuzzwordReader",
-        "default_popup": "popup/entry.html"
+        "default_popup": "popup/login.html"
     },
 
     "content_scripts":
