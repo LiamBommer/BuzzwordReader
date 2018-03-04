@@ -14,6 +14,7 @@
 $(document).ready(function() {
 
 	// 模态框初始化
+	$('#entry-modal').modal();
 	$('#signup-modal').modal();
 	$('#login-modal').modal();
 	$('#info-modal').modal();
@@ -356,10 +357,14 @@ $(document).ready(function() {
 		 $('#search-result-div').html('');
 
 		 var search_content = $('#search-field').val();
+		 if(search_content == null) {
+			 alert('Must Search Something! ');
+			 return ;
+		 }
 
 			$.ajax({
 				type:'GET',
-				url: server_url + 'Entry/search/',
+				url: server_url + 'Entry/search_entry/',
 				timeout: 3000,
 				async: true,
 				dataType: 'json',
@@ -372,17 +377,23 @@ $(document).ready(function() {
 						$('#search-result-div').append("<br/><h6>没有相关结果</h6>");
 						return;
 					}
+					/*
 					for(i in result.entry) {
 						var html = "<div class='col l4 m6 s12'>" +
 								"<div class='card z-depth-2'>" +
 									"<div class='card-content'>" +
+										"<a class='modal-trigger' href='#entry-modal'>" +
 										"<span class='card-title'>"+result.entry[i].name+"</span>" +
+										"</a>" +
 										"<p>id: "+result.entry[i].id_entry+"</p>" +
 										"<p>是否已开放: "+result.entry[i].is_open+"</p>" +
 										"<p>请求次数: "+result.entry[i].request+"</p>" +
 										"<p>创建时间: "+result.entry[i].datetime+"</p>" +
 										"<br><div class='divider'></div><br>" +
 										"<span class='card-title'>Interpretation</span>";
+										*/
+						/*
+						 * 现版本将词条和释义搜索分为两个接口
 						for(j in result.inte) {
 							// 根据词条id选取词条下的释义
 							if(result.inte[j].id_entry == result.entry[i].id_entry) {
@@ -395,11 +406,24 @@ $(document).ready(function() {
 										"<br/><br/>";
 							}
 						}
+						*/
+					for(i in result) {
+						var html = "<div class='col l4 m6 s12'>" +
+								"<div class='card z-depth-2'>" +
+									"<div class='card-content'>" +
+										"<a class='modal-trigger' href='#entry-modal'>" +
+										"<span class='card-title'>"+result[i].name+"</span>" +
+										"</a>" +
+										"<p>id: "+result[i].id_entry+"</p>" +
+										"<p>是否已开放: "+result[i].is_open+"</p>" +
+										"<p>请求次数: "+result[i].request+"</p>" +
+										"<p>创建时间: "+result[i].datetime+"</p>";
 						html += "</div>" +
 								"</div>" +
 							"</div>";
 						$('#search-result-div').append(html);
 					}
+
 				},
 				error: function(error) {
 					alert('查询请求错误，请重试');
@@ -411,7 +435,67 @@ $(document).ready(function() {
 				scriptCharset: 'utf-8'
 			});
 
+
 	 };
+
+
+	/*
+	 * 词条释义显示
+	 * 功能：
+	 *	点开词条，显示释义
+	 *
+	 * 待完成功能：
+	 *	现在只做了能查询到，查询的id是固定的
+	 *	链接还没跟指定的词条名称关联
+	 *	接下来要设置点击时自动获取词条id进行查询
+	 *
+	 */
+	$('#entry-modal').modal({
+		ready: function(modal, trigger) {
+
+		 // 清空词条框
+		 $('#entry-modal-content').html('');
+
+		 var entry_id = '3';
+			$.ajax({
+				type:'GET',
+				url: server_url + 'Entry/search_inte/',
+				timeout: 3000,
+				async: true,
+				dataType: 'json',
+				data: {
+					entry_id: entry_id
+				},
+				success: function(result) {
+					console.log(JSON.stringify(result));
+					if(result.result == 'empty') {
+						$('#entry-modal-title').html("没有相关结果");
+						return;
+					}
+					for(i in result) {
+						var html = "<h4>词条id: "+entry_id+"</h4>" +
+										"<p>释义id: "+result[i].id_interpretation+"</p>" +
+										"<p>用户id: "+result[i].id_user+"</p>" +
+										"<p>释义: "+result[i].interpretation+"</p>" +
+										"<p>来源: "+result[i].resource+"</p>" +
+										"<p>创建时间: "+result[i].datetime+"</p>";
+						$('#entry-modal-content').append(html);
+					}
+
+				},
+				error: function(error) {
+					alert('查询请求错误，请重试');
+					console.log(JSON.stringify(error));
+					// error display
+					$('#entry-modal-content').html(error.responseText);
+					return;
+				},
+				scriptCharset: 'utf-8'
+			});
+
+
+		}
+	});
 
 
 	/*
