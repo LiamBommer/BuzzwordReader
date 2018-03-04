@@ -5,12 +5,10 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<title>Bw | Options</title>
-
   <!--Import materialize.css-->
   <link type="text/css" rel="stylesheet" href="/css/materialize.min.css"  media="screen,projection"/>
   <!--Import Google Icon Font-->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  
 </head>
 <body>
   <!--Import jQuery before materialize.js-->
@@ -18,21 +16,22 @@
   <script type="text/javascript" src="/js/materialize.min.js"></script>
   <script type="text/javascript" src="/js/options.js"></script>
 
-  <nav class="teal lighten-1">
-    <div class="container">
-        <div class="nav-wrapper">
-          <a href="#" class="brand-logo left">Buzzword</a>
-          <ul id="nav-mobile" class="right">
-            <li><a class="waves-effect modal-trigger" id="signup" href="#signup-modal">注册</a></li>
-            <li><a class="waves-effect modal-trigger" id="login" href="#login-modal">登录</a></li>
-            <li><a class="waves-effect" id="info-btn">个人信息查看</a></li>
-            <li><a class="waves-effect modal-trigger" id="revise" href="#pw-modal">修改密码</a></li>
-          </ul>
-        </div>
-    </div>
-    </nav>
-
+<nav class="teal lighten-1">
   <div class="container">
+    <div id="navigator" class="nav-wrapper">
+      <a href="#" class="brand-logo left">Buzzword</a>
+        <ul id="nav-mobile" class="right">
+          <li><a href="#" id="username">username</a></li>
+          <li><a id="info-btn">个人信息查看</a></li>
+          <li><a href="#login-modal">登录</a></li>
+          <li><a href="#signup-modal">注册</a></li>
+          <li><a href="#pw-modal">修改密码</a></li>
+        </ul>
+    </div>
+  </div>
+</nav>
+
+  <div class="container" >
     
   	<br/>
   	<br/>
@@ -45,13 +44,7 @@
     <section class="entry-section">
       <br>
       <br>
-      <a class="waves-effect btn modal-trigger right" href="#new-entry-modal">创建词条</a>
-      <br>
-      <br>
-      <br>
-      <a class="waves-effect btn modal-trigger right" href="#new-inte-modal">添加释义</a>
-      <br>
-      <div class="row">
+      <div class="row" id="search-div">
         <div class="col m12 l6">
           <div class="input-field">
             <input type="search" id="search-field">
@@ -66,6 +59,22 @@
           <div id="search-result-div" class="row"></div>
         </div>
       </div>
+      
+      <br>
+
+      <div class="row">
+        <div  class="col s2 offset-s11">
+          <div class="collection">
+            <a class="waves-effect collection-item modal-trigger" href="#new-entry-modal" id="buttons">创建词条</a>
+            <a class="waves-effect collection-item modal-trigger" href="#new-inte-modal" id="buttons">添加释义</a>
+            <a class="waves-effect collection-item modal-trigger" href="#edit-entry-modal" id="buttons">编辑词条</a>
+            <a class="waves-effect collection-item modal-trigger" href="#delete-entry-modal" id="buttons">删除词条</a>
+            <a class="waves-effect collection-item modal-trigger" href="#edit-inte-modal" id="buttons">编辑释义</a>
+            <a class="waves-effect collection-item modal-trigger" href="#delete-inte-modal" id="buttons">删除释义</a>
+          </div>
+        </div>
+      </div>
+      
     </section>
   </div>
 
@@ -233,12 +242,97 @@
           <input type="text" id="entry-name" name="entry-name">
           <label for="entry-name">Entry Name</label>
         </div>
+      </div>
     </div>
     <div class="modal-footer">
       <a href="#" class="modal-action modal-close waves-effect
         waves-black btn-flat">取消</a>
       <button id="new-entry-btn" type="submit" class="modal-action waves-effect
         waves-green btn-flat">确认创建</a>
+    </div>
+  </div>
+
+  <div id="edit-entry-modal" class="modal">
+    <div class="modal-content">
+      <h4>编辑词条</h4>
+      <div class="row">
+        <div class="input-field col m6">
+          <input type="text" id="edit-entry-id" name="edit-entry-id">
+          <label for="edit-entry-id">Entry Id</label>
+        </div>
+        <div class="input-field col m6">
+          <input type="text" id="edit-entry-name" name="edit-entry-name">
+          <label for="edit-entry-name">Entry Name</label>
+        </div>
+	    </div>
+	    <div class="modal-footer">
+	      <a href="#" class="modal-action modal-close waves-effect
+	        waves-black btn-flat">取消</a>
+	      <button id="edit-entry-btn" type="submit" class="modal-action waves-effect
+	        waves-green btn-flat">确认编辑</a>
+	    </div>
+    </div>
+  </div>
+
+  <div id="delete-entry-modal" class="modal">
+    <div class="modal-content">
+      <h4>删除词条</h4>
+      <div class="row">
+        <div class="input-field col m6">
+          <input type="text" id="delete-entry-id" name="delete-entry-id">
+          <label for="delete-entry-id">Entry Id</label>
+        </div>
+	    </div>
+	    <div class="modal-footer">
+	      <a href="#" class="modal-action modal-close waves-effect
+	        waves-black btn-flat">取消</a>
+	      <button id="delete-entry-btn" type="submit" class="modal-action waves-effect
+	        waves-red red btn">确认删除</a>
+	    </div>
+    </div>
+  </div>
+
+  <div id="edit-inte-modal" class="modal">
+    <div class="modal-content">
+      <h4>编辑释义</h4>
+      <div class="row">
+        <div class="input-field col m6">
+          <input type="text" id="edit-inte-id" name="edit-inte-id">
+          <label for="edit-inte-id">Interpretation Id</label>
+        </div>
+          <div class="input-field col m12">
+            <textarea id="edit-inte" name="edit-inte" class="materialize-textarea"></textarea>
+            <label for="edit-inte">Interpretation</label>
+          </div>
+          <div class="input-field col m12">
+            <input type="text" id="edit-resource" name="edit-resource">
+            <label for="edit-resource">Resource</label>
+          </div>
+	    </div>
+	    <div class="modal-footer">
+	      <a href="#" class="modal-action modal-close waves-effect
+	        waves-black btn-flat">取消</a>
+	      <button id="edit-inte-btn" type="submit" class="modal-action waves-effect
+	        waves-green btn-flat">确认编辑</a>
+	    </div>
+    </div>
+  </div>
+
+  <div id="delete-inte-modal" class="modal">
+    <div class="modal-content">
+      <h4>删除释义</h4>
+      <div class="row">
+        <div class="input-field col m6">
+          <input type="text" id="delete-inte-id" name="delete-inte-id">
+          <label for="delete-inte-id">Interpretation Id</label>
+        </div>
+	    </div>
+	    <div class="modal-footer">
+	      <a href="#" class="modal-action modal-close waves-effect
+	        waves-black btn-flat">取消</a>
+	      <button id="delete-inte-btn" type="submit" class="modal-action waves-effect
+	        waves-red red btn">确认删除</a>
+	    </div>
     </div>
   </div>
 
