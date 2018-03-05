@@ -1,7 +1,11 @@
 /*
 * !!! IMPORTANT !!!
 *
+<<<<<<< HEAD
+* chrome storage 事件为同步，故总是在其他异步代码(js一般都是)后执行
+=======
 * chrome storage 事件为异步，故总是在其他异步代码(js一般都是)后执行
+>>>>>>> zicaijun
 * 故在callback函数外下一步取id_user时失败
 *
 * solution:

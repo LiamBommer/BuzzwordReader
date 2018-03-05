@@ -1,7 +1,7 @@
 /*
 * !!! IMPORTANT !!!
 *
-* chrome storage 事件为异步，故总是在其他异步代码(js一般都是)后执行
+* chrome storage 事件为同步，故总是在其他异步代码(js一般都是)后执行
 * 故在callback函数外下一步取id_user时失败
 *
 * solution:
@@ -27,9 +27,9 @@ $(document).ready(function() {
 	$('#delete-inte-modal').modal();
 
 	// 本机测试用服务器
-	// var server_url = 'http://127.0.0.1/BuzzwordReader/';
+	var server_url = 'http://127.0.0.1/BuzzwordReader/';
 	// 生产环境公网服务器
-	var server_url = 'http://119.29.58.165:81/index.php/';
+	// var server_url = 'http://119.29.58.165:81/index.php/';
 
 
 	// 显示登录用户
@@ -64,7 +64,7 @@ $(document).ready(function() {
 		var phone = $('#phone').val();
 		var gender = $('#gender').val();
 		var profile = $('#profile').val();
-		if(gender != 'male' && gender != 'female') {
+		if(gender != 'male' || gender != 'female') {
 			alert('性别问题');
 		}else if(gender == 'male') {
 			gender = 0;

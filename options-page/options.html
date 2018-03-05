@@ -16,11 +16,23 @@
   <script type="text/javascript" src="/js/materialize.min.js"></script>
   <script type="text/javascript" src="/js/options.js"></script>
 
+<nav class="teal lighten-1">
   <div class="container">
-    <a class="waves-effect btn modal-trigger" href="#signup-modal">注册</a>
-    <a class="waves-effect btn modal-trigger" href="#login-modal">登录</a>
-    <a class="waves-effect btn" id="info-btn">个人信息查看</a>
-    <a class="waves-effect btn modal-trigger" href="#pw-modal">修改密码</a>
+    <div id="navigator" class="nav-wrapper">
+      <a href="#" class="brand-logo left">Buzzword</a>
+        <ul id="nav-mobile" class="right">
+          <li><a href="#" id="username">username</a></li>
+          <li><a id="info-btn">个人信息查看</a></li>
+          <li><a href="#login-modal">登录</a></li>
+          <li><a href="#signup-modal">注册</a></li>
+          <li><a href="#pw-modal">修改密码</a></li>
+        </ul>
+    </div>
+  </div>
+</nav>
+
+  <div class="container" >
+
   	<br/>
   	<br/>
   	已登录用户：
@@ -32,18 +44,7 @@
     <section class="entry-section">
       <br>
       <br>
-      <p>
-        <a class="waves-effect btn modal-trigger" href="#new-entry-modal">创建词条</a>
-        <a class="waves-effect btn modal-trigger" href="#new-inte-modal">添加释义</a>
-      </p>
-      <p>
-        <a class="waves-effect btn modal-trigger" href="#edit-entry-modal">编辑词条</a>
-        <a class="waves-effect btn modal-trigger" href="#delete-entry-modal">删除词条</a>
-        <a class="waves-effect btn modal-trigger" href="#edit-inte-modal">编辑释义</a>
-        <a class="waves-effect btn modal-trigger" href="#delete-inte-modal">删除释义</a>
-      </p>
-      <br>
-      <div class="row">
+      <div class="row" id="search-div">
         <div class="col m12 l6">
           <div class="input-field">
             <input type="search" id="search-field">
@@ -58,6 +59,22 @@
           <div id="search-result-div" class="row"></div>
         </div>
       </div>
+
+      <br>
+
+      <div class="row">
+        <div  class="col s2 offset-s11">
+          <div class="collection">
+            <a class="waves-effect collection-item modal-trigger" href="#new-entry-modal" id="buttons">创建词条</a>
+            <a class="waves-effect collection-item modal-trigger" href="#new-inte-modal" id="buttons">添加释义</a>
+            <a class="waves-effect collection-item modal-trigger" href="#edit-entry-modal" id="buttons">编辑词条</a>
+            <a class="waves-effect collection-item modal-trigger" href="#delete-entry-modal" id="buttons">删除词条</a>
+            <a class="waves-effect collection-item modal-trigger" href="#edit-inte-modal" id="buttons">编辑释义</a>
+            <a class="waves-effect collection-item modal-trigger" href="#delete-inte-modal" id="buttons">删除释义</a>
+          </div>
+        </div>
+      </div>
+
     </section>
   </div>
 

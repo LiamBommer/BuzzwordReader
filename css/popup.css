@@ -1,0 +1,35 @@
+body{
+	width: 500px;
+}
+
+p{
+	font-size: medium;
+}
+
+h1{
+	font-size: 280%;
+}
+
+span{
+	font-size: 150%;
+}
+
+#buzzword{
+	font-size: 280%;
+}
+
+#entry-page{
+	background: #bbdefb;
+}
+
+.divider{
+	margin: 1px;
+}
+
+#title{
+	margin: 1px;
+}
+
+#entry-modal{
+	display: none;
+}

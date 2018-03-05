@@ -1,35 +1,17 @@
-/*
-* !!! IMPORTANT !!!
-*
-* chrome storage 事件为异步，故总是在其他异步代码(js一般都是)后执行
-* 故在callback函数外下一步取id_user时失败
-*
-* solution:
-*	将涉及到取得的值的操作，都放在callback函数里操作
-*
-* refer:
-*	https://stackoverflow.com/questions/12252817/how-chrome-storage-local-get-sets-a-value
-*/
-
 $(document).ready(function() {
 
 	// 模态框初始化
-	$('#entry-modal').modal();
 	$('#signup-modal').modal();
 	$('#login-modal').modal();
 	$('#info-modal').modal();
 	$('#pw-modal').modal();
 	$('#new-entry-modal').modal();
 	$('#new-inte-modal').modal();
-	$('#edit-entry-modal').modal();
-	$('#delete-entry-modal').modal();
-	$('#edit-inte-modal').modal();
-	$('#delete-inte-modal').modal();
 
 	// 本机测试用服务器
-	// var server_url = 'http://127.0.0.1/BuzzwordReader/';
+	var server_url = 'http://127.0.0.1/BuzzwordReader/';
 	// 生产环境公网服务器
-	var server_url = 'http://119.29.58.165:81/index.php/';
+	// var server_url = 'http://119.29.58.165:81/index.php/';
 
 
 	// 显示登录用户
@@ -64,7 +46,7 @@ $(document).ready(function() {
 		var phone = $('#phone').val();
 		var gender = $('#gender').val();
 		var profile = $('#profile').val();
-		if(gender != 'male' && gender != 'female') {
+		if(gender != 'male' || gender != 'female') {
 			alert('性别问题');
 		}else if(gender == 'male') {
 			gender = 0;
@@ -158,13 +140,7 @@ $(document).ready(function() {
 					// 将用户名，用户Id存入storage
 					chrome.storage.sync.set({
 						BW_username: result.row.username,
-						BW_userId: result.row.id_user,
-						BW_userIdentity: result.row.identity,
-						BW_userIsBanned: result.row.is_banned,
-						BW_userEmail: result.row.email,
-						BW_userPhone: result.row.phone,
-						BW_userGender: result.row.gender,
-						BW_userProfile: result.row.profile,
+						BW_userId: result.row.id_user
 					},function() {
 						// 更新登录用户
 						chrome.storage.sync.get({
@@ -181,7 +157,6 @@ $(document).ready(function() {
 				if(result.result == 'failure') {
 					// $('.modal-content > h4').html('注册失败');
 					alert('登录失败!\n' + result.error_msg);
-					$('#password-login').val('');
 				}
 			},
 			error: function(error) {
@@ -357,14 +332,10 @@ $(document).ready(function() {
 		 $('#search-result-div').html('');
 
 		 var search_content = $('#search-field').val();
-		 if(search_content == null) {
-			 alert('Must Search Something! ');
-			 return ;
-		 }
 
 			$.ajax({
 				type:'GET',
-				url: server_url + 'Entry/search_entry/',
+				url: server_url + 'Entry/search/',
 				timeout: 3000,
 				async: true,
 				dataType: 'json',
@@ -377,23 +348,17 @@ $(document).ready(function() {
 						$('#search-result-div').append("<br/><h6>没有相关结果</h6>");
 						return;
 					}
-					/*
 					for(i in result.entry) {
 						var html = "<div class='col l4 m6 s12'>" +
 								"<div class='card z-depth-2'>" +
 									"<div class='card-content'>" +
-										"<a class='modal-trigger' href='#entry-modal'>" +
 										"<span class='card-title'>"+result.entry[i].name+"</span>" +
-										"</a>" +
 										"<p>id: "+result.entry[i].id_entry+"</p>" +
 										"<p>是否已开放: "+result.entry[i].is_open+"</p>" +
 										"<p>请求次数: "+result.entry[i].request+"</p>" +
 										"<p>创建时间: "+result.entry[i].datetime+"</p>" +
 										"<br><div class='divider'></div><br>" +
 										"<span class='card-title'>Interpretation</span>";
-										*/
-						/*
-						 * 现版本将词条和释义搜索分为两个接口
 						for(j in result.inte) {
 							// 根据词条id选取词条下的释义
 							if(result.inte[j].id_entry == result.entry[i].id_entry) {
@@ -406,24 +371,11 @@ $(document).ready(function() {
 										"<br/><br/>";
 							}
 						}
-						*/
-					for(i in result) {
-						var html = "<div class='col l4 m6 s12'>" +
-								"<div class='card z-depth-2'>" +
-									"<div class='card-content'>" +
-										"<a class='modal-trigger' href='#entry-modal'>" +
-										"<span class='card-title'>"+result[i].name+"</span>" +
-										"</a>" +
-										"<p>id: "+result[i].id_entry+"</p>" +
-										"<p>是否已开放: "+result[i].is_open+"</p>" +
-										"<p>请求次数: "+result[i].request+"</p>" +
-										"<p>创建时间: "+result[i].datetime+"</p>";
 						html += "</div>" +
 								"</div>" +
 							"</div>";
 						$('#search-result-div').append(html);
 					}
-
 				},
 				error: function(error) {
 					alert('查询请求错误，请重试');
@@ -435,67 +387,7 @@ $(document).ready(function() {
 				scriptCharset: 'utf-8'
 			});
 
-
 	 };
-
-
-	/*
-	 * 词条释义显示
-	 * 功能：
-	 *	点开词条，显示释义
-	 *
-	 * 待完成功能：
-	 *	现在只做了能查询到，查询的id是固定的
-	 *	链接还没跟指定的词条名称关联
-	 *	接下来要设置点击时自动获取词条id进行查询
-	 *
-	 */
-	$('#entry-modal').modal({
-		ready: function(modal, trigger) {
-
-		 // 清空词条框
-		 $('#entry-modal-content').html('');
-
-		 var entry_id = '3';
-			$.ajax({
-				type:'GET',
-				url: server_url + 'Entry/search_inte/',
-				timeout: 3000,
-				async: true,
-				dataType: 'json',
-				data: {
-					entry_id: entry_id
-				},
-				success: function(result) {
-					console.log(JSON.stringify(result));
-					if(result.result == 'empty') {
-						$('#entry-modal-title').html("没有相关结果");
-						return;
-					}
-					for(i in result) {
-						var html = "<h4>词条id: "+entry_id+"</h4>" +
-										"<p>释义id: "+result[i].id_interpretation+"</p>" +
-										"<p>用户id: "+result[i].id_user+"</p>" +
-										"<p>释义: "+result[i].interpretation+"</p>" +
-										"<p>来源: "+result[i].resource+"</p>" +
-										"<p>创建时间: "+result[i].datetime+"</p>";
-						$('#entry-modal-content').append(html);
-					}
-
-				},
-				error: function(error) {
-					alert('查询请求错误，请重试');
-					console.log(JSON.stringify(error));
-					// error display
-					$('#entry-modal-content').html(error.responseText);
-					return;
-				},
-				scriptCharset: 'utf-8'
-			});
-
-
-		}
-	});
 
 
 	/*
@@ -612,306 +504,6 @@ $(document).ready(function() {
 							alert('ajax错误，请重试');
 							console.log(JSON.stringify(error));
 							$('#new-inte-modal').html(error.responseText);
-							return;
-						},
-						scriptCharset: 'utf-8'
-					});
-
-			});
-
-					//阻止表单提交
-					return false;
-
-		});
-
-
-	/*
-	 * 编辑词条
-	 * 功能：
-	 *  确定词条id，验证用户身份权限
-	 *	输入词条新内容
-	 *
-	 * 待完成功能：
-	 *	词条id由点击词条时自动获取
-	 *	用户权限身份验证
-	 *
-	 */
-	$('#edit-entry-btn').click(function() {
-
-			var entry_id = $('#edit-entry-id').val();
-			var entry_name = $('#edit-entry-name').val();
-			var id_user = -1;
-			// 获取当前登录用户id
-			/*
-			 * !!! IMPORTANT !!!
-			 *
-			 * chrome storage 事件为同步，故总是在其他异步代码(js一般都是)后执行
-			 * 故在callback函数外下一步取id_user时失败
-			 *
-			 * solution:
-			 *	将涉及到取得的值的操作，都放在callback函数里操作
-			 *
-			 * refer:
-			 *	https://stackoverflow.com/questions/12252817/how-chrome-storage-local-get-sets-a-value
-			 */
-			chrome.storage.sync.get({
-				BW_userId: -1,
-				BW_userIdentity: -1
-			},
-			 function(items) {
-				 id_user = items.BW_userId;
-				 user_identity = items.BW_userIdentity;
-					// validate
-					if(entry_id == null || entry_name == null) {
-						alert('Entry Id & Entry Name are required!');
-						return;
-					}
-					if(id_user == -1 || user_identity == -1) {
-						alert('Cannot get correct user ID.\n请尝试重新登录')
-						return;
-					}
-
-					$.ajax({
-						type:'POST',
-						url: server_url + 'Entry/edit_entry/',
-						timeout: 5000,
-						async: true,
-						dataType: 'json',
-						data: {
-							entry_id: entry_id,
-							entry_name: entry_name,
-							id_user: id_user,
-							user_identity: user_identity
-						},
-						success: function(result) {
-							if(result.result == 'success') {
-								console.log(JSON.stringify(result));
-								alert('编辑词条成功！')
-								$('#edit-entry-modal').modal('close');
-							}
-							if(result.result == 'failure') {
-								alert('编辑词条失败!\n' + result.error_msg);
-							}
-						},
-						error: function(error) {
-							alert('ajax错误，请重试');
-							console.log(JSON.stringify(error));
-							$('#edit-entry-modal').html(error.responseText);
-							return;
-						},
-						scriptCharset: 'utf-8'
-					});
-
-			});
-
-					//阻止表单提交
-					return false;
-
-		});
-
-
-	/*
-	 * 删除词条
-	 * 功能：
-	 *  确定词条id，验证用户身份权限
-	 *	确认删除词条
-	 *
-	 * 待完成功能：
-	 *	词条id由点击词条时自动获取
-	 *	用户权限身份验证
-	 *
-	 */
-	$('#delete-entry-btn').click(function() {
-
-			var entry_id = $('#delete-entry-id').val();
-			var id_user = -1;
-			chrome.storage.sync.get({
-				BW_userId: -1,
-				BW_userIdentity: -1
-			},
-			 function(items) {
-				 id_user = items.BW_userId;
-				 user_identity = items.BW_userIdentity;
-					// validate
-					if(entry_id == null) {
-						alert('Entry Id is required!');
-						return;
-					}
-					if(id_user == -1 || user_identity == -1) {
-						alert('Cannot get correct user ID.\n请尝试重新登录')
-						return;
-					}
-
-					$.ajax({
-						type:'POST',
-						url: server_url + 'Entry/delete_entry/',
-						timeout: 5000,
-						async: true,
-						dataType: 'json',
-						data: {
-							entry_id: entry_id,
-							id_user: id_user,
-							user_identity: user_identity
-						},
-						success: function(result) {
-							if(result.result == 'success') {
-								console.log(JSON.stringify(result));
-								alert('删除词条成功！')
-								$('#delete-entry-modal').modal('close');
-							}
-							if(result.result == 'failure') {
-								alert('删除词条失败!\n' + result.error_msg);
-							}
-						},
-						error: function(error) {
-							alert('ajax错误，请重试');
-							console.log(JSON.stringify(error));
-							$('#edit-entry-modal').html(error.responseText);
-							return;
-						},
-						scriptCharset: 'utf-8'
-					});
-
-			});
-
-					//阻止表单提交
-					return false;
-
-		});
-
-
-	/*
-	 * 编辑释义
-	 * 功能：
-	 *  确定释义id，验证用户身份权限
-	 *	输入释义新内容
-	 *
-	 * 待完成功能：
-	 *	释义id由点击释义时自动获取
-	 *	用户权限身份验证
-	 *
-	 */
-	$('#edit-inte-btn').click(function() {
-
-			var inte_id = $('#edit-inte-id').val();
-			var inte = $('#edit-inte').val();
-			var resource = $('#edit-resource').val();
-			var id_user = -1;
-
-			chrome.storage.sync.get({
-				BW_userId: -1,
-				BW_userIdentity: -1
-			},
-			 function(items) {
-				 id_user = items.BW_userId;
-				 user_identity = items.BW_userIdentity;
-					// validate
-					if(inte_id == null || inte == null) {
-						alert('Interpretation Id & Interpretation are required!');
-						return;
-					}
-					if(id_user == -1 || user_identity == -1) {
-						alert('Cannot get correct user ID.\n请尝试重新登录')
-						return;
-					}
-
-					$.ajax({
-						type:'POST',
-						url: server_url + 'Entry/edit_inte/',
-						timeout: 5000,
-						async: true,
-						dataType: 'json',
-						data: {
-							inte_id: inte_id,
-							inte: inte,
-							resource: resource,
-							id_user: id_user,
-							user_identity: user_identity
-						},
-						success: function(result) {
-							if(result.result == 'success') {
-								console.log(JSON.stringify(result));
-								alert('编辑释义成功！')
-								$('#edit-inte-modal').modal('close');
-							}
-							if(result.result == 'failure') {
-								alert('编辑释义失败!\n' + result.error_msg);
-							}
-						},
-						error: function(error) {
-							alert('ajax错误，请重试');
-							console.log(JSON.stringify(error));
-							$('#edit-entry-modal').html(error.responseText);
-							return;
-						},
-						scriptCharset: 'utf-8'
-					});
-
-			});
-
-					//阻止表单提交
-					return false;
-
-		});
-
-
-	/*
-	 * 删除释义
-	 * 功能：
-	 *  确定释义id，验证用户身份权限
-	 *	确认删除释义
-	 *
-	 * 待完成功能：
-	 *	释义id由点击词条时自动获取
-	 *	用户权限身份验证
-	 *
-	 */
-	$('#delete-inte-btn').click(function() {
-
-			var inte_id = $('#delete-inte-id').val();
-			var id_user = -1;
-			chrome.storage.sync.get({
-				BW_userId: -1,
-				BW_userIdentity: -1
-			},
-			 function(items) {
-				 id_user = items.BW_userId;
-				 user_identity = items.BW_userIdentity;
-					// validate
-					if(inte_id == null) {
-						alert('Interpretation Id is required!');
-						return;
-					}
-					if(id_user == -1 || user_identity == -1) {
-						alert('Cannot get correct user ID.\n请尝试重新登录')
-						return;
-					}
-
-					$.ajax({
-						type:'POST',
-						url: server_url + 'Entry/delete_inte/',
-						timeout: 5000,
-						async: true,
-						dataType: 'json',
-						data: {
-							inte_id: inte_id,
-							id_user: id_user,
-							user_identity: user_identity
-						},
-						success: function(result) {
-							if(result.result == 'success') {
-								console.log(JSON.stringify(result));
-								alert('删除释义成功！')
-								$('#delete-inte-modal').modal('close');
-							}
-							if(result.result == 'failure') {
-								alert('删除释义失败!\n' + result.error_msg);
-							}
-						},
-						error: function(error) {
-							alert('ajax错误，请重试');
-							console.log(JSON.stringify(error));
-							$('#edit-entry-modal').html(error.responseText);
 							return;
 						},
 						scriptCharset: 'utf-8'
