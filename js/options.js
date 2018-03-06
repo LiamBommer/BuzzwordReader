@@ -547,7 +547,7 @@ $(document).ready(function() {
 
 		$.ajax({
 			type:'GET',
-			url: server_url + 'Entry/create',
+			url: server_url + 'Entry/new_entry',
 			timeout: 5000,
 			async: true,
 			dataType: 'json',
