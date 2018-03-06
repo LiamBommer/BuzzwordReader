@@ -1,9 +1,4 @@
-.buttons{
-	position: absolute;
-	right: 1000px;
-}
-
-#search-div{
-	position: relative;
-	bottom: : 1000px;
-}
+#icons-order{
+	align-items: right;
+	vertical-align: center;
+ }

@@ -9,6 +9,7 @@
   <link type="text/css" rel="stylesheet" href="/css/materialize.min.css"  media="screen,projection"/>
   <!--Import Google Icon Font-->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link rel="stylesheet" href="/css/option.css">
 </head>
 <body>
   <!--Import jQuery before materialize.js-->
@@ -32,7 +33,6 @@
 </nav>
 
   <div class="container" >
-
   	<br/>
   	<br/>
   	已登录用户：
@@ -40,40 +40,46 @@
   	<div class="chip" id="userId-div"></div>
 		<br/>
 		<br/>
+
 		<div class="divider"></div>
+
     <section class="entry-section">
       <br>
-      <br>
-      <div class="row" id="search-div">
-        <div class="col m12 l6">
-          <div class="input-field">
-            <input type="search" id="search-field">
-            <label for="search-field" class="label-icon">
-              <i class="material-icons">search</i>
-            </label>
-            <i class="material-icons">close</i>
-          </div>
-        </div>
-        <div class="col l12">
-          <h5>相关词条：</h5>
-          <div id="search-result-div" class="row"></div>
-        </div>
-      </div>
+			<br>
 
-      <br>
+			<div class="row" >
+				<div id="functions-order">
+	        <div class="col s2">
+	          <div class="collection">
+	            <a class="waves-effect collection-item modal-trigger black-text" href="#new-entry-modal">&nbsp;&nbsp;&nbsp;创建词条&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="tiny material-icons icons-order">chevron_right</i></a>
+	            <a class="waves-effect collection-item modal-trigger black-text" href="#new-inte-modal">&nbsp;&nbsp;&nbsp;添加释义&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="tiny material-icons icons-order">chevron_right</i></a>
+	            <a class="waves-effect collection-item modal-trigger black-text" href="#edit-entry-modal">&nbsp;&nbsp;&nbsp;编辑词条&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="tiny material-icons icons-order">chevron_right</i></a>
+	            <a class="waves-effect collection-item modal-trigger black-text" href="#delete-entry-modal">&nbsp;&nbsp;&nbsp;删除词条&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="tiny material-icons icons-order">chevron_right</i></a>
+	            <a class="waves-effect collection-item modal-trigger black-text" href="#edit-inte-modal">&nbsp;&nbsp;&nbsp;编辑释义&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="tiny material-icons icons-order">chevron_right</i></a>
+	            <a class="waves-effect collection-item modal-trigger black-text" href="#delete-inte-modal">&nbsp;&nbsp;&nbsp;删除释义&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="tiny material-icons icons-order">chevron_right</i></a>
+	          </div>
+	        </div>
+	      </div>
 
-      <div class="row">
-        <div  class="col s2 offset-s11">
-          <div class="collection">
-            <a class="waves-effect collection-item modal-trigger buttons" href="#new-entry-modal">创建词条</a>
-            <a class="waves-effect collection-item modal-trigger buttons" href="#new-inte-modal">添加释义</a>
-            <a class="waves-effect collection-item modal-trigger buttons" href="#edit-entry-modal">编辑词条</a>
-            <a class="waves-effect collection-item modal-trigger buttons" href="#delete-entry-modal">删除词条</a>
-            <a class="waves-effect collection-item modal-trigger buttons" href="#edit-inte-modal">编辑释义</a>
-            <a class="waves-effect collection-item modal-trigger buttons" href="#delete-inte-modal">删除释义</a>
-          </div>
-        </div>
-      </div>
+				<div id="search-div">
+	        <div class="col s9 offset-s1">
+	          <div class="input-field">
+	            <input type="search" id="search-field">
+	            <label for="search-field" class="label-icon">
+	              <i class="material-icons">search</i>
+	            </label>
+	            <i class="material-icons">close</i>
+	          </div>
+						<h5>相关词条：</h5>
+	          <div id="search-result-div" class="row"></div>
+	        </div>
+	      </div>
+
+
+			</div>
+
+
+
 
     </section>
   </div>
