@@ -447,13 +447,14 @@ $(document).ready(function() {
 					}
 					for(i in result.inte) {
 						var html = "<h4>词条id: "+entry_id+"</h4>" +
-						"<p>释义id: "+result.inte[i].id_interpretation+"</p>" +
+						"<p id='id-inte-p'> "+result.inte[i].id_interpretation+"</p>" +
 						"<p>用户id: "+result.inte[i].id_user+"</p>" +
 						"<p>释义: "+result.inte[i].interpretation+"</p>" +
 						"<p>来源: "+result.inte[i].resource+"</p>" +
 						"<p>创建时间: "+result.inte[i].datetime+"</p>";
 						var like = result.like.filter(item => item.id_interpretation == result.inte[i].id_interpretation);
-						html += "<a class='chip' id='like-btn'>赞"+like[0].like_total+"<i class='material-icons'>arrow_drop_up</i></a>";
+						html += "<a class='chip like-btn' style='cursor:pointer;'>赞"+
+							like[0].like_total+"<i class='material-icons'>arrow_drop_up</i></a>";
 						$('#entry-modal-content').append(html);
 					}
 
@@ -473,6 +474,63 @@ $(document).ready(function() {
 	});
 
 
+	/*
+	* 点赞
+	* 功能：
+	*  获取释义id
+	*  获取用户id
+	*
+	* 待完成功能：
+	*
+	*/
+	$('#entry-modal').on('click', 'a.like-btn', function() {
+
+		var id_user = -1;
+		var id_inte = $('#id-inte-p').html();
+
+		chrome.storage.sync.get({
+			BW_userId: -1
+		},
+		function(items) {
+			id_user = items.BW_userId;
+			// validate
+			if(id_user == -1 || id_inte == null) {
+				alert('Cannot get correct user ID.')
+				return;
+			}
+
+			$.ajax({
+				type:'POST',
+				url: server_url + 'Entry/like/',
+				timeout: 5000,
+				async: true,
+				dataType: 'json',
+				data: {
+					id_user: id_user,
+					id_inte: id_inte
+				},
+				success: function(result) {
+					if(result.result == 'success') {
+						console.log(JSON.stringify(result));
+						alert('点赞成功！')
+					}
+					if(result.result == 'failure') {
+						alert('点赞失败!\n' + result.error_msg);
+					}
+				},
+				error: function(error) {
+					alert('ajax错误，请重试');
+					console.log(JSON.stringify(error));
+					$('#entry-modal').html(error.responseText);
+					return;
+				},
+				scriptCharset: 'utf-8'
+			});
+
+		});
+
+	});
+
 
 	/*
 	* 创建词条
@@ -489,7 +547,7 @@ $(document).ready(function() {
 
 		$.ajax({
 			type:'GET',
-			url: server_url + 'Entry/create',
+			url: server_url + 'Entry/new_entry',
 			timeout: 5000,
 			async: true,
 			dataType: 'json',
