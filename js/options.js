@@ -71,6 +71,7 @@ $(document).ready(function() {
 		}else {
 			gender = 1;
 		}
+		alert(username+','+password+','+email+','+phone+','+gender+','+','+profile);
 
 		// ajax 传输
 		$.ajax({
