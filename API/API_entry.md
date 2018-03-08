@@ -62,6 +62,25 @@ id_entry, name, is_open, request, datetime
 
 * error_msg	(仅在结果为result == failure时存在)
 
+## dislike | 点灭
+> Entry/dislike | POST
+
+### @param
+
+* id_user
+* id_inte
+
+### validate
+
+1. id_user, in_inte非空...(editing)
+
+### @return
+
+* result
+> 'success' **OR** 'failure'
+
+* error_msg	(仅在结果为result == failure时存在)
+
 ## new_entry | 创建词条
 > Entry/new_entry | GET
 
