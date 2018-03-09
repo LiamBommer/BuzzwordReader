@@ -81,6 +81,27 @@ id_entry, name, is_open, request, datetime
 
 * error_msg	(仅在结果为result == failure时存在)
 
+## new_entry_request | 请求创建词条
+> Entry/new_entry_request | POST
+
+### @param
+
+* entry_name
+* entry_id
+>  暂未确定用哪个作为参数，都传吧
+
+### validate
+
+1. entry_name非空...(editing)
+
+### @return
+
+* result
+> 'success' **OR** 'failure'
+
+* error_msg	(仅在结果为result == failure时存在)
+
+
 ## new_entry | 创建词条
 > Entry/new_entry | GET
 
