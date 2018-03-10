@@ -27,9 +27,9 @@ $(document).ready(function() {
 	$('#delete-inte-modal').modal();
 
 	// 本机测试用服务器
-	// var server_url = 'http://127.0.0.1/BuzzwordReader/';
+	var server_url = 'http://127.0.0.1/BuzzwordReader/';
 	// 生产环境公网服务器
-	var server_url = 'http://119.29.58.165:81/index.php/';
+	// var server_url = 'http://119.29.58.165:81/index.php/';
 
 
 	// 显示登录用户
@@ -234,11 +234,11 @@ $(document).ready(function() {
 				},
 				success: function(result) {
 					if(result.result == 'success') {
-						$('#info-collec-ul').append("<li class='collection-item'>"+result.data.email+"</li>");
-						$('#info-collec-ul').append("<li class='collection-item'>"+result.data.phone+"</li>");
-						$('#info-collec-ul').append("<li class='collection-item'>"+result.data.identity+"</li>");
-						$('#info-collec-ul').append("<li class='collection-item'>"+result.data.gender+"</li>");
-						$('#info-collec-ul').append("<li class='collection-item'>"+result.data.profile+"</li>");
+						$('#info-collec-ul').append("<li class='collection-item'>"+result.row.email+"</li>");
+						$('#info-collec-ul').append("<li class='collection-item'>"+result.row.phone+"</li>");
+						$('#info-collec-ul').append("<li class='collection-item'>"+result.row.identity+"</li>");
+						$('#info-collec-ul').append("<li class='collection-item'>"+result.row.gender+"</li>");
+						$('#info-collec-ul').append("<li class='collection-item'>"+result.row.profile+"</li>");
 					}
 					if(result.result == 'failure') {
 						alert('获取信息失败!\n' + result.error_msg);
