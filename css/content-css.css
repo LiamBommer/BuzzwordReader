@@ -17,6 +17,15 @@
 	padding: 10px 8px;
 	color: white;
 	background-color: #455a64;*/
-  z-index: 999;
+  /*z-index: 999;*/
 	background-color: white;
+}
+
+html, body, iframe {
+    margin: 0;
+    border: 0;
+    padding: 0;
+    display: block;
+    background: white;
+    color: black;
 }
