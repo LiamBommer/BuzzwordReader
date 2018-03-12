@@ -26,6 +26,8 @@ html, body, iframe {
     border: 0;
     padding: 0;
     display: block;
-    background: white;
-    color: black;
+}
+
+body {
+  background-color: transparent;
 }

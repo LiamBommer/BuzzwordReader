@@ -43,20 +43,42 @@ $('body').mouseup(function(e) {
 		// 创建一个，置为不可见
 		if($('#__result-div__').length == 0) {
 
-			// new method
+			/*
+			// new method to create an iframe
 			// Avoid recursive frame insertion...
 			var extensionOrigin = 'chrome-extension://' + chrome.runtime.id;
 			if(!location.ancestorOrigins.contains(extensionOrigin)) {
 				var iframe = document.createElement('iframe');
-                var url = 'content-scripts/iframe.html?entry=abc';
+                iframe.id = "BW-iframe";
 				// Must be declared at web_accessible_resources in manifest.json
+                var url = 'content-scripts/iframe.html?entry=abc';
     		    iframe.src = chrome.runtime.getURL(url);
 
+                iframe.allowTransparency = "true";
 				iframe.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;' +
                 'display:block;width:100%;height:100%;z-index:20394;border:0px;';
 				document.body.appendChild(iframe);
 			}
 
+            // send message to iframe
+            var $BW_iframe = $('#BW-iframe');
+            // ATTENTION: operations must be done after loaded
+            $BW_iframe.on('load', function() {
+                var data = {
+                    act: '',
+                    msg: 'Hello, this is BuzzwordReader'
+                };
+                $BW_iframe[0].contentWindow.postMessage(data, '*');
+            });
+
+            // receive message from iframe
+            window.addEventListener('message', function(event) {
+                if(event.data.act == 'close') {
+                    // close iframe
+                    $('#BW-iframe').remove();
+                }
+            }, false);
+						*/
 		}
 
 	}
