@@ -24,24 +24,23 @@
 
 	<nav class="teal lighten-1">
 		<div class="container">
-    		<div id="navigator" class="nav-wrapper">
-    			<a href="#" class="brand-logo left">Buzzword</a>
-    			<ul id="nav-mobile" class="right">
-    				<li><a href="#" id="username"></a></li>
-    				<li><a href="#" id="login-btn">登录</a></li>
-    				<li><a href="#" id="singup-btn">注册</a></li>
-
-    			</ul>
-    		</div>
+    	<div id="navigator" class="nav-wrapper">
+    		<a href="#" class="brand-logo left">Buzzword</a>
+    		<ul id="nav-mobile" class="right">
+    			<li><a href="#" id="username">user</a></li>
+    			<li><a href="#" id="login-btn"></a></li>
+    			<li><a href="#" id="signup-btn"></a></li>
+    		</ul>
+    	</div>
     	</div>
     </nav>
 
     <div id="search-modal">
     	<div class="container">
-			<p>请输入流行语关键字：</p>
+        <br>
+			<!-- <p>请输入流行语关键字：</p> -->
 			<nav class="green lighten-4">
 				<div class="nav-wrapper">
-					<form id="search-form">
 						<div class="input-field">
 							<input type="search" id="search"/>
 							<label for="search" class="label-icon">
@@ -49,7 +48,6 @@
 							</label>
 							<i class="material-icons">close</i>
 						</div>
-					</form>
 				</div>
 			</nav>
 		</div>
@@ -71,40 +69,46 @@
 		<nav class="nav-extended teal lighten-1">
 			<div class="nav-content">
 				<ul class="tabs tabs-transparent">
-					<li id="top-meaning" class="tab"><a href="#">置顶释义</a></li>
-					<li id="other-meaning" class="tab"><a class="active" href="#">其他释义</a></li>
+					<li class="tab"><a class="active" href="#top-meaning">置顶释义</a></li>
+					<li class="tab"><a href="#other-meaning">其他释义</a></li>
 				</ul>
 			</div>
 		</nav>
 
+    <div id="top-meaning">
+      <div class="container" >
+  			<h1 id="entry-heading"></h1>
+  			<div class="divider"></div>
+  			<div class="section">
+  				<p id="entry-meaning"></p>
+  				<p id="entry-source"></p>
+  			</div>
+  		</div>
 
-		<div class="container">
-			<h1 id="entry-heading">老铁</h1>
-			<div class="divider"></div>
-			<div class="section">
-				<p id="entry-meaning">老铁，网络流行词，东北方言，对“哥们”的别称，类似的变形称呼还有“铁子”，“铁哥们”等称呼，意思都是一样的，说的是关系亲近，牢靠，值得信任。解释形容朋友之间的关系非常好。</p>
-				<p id="entry-source">来源icon</p>
-			</div>
-		</div>
+  		<div class="fixed-action-btn">
+  			<a class="btn-floating"><i class="large material-icons">add</i></a>
+  			<ul>
+  				<li><a class="btn-floating red" id="add-meaning"><i class="material-icons">edit</i></a></li>
+  				<li><a class="btn-floating yellow darken-1" id="add-entry"><i class="material-icons">border_color</i></a></li>
+  				<li><a class="btn-floating green" id="report"><i class="material-icons">report</i></a></li>
+  				<li><a class="btn-floating blue" id="return-search"><i class="material-icons">search</i></a></li>
+  			</ul>
+  		</div>
 
-		<div class="fixed-action-btn">
-			<a class="btn-floating"><i class="large material-icons">add</i></a>
-			<ul>
-				<li id="add-meaning"><a class="btn-floating red"><i class="material-icons">edit</i></a></li>
-				<li id="add-entry"><a class="btn-floating yellow darken-1"><i class="material-icons">border_color</i></a></li>
-				<li id="report"><a class="btn-floating green"><i class="material-icons">report</i></a></li>
-				<li id="search"><a class="btn-floating blue"><i class="material-icons">search</i></a></li>
-			</ul>
-		</div>
+  		<nav class="teal lighten-2">
+  			<div class="container nav-wrapper">
+  				<ul id="nav-mobile" class="left">
+  					<li><a href="#">赞</a></li>
+  					<li><a href="#">踩</a></li>
+  				</ul>
+  			</div>
+  		</nav>
+    </div>
 
-		<nav class="teal lighten-2">
-			<div class="container nav-wrapper">
-				<ul id="nav-mobile" class="left">
-					<li><a href="#">赞</a></li>
-					<li><a href="#">踩</a></li>
-				</ul>
-			</div>
-		</nav>
+    <div id="other-meaning">
+      <div class="divider"></div>
+    </div>
+
 	</div>
 
 </body>
