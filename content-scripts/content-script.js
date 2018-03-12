@@ -43,7 +43,6 @@ $('body').mouseup(function(e) {
 		// 创建一个，置为不可见
 		if($('#__result-div__').length == 0) {
 
-			/*
 			// new method to create an iframe
 			// Avoid recursive frame insertion...
 			var extensionOrigin = 'chrome-extension://' + chrome.runtime.id;
@@ -78,7 +77,6 @@ $('body').mouseup(function(e) {
                     $('#BW-iframe').remove();
                 }
             }, false);
-						*/
 		}
 
 	}

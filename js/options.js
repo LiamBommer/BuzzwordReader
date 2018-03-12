@@ -351,7 +351,8 @@ $(document).ready(function() {
 	* 待完成功能：
 	*
 	*/
-	document.getElementById('search-field').onsearch=function() {
+	// document.getElementById('search-field').onsearch=function() {
+	document.getElementById('search-field').addEventListener('search', function() {
 
 		// 清空结果
 		$('#search-result-div').html('');
@@ -406,7 +407,7 @@ $(document).ready(function() {
 		});
 
 
-	};
+	});
 
 
 	/*
