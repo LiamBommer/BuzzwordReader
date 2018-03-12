@@ -1,9 +1,14 @@
+/*
+ * Reference to:
+ *	https://stackoverflow.com/questions/24641592/injecting-iframe-into-page-with-restrictive-content-security-policy
+ */
 
 var selected = "";
 
 
 /*
  * 鼠标点击后松开的事件
+ *
  */
 $('body').mouseup(function(e) {
 
@@ -14,28 +19,20 @@ $('body').mouseup(function(e) {
 		selected = window.getSelection();
 	}
 
-	// 若有选中文本
+	// 若选中不为空
 	if(selected != "") {
 
 		// 提示框html代码，用于后面插入时使用
 		var float_div_html = "<div id='__float-div__' " +
 			" class='bw-btn'>BW</div>";
-		/*
-		 *	结果框html代码，用于后面插入时使用
-		 */
-		var result_div_html = "<iframe id='__result-div__' class=' '" +
-			" frameborder=0 width=300 height=300></iframe>";
-		var materializecss_html = "<link type='text/css' rel='stylesheet' href='/css/materialize.min.css'  media='screen,projection'/>";
-		var css_html= "<link type='text/css' rel='stylesheet' href='/css/content-css.css' />";
-		var jquery_html = "<script type='text/javascript' src='/js/jquery-3.2.1.min.js'></script>";
-		var materializejs_html = "<script type='text/javascript' src='/js/materialize.min.js'></script>";
-
 
 		// 判断浮动框是否存在
 		if($('#__float-div__').length > 0) {
-			// 存在，则改为可见，并更改位置
+
+			// 浮动框存在
+			// 则改为可见，并更改其位置至鼠标旁边
 			$('#__float-div__').css({'display': 'inline-block',
-					'top': e.clientY+3+'px', 'left': e.clientX+3+'px'});
+					'top': e.clientY+5+'px', 'left': e.clientX+5+'px'});
 		} else {
 			// 不存在，创建一个
 			$('body').append(float_div_html);
@@ -43,15 +40,45 @@ $('body').mouseup(function(e) {
 		}
 
 		// 若结果框不存在
-		// 创建一个，置为不可见， 并插入css与jquery文件
+		// 创建一个，置为不可见
 		if($('#__result-div__').length == 0) {
-			$('body').append(result_div_html);
-			$('#__result-div__').css({'top': e.clientY+3+'px', 'left': e.clientX+3+'px'});
-			$('#__result-div__').contents().find('head').append(materializecss_html);
-			$('#__result-div__').contents().find('head').append(css_html);
-			$('#__result-div__').contents().find('head').append(jquery_html);
-			$('#__result-div__').contents().find('head').append(materializejs_html);
 
+			/*
+			// new method to create an iframe
+			// Avoid recursive frame insertion...
+			var extensionOrigin = 'chrome-extension://' + chrome.runtime.id;
+			if(!location.ancestorOrigins.contains(extensionOrigin)) {
+				var iframe = document.createElement('iframe');
+                iframe.id = "BW-iframe";
+				// Must be declared at web_accessible_resources in manifest.json
+                var url = 'content-scripts/iframe.html?entry=abc';
+    		    iframe.src = chrome.runtime.getURL(url);
+
+                iframe.allowTransparency = "true";
+				iframe.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;' +
+                'display:block;width:100%;height:100%;z-index:20394;border:0px;';
+				document.body.appendChild(iframe);
+			}
+
+            // send message to iframe
+            var $BW_iframe = $('#BW-iframe');
+            // ATTENTION: operations must be done after loaded
+            $BW_iframe.on('load', function() {
+                var data = {
+                    act: '',
+                    msg: 'Hello, this is BuzzwordReader'
+                };
+                $BW_iframe[0].contentWindow.postMessage(data, '*');
+            });
+
+            // receive message from iframe
+            window.addEventListener('message', function(event) {
+                if(event.data.act == 'close') {
+                    // close iframe
+                    $('#BW-iframe').remove();
+                }
+            }, false);
+						*/
 		}
 
 	}
@@ -72,8 +99,10 @@ $('body').delegate('#__float-div__', 'mousedown', function(event) {
 	event.stopPropagation();
 
 	// 显示结果框
-	$('#__result-div__').css({'display': 'block',
-					'top': event.clientY+3+'px', 'left': event.clientX+3+'px'});
+	// $('#__result-div__').css({'display': 'block',
+	// 				'top': event.clientY+3+'px', 'left': event.clientX+3+'px'});
+	$('#__result-div__').css({'display': 'block'});
+
 
 
 	// 从background-script中获得查询结果的json字符串

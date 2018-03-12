@@ -27,9 +27,9 @@ $(document).ready(function() {
 	$('#delete-inte-modal').modal();
 
 	// 本机测试用服务器
-	var server_url = 'http://127.0.0.1/BuzzwordReader/';
+	// var server_url = 'http://127.0.0.1/BuzzwordReader/';
 	// 生产环境公网服务器
-	// var server_url = 'http://119.29.58.165:81/index.php/';
+	var server_url = 'http://119.29.58.165:81/index.php/';
 
 
 	// 显示登录用户

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>BuzzwordReader | Entry</title>
+	<!-- Import Materialize min Css -->
+	<link rel="stylesheet" href="/css/materialize.min.css">
+	<link rel="stylesheet" href="/css/content-css.css">
+	<!--Import Google Icon Font-->
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+    </style>
+</head>
+<body>
+	<!-- Import jQuery & Materialize min js -->
+	<script type="text/javascript" src="/js/jquery-3.2.1.min.js"></script>
+	<script type="text/javascript" src="/js/materialize.min.js"></script>
+	<script type="text/javascript" src="/js/iframe.js"></script>
+
+  <div id="login-modal" class="modal modal-fixed-footer">
+    <form id="login-form">
+      <div class="modal-content">
+        <h4>登录</h4>
+        <div class="divider"></div>
+        <div class="row">
+          <div class="input-field col m5">
+            <i class="material-icons prefix">email</i>
+            <input type="email" id="email-login" name="email" class="validate">
+            <label for="email">Email</label>
+          </div>
+          <div class="input-field col m1">
+            <h5>OR</h5>
+          </div>
+          <div class="input-field col m6">
+            <i class="material-icons prefix">phone</i>
+            <input type="text" id="phone-login" name="phone" class="validate">
+            <label for="phone">Phone Number</label>
+          </div>
+          <div class="input-field col m12">
+            <i class="material-icons prefix">lock</i>
+            <input type="password" id="password-login" name="password" class="validate">
+            <label for="passwrod">Password</label>
+          </div>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="modal-footer">
+        <a href="#" class="modal-action modal-close waves-effect
+          waves-black btn-flat">取消</a>
+        <button id="login-btn" type="submit" class="modal-action waves-effect
+          waves-green btn-flat">登录</a>
+      </div>
+    </form>
+  </div>
+
+</body>
+</html>

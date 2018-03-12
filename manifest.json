@@ -36,10 +36,15 @@
       {
         "matches": ["http://*/*", "https://*/*"],
         "js": ["js/jquery-3.2.1.min.js",
-            "js/materialize.min.js", 
             "content-scripts/content-script.js"],
-        "css": ["css/content-css.css", "css/adapted-materializecss.css"]
+        "css": ["css/content-css.css", "css/adapted-materializecss.css"],
+        "all_frames": true
       }
+    ],
+
+    "web_accessible_resources": [
+        "content-scripts/iframe.html",
+        "js/iframe.js"
     ],
 
     "options_page": "options-page/options.html"
