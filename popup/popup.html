@@ -22,7 +22,7 @@
 	<script type="text/javascript" src="/js/materialize.min.js"></script>
 	<script type="text/javascript" src="/js/popup.js"></script>
 
-	<nav class="teal lighten-1">
+  <nav class="teal lighten-1">
 		<div class="container">
     	<div id="navigator" class="nav-wrapper">
     		<a href="#" class="brand-logo left">Buzzword</a>
@@ -32,22 +32,21 @@
     			<li><a href="#" id="signup-btn"></a></li>
     		</ul>
     	</div>
-    	</div>
-    </nav>
+    </div>
+  </nav>
 
-    <div id="search-modal">
-    	<div class="container">
-        <br>
+  <div id="search-modal">
+    <div class="container"><br>
 			<!-- <p>请输入流行语关键字：</p> -->
 			<nav class="green lighten-4">
 				<div class="nav-wrapper">
-						<div class="input-field">
-							<input type="search" id="search"/>
-							<label for="search" class="label-icon">
-								<i class="material-icons">search</i>
-							</label>
-							<i class="material-icons">close</i>
-						</div>
+					<div class="input-field">
+						<input type="search" id="search"/>
+						<label for="search" class="label-icon">
+							<i class="material-icons">search</i>
+						</label>
+						<i class="material-icons">close</i>
+					</div>
 				</div>
 			</nav>
 		</div>
@@ -56,14 +55,21 @@
 		<div class="divider"></div>
 
 		<section>
-			<div class="container result-title-div">
+			<div class="container result-title-div" id="result-div">
 				<p>你可能寻找的是：</p>
 				<div id="result-chips" class="result-div">
 					<!-- Result here -->
 				</div>
 			</div>
+
+      <div class="container" id="result-not-found">
+        <span>没有查询到相关结果</span>
+        <a class="btn-floating btn-tiny waves-effect waves-light add-entry-meaning right">
+        <i class="material-icons" >edit</i></a>
+        <br/>
+      </div>
 		</section>
-    </div>
+  </div>
 
 	<div id="entry-modal">
 		<nav class="nav-extended teal lighten-1">
@@ -81,14 +87,14 @@
   			<div class="divider"></div>
   			<div class="section">
   				<p id="entry-meaning"></p>
-  				<p id="entry-source"></p>
+  				<p id="meaning-source"></p>
   			</div>
   		</div>
 
   		<div class="fixed-action-btn">
   			<a class="btn-floating"><i class="large material-icons">add</i></a>
   			<ul>
-  				<li><a class="btn-floating red" id="add-meaning"><i class="material-icons">edit</i></a></li>
+  				<li><a class="btn-floating red add-entry-meaning" id="add-meaning"><i class="material-icons">edit</i></a></li>
   				<li><a class="btn-floating yellow darken-1" id="add-entry"><i class="material-icons">border_color</i></a></li>
   				<li><a class="btn-floating green" id="report"><i class="material-icons">report</i></a></li>
   				<li><a class="btn-floating blue" id="return-search"><i class="material-icons">search</i></a></li>
