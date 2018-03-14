@@ -3,26 +3,50 @@
 *	https://stackoverflow.com/questions/24641592/injecting-iframe-into-page-with-restrictive-content-security-policy
 */
 
-var selected = "";
 var mouseoverTimer;
 var mouseoutTimer;
+var finalSelected = 'a';
 
+/*
+ * 划取区域的类
+ * selected （应该）是节点或对象，所以需要
+ * finalSelected 来保存其字符串值
+ */
+function Select() {
+	var selectItem = new Object();
+	selectItem.selected = "";
+	selectItem.finalSelected = "";
+	selectItem.setSelected = function() {
+		// 获取选取文本
+		if(document.selection) {
+			this.selected = document.selection.createRange().text;
+		} else if(window.getSelection()) {
+			this.selected = window.getSelection();
+		}
+		this.finalSelected = this.selected.toString();
+	}
+	selectItem.getSelected = function() {
+		return this.selected;
+	}
+	selectItem.getFinalSelected = function() {
+		return this.finalSelected;
+	}
+	return selectItem;
+}
+
+var selectItem = new Select();
 
 /*
 * 鼠标点击后松开的事件
 *
 */
-$('body').mouseup(function(e) {
+$('body').on('mouseup', function(e) {
 
-	// 获取选取文本
-	if(document.selection) {
-		selected = document.selection.createRange().text;
-	} else if(window.getSelection()) {
-		selected = window.getSelection();
-	}
-
+	// // 获取选取文本
+	selectItem.setSelected();
+	// alert(selectItem.getSelected().toString()+","+ selectItem.getFinalSelected());
 	// 若选中不为空		此处选择有bug:双击空白会出现按钮
-	if(selected != "") {
+	if(selectItem.getSelected() != "") {
 
 		// 提示框html代码，用于后面插入时使用
 		var float_div_html = "<a id='__float-div__' " +
@@ -56,79 +80,62 @@ $('body').mouseup(function(e) {
 
 });
 
+
 /*
 * 提示框点击事件,这种方法才能使动态添加的元素绑定事件
 */
-$('body').delegate('#__float-div__', 'click', function(event) {
+$('body').on('click', '#__float-div__', function(event) {
 
-	// 阻止继承父元素的事件
-	event.stopPropagation();
+	if(selectItem.getFinalSelected() != "") {
 
-	/*
-	* 从background-script中获得查询结果的json字符串
-	*/
+		// create an iframe		(new method)
+		// Avoid recursive frame insertion...
+		var extensionOrigin = 'chrome-extension://' + chrome.runtime.id;
+		if(!location.ancestorOrigins.contains(extensionOrigin)) {
+			var iframe = document.createElement('iframe');
+			iframe.id = "BW-iframe";
+			// Must be declared at web_accessible_resources in manifest.json
+			var url = 'content-scripts/iframe.html?entry=abc';
+			iframe.src = chrome.runtime.getURL(url);
 
-	// var request = {"type": "search", "keyword": selected.toString() };
-	// chrome.runtime.sendMessage(request, function(result) {
-	// 	// 将结果写入框内
-	// 	$('#__result-div__').contents().find('body').empty();
-	// 	$('#__result-div__').contents().find('body').append(
-	// 		"<div class='container'><h4>You might be looking for: </h4></div>");
-	//
-	// 	// 若无词条内容，则写未找到		有内容则写入内容
-	// 	if(result.total == 0) {
-	// 		$('#__result-div__').contents().find('body').append('<p>暂时未找到词条！</p>');
-	// 	} else {
-	// 		for(item in result.entry_name) {
-	// 			$('#__result-div__').append('<p>'+result.entry_name[item]+'</p>');
-	// 		}
-	// 	}
-	// });
+			iframe.allowTransparency = "true";
+			iframe.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;' +
+			'display:block;width:100%;height:100%;z-index:20394;border:0px;';
+			document.body.appendChild(iframe);
+		}
 
+		// send message to iframe
+		var $BW_iframe = $('#BW-iframe');
+		// ATTENTION: operations must be done after loaded
+		$BW_iframe.on('load', function() {
+			var data = {
+				act: 'search_content',
+				msg: selectItem.getFinalSelected()
+			};
+			$BW_iframe[0].contentWindow.postMessage(data, '*');
+		});
 
-	// create an iframe		(new method)
-	// Avoid recursive frame insertion...
-	var extensionOrigin = 'chrome-extension://' + chrome.runtime.id;
-	if(!location.ancestorOrigins.contains(extensionOrigin)) {
-		var iframe = document.createElement('iframe');
-		iframe.id = "BW-iframe";
-		// Must be declared at web_accessible_resources in manifest.json
-		var url = 'content-scripts/iframe.html?entry=abc';
-		iframe.src = chrome.runtime.getURL(url);
+		// receive message from iframe
+		window.addEventListener('message', function(event) {
+			if(event.data.act == 'close') {
+				// close iframe
+				$('#BW-iframe').remove();
+			}
+		}, false);
 
-		iframe.allowTransparency = "true";
-		iframe.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;' +
-		'display:block;width:100%;height:100%;z-index:20394;border:0px;';
-		document.body.appendChild(iframe);
+	} else {
+		alert('null');
 	}
 
-	// send message to iframe
-	var $BW_iframe = $('#BW-iframe');
-	// ATTENTION: operations must be done after loaded
-	$BW_iframe.on('load', function() {
-		var data = {
-			act: '',
-			msg: 'Hello, this is BuzzwordReader'
-		};
-		$BW_iframe[0].contentWindow.postMessage(data, '*');
-	});
-
-	// receive message from iframe
-	window.addEventListener('message', function(event) {
-		if(event.data.act == 'close') {
-			// close iframe
-			$('#BW-iframe').remove();
-		}
-	}, false);
 });
 
 
 /*
 * 不继承父类事件，并关闭提示框
 */
-$('body').delegate('#__float-div__', 'mouseup', function(event) {
+$('body').on('mouseup', '#__float-div__', function(event) {
 	event.stopPropagation();
-	$('#__float-div__').css({'display': 'none'});
+	$('#__float-div__').css({'display':'none'});
 });
 // 不继承父类鼠标事件
 // $('body').delegate('#__result-div__', 'mousedown', function(event) {
@@ -142,7 +149,7 @@ $('body').delegate('#__float-div__', 'mouseup', function(event) {
 /*
 * 按钮悬浮改变类的事件
 */
-$('body').delegate( '#__float-div__', 'mouseover',function() {
+$('body').on('mouseover', '#__float-div__', function() {
 
 	$('#__float-div__').removeClass('disabled');
 
@@ -153,7 +160,7 @@ $('body').delegate( '#__float-div__', 'mouseover',function() {
 	},1000);
 
 });
-$('body').delegate( '#__float-div__', 'mouseout',function() {
+$('body').on('mouseout', '#__float-div__', function() {
 
 	$('#__float-div__').addClass('disabled');
 	$('#__float-div__').removeClass('pulse');
