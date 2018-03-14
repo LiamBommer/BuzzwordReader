@@ -10,7 +10,7 @@ This is an Chrome Extension built for exploring, sharing and defining buzzwords 
 
 1. **Download** or **clone** the extension from github, branch master will work.
 2. Open Chrome, type in url
-> chrome://extension
+> chrome://extensions
 
 3. click **Develop Mode** radio on the up-right corner.
 4. click the first button **Load Unpacked extension** and select the extension folder you downloaded or cloned.
@@ -48,7 +48,7 @@ BuzzwordReader作为一款谷歌插件能快速查找，分享和定义网络流
 
 1. 从github上 **下载** 或 **克隆** master分支。
 2. 打开Chrome浏览器，输入url
-> chrome://extension
+> chrome://extensions
 
 3. 点击右上角的 **开发者模式** （Developer Mode)
 4. 点击下面一行 **加载未压缩插件** (Load unpacked extension)
