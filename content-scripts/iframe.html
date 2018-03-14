@@ -46,7 +46,7 @@
 		</template>
 
 		<div class="row" >
-			<div class="col m11" v-for="entry in entry_list">
+			<!-- <div class="col m11" v-for="entry in entry_list">
 				<div class="card">
 					<div class="card-content">
 						<span class="card-title" >
@@ -55,7 +55,10 @@
 					</div>
 					<div class="card-action"></div>
 				</div>
-			</div>
+			</div> -->
+				<div class="collection">
+					<a class="collection-item" v-for="entry in entry_list">{{ entry.name }}</a>
+				</div>
 		</div>
 
   </div>
