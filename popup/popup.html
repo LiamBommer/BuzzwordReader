@@ -27,9 +27,9 @@
     	<div id="navigator" class="nav-wrapper">
     		<a href="#" class="brand-logo left">Buzzword</a>
     		<ul id="nav-mobile" class="right">
-    			<li><a href="#" id="username">user</a></li>
-    			<li><a href="#" id="login-btn"></a></li>
-    			<li><a href="#" id="signup-btn"></a></li>
+    			<li><a href="#" class="waves-effect modal-trigger" id="username">user</a></li>
+    			<li><a href="#" class="waves-effect modal-trigger" id="login-btn"></a></li>
+    			<li><a href="#" class="waves-effect modal-trigger" id="signup-btn"></a></li>
     		</ul>
     	</div>
     </div>
@@ -52,22 +52,24 @@
 		</div>
 
 		<br/>
-		<div class="divider"></div>
-
+    <div class="divider"></div>
 		<section>
-			<div class="container result-title-div" id="result-div">
+
+			<div class="container result-title-div" id="results-div">
 				<p>你可能寻找的是：</p>
-				<div id="result-chips" class="result-div">
+				<div id="result-collection" class="result-div collection">
 					<!-- Result here -->
 				</div>
 			</div>
 
       <div class="container" id="result-not-found">
-        <span>没有查询到相关结果</span>
-        <a class="btn-floating btn-tiny waves-effect waves-light add-entry-meaning right">
+        <p>没有查询到相关结果</p>
+        <p>你可以申请添加词条并编辑释义和来源。</p>
+        <span>点击右侧的图标可申请添加词条</span>
+        <a class="btn-floating btn-tiny right waves-light waves-effect waves-teal" id="add-entry-meaning">
         <i class="material-icons" >edit</i></a>
-        <br/>
       </div>
+
 		</section>
   </div>
 
@@ -94,7 +96,7 @@
   		<div class="fixed-action-btn">
   			<a class="btn-floating"><i class="large material-icons">add</i></a>
   			<ul>
-  				<li><a class="btn-floating red add-entry-meaning" id="add-meaning"><i class="material-icons">edit</i></a></li>
+  				<li><a class="btn-floating red" id="add-meaning"><i class="material-icons">edit</i></a></li>
   				<li><a class="btn-floating yellow darken-1" id="add-entry"><i class="material-icons">border_color</i></a></li>
   				<li><a class="btn-floating green" id="report"><i class="material-icons">report</i></a></li>
   				<li><a class="btn-floating blue" id="return-search"><i class="material-icons">search</i></a></li>

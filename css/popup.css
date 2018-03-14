@@ -37,3 +37,24 @@ span{
 #search-modal{
 
 }
+
+#results-div{
+
+}
+
+#result-not-found{
+	display: none;
+}
+
+#add-entry-meaning{
+	position: relative;
+	bottom: 12px;
+}
+
+#result-collection{
+	display: none;
+}
+
+.collection-item{
+	font-size: medium;
+}

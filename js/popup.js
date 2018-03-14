@@ -25,34 +25,31 @@ $(document).ready(function() {
 
 				success: function(result) {
 					console.log(JSON.stringify(result));
+
+					$('#result-collection').html('');
+
 					if(result.result == 'empty') {
-						$('#search-result-div').append("<br/><h6>没有相关结果</h6>");
+						$('#result-not-found').show();
 						return;
 					}
 
-					for(i in result) {
-						var html = "<div class='col l4 m6 s12'>" +
-						"<div class='card z-depth-2'>" +
-						"<div class='card-content'>" +
-						"<a class='modal-trigger' href='#entry-modal'>" +
-						"<span class='card-title'>"+result[i].name+"</span>" +
-						"</a>" +
-						"<p>"+result[i].id_entry+"</p>" +
-						"<p>是否已开放: "+result[i].is_open+"</p>" +
-						"<p>请求次数: "+result[i].request+"</p>" +
-						"<p>创建时间: "+result[i].datetime+"</p>";
-						html += "</div>" +
-						"</div>" +
-						"</div>";
-						$('#search-result-div').append(html);
+					if($('#result-not-found').css('display') != 'none'){
+						$('#result-not-found').hide();
 					}
+
+					for(i in result) {
+						var html = "<a href='#' class='collection-item' id='entry_no"+i+"'>"+result[i].name+"</a>";
+						$('#result-collection').append(html);
+					}
+					$('#result-collection').show();
+
 				},
 
 				error: function(error) {
 					alert('查询请求错误，请重试');
 					console.log(JSON.stringify(error));
 					// error display
-					$('#search-result-div').html(error.responseText);
+					$('.section').html(error.responseText);
 					return;
 				},
 				scriptCharset: 'utf-8'
@@ -60,9 +57,6 @@ $(document).ready(function() {
 
       // 测试用
 			// alert(entry_content);
-
-			$("#entry-modal").show();
-			$("#search-modal").hide();
 		}
 	};
 
