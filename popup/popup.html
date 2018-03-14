@@ -22,48 +22,56 @@
 	<script type="text/javascript" src="/js/materialize.min.js"></script>
 	<script type="text/javascript" src="/js/popup.js"></script>
 
-	<nav class="teal lighten-1">
+  <nav class="teal lighten-1">
 		<div class="container">
     	<div id="navigator" class="nav-wrapper">
     		<a href="#" class="brand-logo left">Buzzword</a>
     		<ul id="nav-mobile" class="right">
-    			<li><a href="#" id="username">user</a></li>
-    			<li><a href="#" id="login-btn"></a></li>
-    			<li><a href="#" id="signup-btn"></a></li>
+    			<li><a href="#" class="waves-effect modal-trigger" id="username">user</a></li>
+    			<li><a href="#" class="waves-effect modal-trigger" id="login-btn"></a></li>
+    			<li><a href="#" class="waves-effect modal-trigger" id="signup-btn"></a></li>
     		</ul>
     	</div>
-    	</div>
-    </nav>
+    </div>
+  </nav>
 
-    <div id="search-modal">
-    	<div class="container">
-        <br>
+  <div id="search-modal">
+    <div class="container"><br>
 			<!-- <p>请输入流行语关键字：</p> -->
 			<nav class="green lighten-4">
 				<div class="nav-wrapper">
-						<div class="input-field">
-							<input type="search" id="search"/>
-							<label for="search" class="label-icon">
-								<i class="material-icons">search</i>
-							</label>
-							<i class="material-icons">close</i>
-						</div>
+					<div class="input-field">
+						<input type="search" id="search"/>
+						<label for="search" class="label-icon">
+							<i class="material-icons">search</i>
+						</label>
+						<i class="material-icons">close</i>
+					</div>
 				</div>
 			</nav>
 		</div>
 
 		<br/>
-		<div class="divider"></div>
-
+    <div class="divider"></div>
 		<section>
-			<div class="container result-title-div">
+
+			<div class="container result-title-div" id="results-div">
 				<p>你可能寻找的是：</p>
-				<div id="result-chips" class="result-div">
+				<div id="result-collection" class="result-div collection">
 					<!-- Result here -->
 				</div>
 			</div>
+
+      <div class="container" id="result-not-found">
+        <p>没有查询到相关结果</p>
+        <p>你可以申请添加词条并编辑释义和来源。</p>
+        <span>点击右侧的图标可申请添加词条</span>
+        <a class="btn-floating btn-tiny right waves-light waves-effect waves-teal" id="add-entry-meaning">
+        <i class="material-icons" >edit</i></a>
+      </div>
+
 		</section>
-    </div>
+  </div>
 
 	<div id="entry-modal">
 		<nav class="nav-extended teal lighten-1">
@@ -81,7 +89,7 @@
   			<div class="divider"></div>
   			<div class="section">
   				<p id="entry-meaning"></p>
-  				<p id="entry-source"></p>
+  				<p id="meaning-source"></p>
   			</div>
   		</div>
 
