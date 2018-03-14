@@ -31,3 +31,9 @@ html, body, iframe {
 body {
   background-color: transparent;
 }
+
+#close-btn {
+	position: fixed;
+	right: 20px;
+	top: 25px;
+}

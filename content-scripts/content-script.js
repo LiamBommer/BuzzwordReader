@@ -14,8 +14,9 @@ var finalSelected = 'a';
  */
 function Select() {
 	var selectItem = new Object();
-	selectItem.selected = "";
-	selectItem.finalSelected = "";
+	// 私有
+	var selected = "";
+	var finalSelected = "";
 	selectItem.setSelected = function() {
 		// 获取选取文本
 		if(document.selection) {
@@ -44,7 +45,7 @@ $('body').on('mouseup', function(e) {
 
 	// // 获取选取文本
 	selectItem.setSelected();
-	// alert(selectItem.getSelected().toString()+","+ selectItem.getFinalSelected());
+
 	// 若选中不为空		此处选择有bug:双击空白会出现按钮
 	if(selectItem.getSelected() != "") {
 
@@ -58,14 +59,14 @@ $('body').on('mouseup', function(e) {
 			// 浮动框存在
 			// 则改为可见，并更改其位置至鼠标旁边
 			$('#__float-div__').css({'display': 'block',
-			'top': e.clientY+5+'px', 'left': e.clientX+5+'px'});
+			'top': e.clientY+7+'px', 'left': e.clientX+7+'px'});
 
 			clearTimeout(mouseoutTimer);
 
 		} else {
 			// 不存在，创建一个
 			$('body').append(float_div_html);
-			$('#__float-div__').css({'top': e.clientY+3+'px', 'left': e.clientX+3+'px'});
+			$('#__float-div__').css({'top': e.clientY+7+'px', 'left': e.clientX+7+'px'});
 
 			// 未放置则3秒自动消失
 			mouseoutTimer = setTimeout(function() {

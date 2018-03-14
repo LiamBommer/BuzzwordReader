@@ -9,7 +9,8 @@
 * adapted: .
 */
 .btn-floating i {
-  font-size: 1.3rem;
+  /*font-size: 1.3rem;*/
+  font-size: 12px;
   line-height: inherit;
 }
 .btn-floating {
