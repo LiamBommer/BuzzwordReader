@@ -84,7 +84,16 @@ $(document).ready(function() {
 					},
 					scriptCharset: 'utf-8'
 				});
-		  }
+		  },
+			inte(id_entry, name_entry) {
+				// 将词条id赋值给释义列表页面
+				this.$emit('id_entry_pass', {
+					id_entry: id_entry,
+					name_entry: name_entry
+				});
+				// 更改视图
+				search_entry_vue.currentView = 'inte-list';
+			}
 		},
 		created() {
 		  // 在创建后自动查询传来的词条名
@@ -124,8 +133,9 @@ $(document).ready(function() {
 			<div class="row">
 				<div class="col m11">
 					<div class="input-field">
-						<input type="search" v-model="search_input"
-						v-on:keyup.enter="search" id="search"/>
+						<input type="search" id="search"
+						v-model="search_input"
+						v-on:keyup.enter="search" />
 						<i class="material-icons" >search</i>
 					</div>
 				</div>
@@ -147,7 +157,9 @@ $(document).ready(function() {
 					<div class="collection">
 						<a class="collection-item"
 						v-for="entry in entrys"
-						v-bind:key="entry.id_entry">{{ entry.name }}</a>
+						v-bind:key="entry.id_entry"
+						v-on:click="inte(entry.id_entry, entry.name)">
+						{{ entry.name }}</a>
 					</div>
 			</div>
 			`
@@ -159,15 +171,84 @@ $(document).ready(function() {
 	 *   某词条具体释义列表
 	 */
 	var Inte_List= {
+		props: ['prop_id_entry', 'prop_name_entry'],
 		data: function() {
 			return {
+				id_entry: this.prop_id_entry,
+				intes: [],
+				likes: []
 			}
 		},
 		methods: {
+			// 从Entry_List中接收词条id
+			back_to_entry() {
+				// 返回词条列表组件
+				search_entry_vue.currentView = 'entry-list';
+			}
 		},
 		created() {
+			var _this = this;
+			if(_this.id_entry != -1) {
+				// 查找词条下的释义
+				$.ajax({
+					type:'GET',
+					url: server_url + 'Entry/search_inte/',
+					dataType: 'json',
+					data: {
+						entry_id: _this.id_entry
+					},
+					success: function(result) {
+						console.log("总结果数组: "+JSON.stringify(result));
+						if(result.result == 'empty') {
+							return;
+						}
+						for(i in result.inte) {
+							_this.intes.push(result.inte[i]);
+							// var like = result.like.filter(item => item.id_interpretation == result.inte[i].id_interpretation);
+							// html += "<a class='chip like-btn' style='cursor:pointer;'>赞"+
+							// 	like[0].like_total+"<i class='material-icons'>arrow_drop_up</i></a>";
+						}
+						// _this.like.push(result.like);
+						console.log("点赞数组: "+JSON.stringify(_this.like))
+					},
+					error: function(error) {
+						alert('查询请求错误，请重试');
+						console.log(JSON.stringify(error));
+						// error display
+						return;
+					},
+					scriptCharset: 'utf-8'
+				});
+			} else {
+				// 获取不到词条id
+				alert('id_entry = '+_this.id_entry);
+				return;
+			}
 		},
 		template: `
+			<div class="row">
+				<div class="col m1">
+					<i class="material-icons small" id="back-btn"
+					v-on:click="back_to_entry">arrow_back</i>
+				</div>
+				<div class="col m10">
+					<h5 class="entry-title">{{ prop_name_entry }}</h5>
+				</div>
+				<div class="col m1">
+					<i class="material-icons small modal-action modal-close" id="close-btn">close</i>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col m12">
+					<ul class="collapsible">
+						<li>
+							<div class="collapsible-header"></div>
+							<div class="collapsible-body"></div>
+						</li>
+					</ul>
+				</div>
+			</div>
 			`
 	}
 
@@ -178,11 +259,17 @@ $(document).ready(function() {
 	var search_entry_vue = new Vue({
 		el: '#search-entry-div',
 		data: {
-			currentView: 'entry-list',
+			id_entry: -1,
+			name_entry: 'entry_name',
+			currentView: 'entry-list'
 		},
 		methods: {
-		},
-		created() {
+			// 接收来自Entry List的Entry Id
+			// 并传到Inte List中
+			passEntryId: function(data) {
+				this.id_entry = data.id_entry;
+				this.name_entry = data.name_entry;
+			}
 		},
 		components: {
 		  'entry-list': Entry_list,

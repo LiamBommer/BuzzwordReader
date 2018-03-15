@@ -35,7 +35,18 @@ body {
 #close-btn {
 	position: fixed;
 	right: 20px;
-	top: 25px;
+	top: 18px;
+}
+
+#back-btn {
+	position: fixed;
+	left: 20px;
+	top: 18px;
+	cursor: pointer;
+}
+
+h5.entry-title {
+	margin-bottom: 0px;
 }
 
 /*
