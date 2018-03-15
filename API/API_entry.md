@@ -33,9 +33,6 @@ id_entry, name, is_open, request, datetime
 
 ### @return
 
-* result **在搜索结果为空时返回**
-> 'empty'
-
 * inte (释义数组)
 > id_interpretation, id_entry, id_user, interpretation, resource, datetime
 

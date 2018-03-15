@@ -21,47 +21,17 @@
 	<script type="text/javascript" src="/js/vue.js"></script>
 	<script type="text/javascript" src="/js/iframe.js"></script>
 
-  <div id="search-entry-div" class="modal modal-fixed-footer white">
+<div id="search-entry-div" class="modal modal-fixed-footer white">
 
-		<div class="row">
-			<div class="col m11">
-				<div class="input-field">
-					<input type="search" v-model="search_input"
-					v-on:keyup.enter="search" id="search"/>
-					<i class="material-icons" >search</i>
-				</div>
-			</div>
-			<div class="col m1">
-				<i class="material-icons small modal-action modal-close" id="close-btn">close</i>
-			</div>
-		</div>
+	<transition name="component-fade" mode="out-in">
+		<!-- <keep-alive> -->
+			<component v-bind:is="currentView">
+			</component>
+		<!-- </keep-alive> -->
+	</transition>
 
-		<template v-if="is_empty">
-			<div class="row">
-				<div class="col m11">
-					<h5 >暂未有相关词条</h5>
-					<!-- 请求创建词条模块 -->
-				</div>
-			</div>
-		</template>
+</div>
 
-		<div class="row" >
-			<!-- <div class="col m11" v-for="entry in entry_list">
-				<div class="card">
-					<div class="card-content">
-						<span class="card-title" >
-							{{ entry.name }}
-						</span>
-					</div>
-					<div class="card-action"></div>
-				</div>
-			</div> -->
-				<div class="collection">
-					<a class="collection-item" v-for="entry in entry_list">{{ entry.name }}</a>
-				</div>
-		</div>
-
-  </div>
 
 </body>
 </html>
