@@ -10,8 +10,15 @@
 	<link rel="stylesheet" href="/css/content-css.css">
 	<!--Import Google Icon Font-->
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <style>
-    </style>
+	<style>
+		.component-fade-enter-active, .component-fade-leave-active {
+			transition: opacity .3s ease;
+		}
+		.component-fade-enter, .component-fade-leave-to
+			/* .component-fade-leave-active for below version 2.1.8 */ {
+			opacity: 0;
+		}
+	</style>
 </head>
 <body>
 	<!-- Import jQuery & Materialize min js -->
@@ -23,12 +30,11 @@
 
 <div id="search-entry-div" class="modal modal-fixed-footer white">
 
-	<transition name="component-fade" mode="out-in">
-		<!-- <keep-alive> -->
-			<component v-bind:is="currentView">
-			</component>
-		<!-- </keep-alive> -->
-	</transition>
+	<component v-bind:is="currentView"
+	v-on:id_entry_pass="passEntryId"
+	v-bind:prop_id_entry="id_entry"
+	v-bind:prop_name_entry="name_entry">
+	</component>
 
 </div>
 
