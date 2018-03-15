@@ -66,10 +66,9 @@
         <p>没有查询到相关结果</p>
         <p>你可以申请添加词条并编辑释义和来源。</p>
         <span>点击右侧的图标可申请添加词条</span>
-        <a class="btn-floating btn-tiny right waves-light waves-effect waves-teal" id="add-entry-meaning">
-        <i class="material-icons" >edit</i></a>
+        <a class="btn-floating btn-tiny right waves-light waves-effect waves-teal" id="add-entry02">
+        <i class="material-icons" >border_color</i></a>
       </div>
-
 		</section>
   </div>
 
@@ -90,14 +89,15 @@
   			<div class="section">
   				<p id="entry-meaning"></p>
   				<p id="meaning-source"></p>
+          <p id="meaning-daytime"></p>
   			</div>
   		</div>
 
   		<div class="fixed-action-btn">
   			<a class="btn-floating"><i class="large material-icons">add</i></a>
   			<ul>
-  				<li><a class="btn-floating red" id="add-meaning"><i class="material-icons">edit</i></a></li>
-  				<li><a class="btn-floating yellow darken-1" id="add-entry"><i class="material-icons">border_color</i></a></li>
+  				<li><a class="btn-floating red" id="add-meaning01"><i class="material-icons">edit</i></a></li>
+  				<li><a class="btn-floating yellow darken-1" id="add-entry01"><i class="material-icons">border_color</i></a></li>
   				<li><a class="btn-floating green" id="report"><i class="material-icons">report</i></a></li>
   				<li><a class="btn-floating blue" id="return-search"><i class="material-icons">search</i></a></li>
   			</ul>
@@ -106,18 +106,36 @@
   		<nav class="teal lighten-2">
   			<div class="container nav-wrapper">
   				<ul id="nav-mobile" class="left">
-  					<li><a href="#">赞</a></li>
-  					<li><a href="#">踩</a></li>
+  					<li><a href="#" id="good">赞</a></li>
+  					<li><a href="#" id="bad">踩</a></li>
   				</ul>
   			</div>
   		</nav>
     </div>
 
     <div id="other-meaning">
-      <div class="divider"></div>
+      <div class="container">
+        <h1 id="entry-heading02"></h1>
+        <div class="divider"></div>
+        <ul class="collapsible" data-collapsible="expandable" id="other-meaning-collection">
+      </div>
+      <nav class="teal lighten-2">
+        <div class="container nav-wrapper">
+        </div>
+      </nav>
     </div>
 
+
 	</div>
+
+  <!--当可搜索的词条无释义时-->
+  <div class="container" id="meaning-not-found">
+    <h1 id="entry-heading"></h1>
+    <p>目前该词条还没有释义</p>
+    <p>点击右侧按钮可添加释义</p>
+    <a class="btn-floating btn-tiny right waves-light waves-effect waves-teal" id="add-meaning02">
+      <i class="material-icons">edit</i></a>
+  </div>
 
 </body>
 

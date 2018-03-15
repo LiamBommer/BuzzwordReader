@@ -2,7 +2,7 @@ body{
 	width: 500px;
 }
 
-p{
+p,span,#collection-username{
 	font-size: medium;
 }
 
@@ -46,7 +46,12 @@ span{
 	display: none;
 }
 
-#add-entry-meaning{
+#add-entry02{
+	position: relative;
+	bottom: 12px;
+}
+
+#add-meaning02{
 	position: relative;
 	bottom: 12px;
 }
@@ -57,4 +62,12 @@ span{
 
 .collection-item{
 	font-size: medium;
+}
+
+#meaning-not-found{
+	display: none;
+}
+
+#meaning-daytime{
+	font-size: 75%;
 }
