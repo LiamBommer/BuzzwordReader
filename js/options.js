@@ -454,8 +454,14 @@ $(document).ready(function() {
 						"<p>来源: "+result.inte[i].resource+"</p>" +
 						"<p>创建时间: "+result.inte[i].datetime+"</p>";
 						var like = result.like.filter(item => item.id_interpretation == result.inte[i].id_interpretation);
+						var like_total = 0;
+						if(JSON.stringify(like) === '[]' || like.length === 0) {
+							like_total = 0;
+						} else {
+							like_total = like[0].like_total;
+						}
 						html += "<a class='chip like-btn' style='cursor:pointer;'>赞"+
-							like[0].like_total+"<i class='material-icons'>arrow_drop_up</i></a>";
+							like_total+"<i class='material-icons'>arrow_drop_up</i></a>";
 						$('#entry-modal-content').append(html);
 					}
 
@@ -487,6 +493,15 @@ $(document).ready(function() {
 	$('#entry-modal').on('click', 'a.like-btn', function() {
 
 		var id_user = -1;
+		/*
+
+
+
+		// 这里有BUG！！！
+		// 释义id不是这么获取的
+
+
+		*/
 		var id_inte = $('#id-inte-p').html();
 
 		chrome.storage.sync.get({

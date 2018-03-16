@@ -84,6 +84,9 @@ $(document).ready(function() {
 					},
 					scriptCharset: 'utf-8'
 				});
+
+				// 改变search_content,使得返回这界面时能够保存查找信息
+				search_content = _this.search_input;
 		  },
 			inte(id_entry, name_entry) {
 				// 将词条id赋值给释义列表页面
@@ -132,11 +135,11 @@ $(document).ready(function() {
 		template: `
 			<div class="row">
 				<div class="col m11">
-					<div class="input-field">
+					<div class="input-field hoverable">
 						<input type="search" id="search"
 						v-model="search_input"
 						v-on:keyup.enter="search" />
-						<i class="material-icons" >search</i>
+						<i class="material-icons" id="search-icon">search</i>
 					</div>
 				</div>
 				<div class="col m1">
@@ -153,7 +156,7 @@ $(document).ready(function() {
 				</div>
 			</template>
 
-			<div class="row" >
+			<div class="row" v-if="! is_empty">
 					<div class="collection">
 						<a class="collection-item"
 						v-for="entry in entrys"
@@ -175,6 +178,7 @@ $(document).ready(function() {
 		data: function() {
 			return {
 				id_entry: this.prop_id_entry,
+				is_empty: false,
 				intes: [],
 				likes: []
 			}
@@ -184,7 +188,106 @@ $(document).ready(function() {
 			back_to_entry() {
 				// 返回词条列表组件
 				search_entry_vue.currentView = 'entry-list';
-			}
+			},
+			inte_shortcut(id_inte, id_user) {
+				var username = "";
+				var return_str = "";
+				var _this = this;
+
+				// 根据id查找用户
+				$.ajax({
+					type:'GET',
+					url: server_url + 'User/search_user/',
+					async: false,
+					dataType: 'json',
+					data: {
+						id_user: id_user
+					},
+					success: function(result) {
+						console.log("用户信息： "+JSON.stringify(result));
+						if(result.result == 'empty') {
+							username = "can't find user";
+						} else {
+							username = result.username;
+						}
+					},
+					error: function(error) {
+						alert('查询请求错误，请重试');
+						console.log(JSON.stringify(error));
+						// error display
+						return;
+					},
+					scriptCharset: 'utf-8'
+				});
+
+				// 返回 “用户名 + 词条前15个字符	”
+				var inte_arr = _this.intes.filter(item => item.id_interpretation == id_inte);
+				var inte = inte_arr[0].interpretation;
+				// 截取开头10个字符
+				var inte_short = inte.substr(0, 10);
+				// return_str = username+": "+inte_short+"...";
+				return_str = username+": "+inte;
+				return return_str;
+			},
+			like_total(id_inte) {
+				// 根据释义id在点赞数组里找出点赞数并返回
+				var like_total;
+				var like = this.likes.filter(item => item.id_interpretation == id_inte);
+				alert(JSON.stringify(this.likes));
+				if(JSON.stringify(like) === '[]' || like.length === 0) {
+					// 释义没有赞，数组为空
+					like_total = 0;
+				}else {
+					like_total = like[0].like_total;
+				}
+				return like_total;
+			},
+			like(id_inte) {
+				// 释义点赞
+
+				// 用户id获取
+				var id_user = -1;
+				chrome.storage.sync.get({
+					BW_userId: -1
+				},
+				function(items) {
+					id_user = items.BW_userId;
+					// validate
+					if(id_user == -1 || id_inte == null) {
+						alert('Cannot get correct user ID.')
+						return;
+					}
+
+					$.ajax({
+						type:'POST',
+						url: server_url + 'Entry/like/',
+						timeout: 5000,
+						async: true,
+						dataType: 'json',
+						data: {
+							id_user: id_user,
+							id_inte: id_inte
+						},
+						success: function(result) {
+							if(result.result == 'success') {
+								console.log(JSON.stringify(result));
+								alert('点赞成功！')
+							}
+							if(result.result == 'failure') {
+								alert('点赞失败!\n' + result.error_msg);
+							}
+						},
+						error: function(error) {
+							alert('ajax错误，请重试');
+							console.log(JSON.stringify(error));
+							$('#entry-modal').html(error.responseText);
+							return;
+						},
+						scriptCharset: 'utf-8'
+					});
+
+				});
+			},
 		},
 		created() {
 			var _this = this;
@@ -198,18 +301,22 @@ $(document).ready(function() {
 						entry_id: _this.id_entry
 					},
 					success: function(result) {
-						console.log("总结果数组: "+JSON.stringify(result));
+						console.log("查找释义ajax结果: "+JSON.stringify(result));
 						if(result.result == 'empty') {
 							return;
 						}
 						for(i in result.inte) {
 							_this.intes.push(result.inte[i]);
-							// var like = result.like.filter(item => item.id_interpretation == result.inte[i].id_interpretation);
-							// html += "<a class='chip like-btn' style='cursor:pointer;'>赞"+
-							// 	like[0].like_total+"<i class='material-icons'>arrow_drop_up</i></a>";
 						}
-						// _this.like.push(result.like);
-						console.log("点赞数组: "+JSON.stringify(_this.like))
+						if(result.like !== undefined) {
+							_this.likes.push(result.like);
+						}
+						console.log("点赞数组: "+JSON.stringify(_this.likes))
+						console.log("释义数组: "+JSON.stringify(_this.intes))
+						// 若释义为空，则显示添加释义界面
+						if(_this.intes === undefined || _this.intes.length == 0) {
+							_this.is_empty = true;
+						}
 					},
 					error: function(error) {
 						alert('查询请求错误，请重试');
@@ -224,6 +331,12 @@ $(document).ready(function() {
 				alert('id_entry = '+_this.id_entry);
 				return;
 			}
+
+			// 在dom渲染完成后执行
+			this.$nextTick(function() {
+				$('.collapsible').collapsible()	;
+				$('.collapsible').collapsible('open', 1);
+			});
 		},
 		template: `
 			<div class="row">
@@ -239,12 +352,34 @@ $(document).ready(function() {
 				</div>
 			</div>
 
-			<div class="row">
+			<template v-if="is_empty">
+				<div class="row">
+					<div class="col m11">
+						<h5 >暂未有相关释义</h5>
+						<!-- 添加释义模块 -->
+					</div>
+				</div>
+			</template>
+
+			<div class="row" v-if="! is_empty">
 				<div class="col m12">
-					<ul class="collapsible">
-						<li>
-							<div class="collapsible-header"></div>
-							<div class="collapsible-body"></div>
+					<ul class="collapsible popout" data-collapsible="accordion">
+						<li v-for="inte in intes">
+							<div class="collapsible-header truncate flow-text">
+								{{ inte_shortcut(inte.id_interpretation, inte.id_user) }}
+							</div>
+							<div class="collapsible-body ">
+								{{ inte.interpretation }}
+								<br/><br/><div class="divider"></div>
+								<p><b>来源：</b>
+									<a href="{{ inte.resource }}">{{ inte.resource }}</a>
+								</p>
+								<a class='chip like-btn' style='cursor:pointer;'
+								v-on:click="like(inte.id_interpretation)">
+									赞{{ like_total(inte.id_interpretation) }}
+									<i class='material-icons like-icon'>arrow_drop_up</i>
+								</a>
+							</div>
 						</li>
 					</ul>
 				</div>
