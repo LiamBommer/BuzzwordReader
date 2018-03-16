@@ -6,6 +6,10 @@ p,span,#collection-username{
 	font-size: medium;
 }
 
+#meaning-source{
+	font-size: 90%;
+}
+
 h1{
 	font-size: 280%;
 }
@@ -69,5 +73,5 @@ span{
 }
 
 #meaning-daytime{
-	font-size: 75%;
+	font-size: 90%;
 }
