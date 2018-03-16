@@ -30,13 +30,11 @@
 
 <div id="search-entry-div" class="modal modal-fixed-footer white">
 
-	<keep-alive>
-		<component v-bind:is="currentView"
-		v-on:id_entry_pass="passEntryId"
-		v-bind:prop_id_entry="id_entry"
-		v-bind:prop_name_entry="name_entry">
-		</component>
-	</keep-alive>
+	<component v-bind:is="currentView"
+	v-on:id_entry_pass="passEntryId"
+	v-bind:prop_id_entry="id_entry"
+	v-bind:prop_name_entry="name_entry">
+	</component>
 
 </div>
 

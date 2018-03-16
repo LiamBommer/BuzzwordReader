@@ -99,3 +99,23 @@ email, phone, identity, gender, profile
 > 'success' **OR** 'failure'
 
 * error_msg	(仅在结果为result == failure时存在)
+
+## search_user | 根据用户id搜索用户名
+> User/search_user | GET
+
+### @param
+
+* id_user
+
+### validate
+
+1. 搜索内容非空
+
+### @return
+
+* result **在搜索结果为空时返回**
+> 'empty'
+
+* (搜索结果，一个包含用户信息的数组, 只有一条！)
+> id_user, username
+直接用result.username就行

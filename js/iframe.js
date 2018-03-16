@@ -231,14 +231,13 @@ $(document).ready(function() {
 			},
 			like_total(id_inte) {
 				// 根据释义id在点赞数组里找出点赞数并返回
-				var like_total;
-				var like = this.likes.filter(item => item.id_interpretation == id_inte);
-				alert(JSON.stringify(this.likes));
-				if(JSON.stringify(like) === '[]' || like.length === 0) {
-					// 释义没有赞，数组为空
-					like_total = 0;
-				}else {
-					like_total = like[0].like_total;
+				var likes = this.likes[0];
+				var like_total = 0;
+				for(var i=0; i<likes.length; i++) {
+					if(likes[i].id_interpretation == id_inte) {
+						like_total = likes[i].like_total;
+						return like_total;
+					}
 				}
 				return like_total;
 			},
