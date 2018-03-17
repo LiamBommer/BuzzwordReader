@@ -127,6 +127,8 @@ $(document).ready(function() {
 				// alert($('#entry-meaning').attr());
 
         // 其他释义显示
+				$('#entry-heading02').text(entry_name);
+
 				var other_meaning;
 				var other_meaning_id;
 				var other_meaning_source;
@@ -141,18 +143,23 @@ $(document).ready(function() {
 					}
 
           if(result.inte[i].id_interpretation != top_meaning_id){
-						most_like = like_total;
+						other_meaning_id = result.inte[i].id_interpretation;
 						other_meaning = result.inte[i].interpretation;
 						other_meaning_source = result.inte[i].resource;
 						other_meaning_daytime = result.inte[i].datetime;
 
 						var other="<li><div class='collapsible-header' id='collection-username'>"
 						+"<i class='material-icons'>account_circle</i>"+result.inte[i].id_user+"</div>"
-						+"<div class='collapsible-body'><span id='other-meaning-span'>"+other_meaning+"</span></div></li>";
+						+"<div class='collapsible-body'><span id='other-meaning"+other_meaning_id+"'>"+other_meaning
+						+"</span><div class='chip right'><a href='#' class='dislike'><i class='tiny material-icons'>"
+						+"arrow_drop_down</i></a></div>"
+						+"<div class='chip right'><a href='#' class='like'>"
+						+"<i class='tiny material-icons'>arrow_drop_up</i>"
+						+like_total+"</a></div>"
+						+"</div></li>";
 						$('#other-meaning-collection').append(other);
 					}
 				}
-
 			},
 
 			error: function(error) {
