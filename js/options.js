@@ -11,6 +11,64 @@
 *	https://stackoverflow.com/questions/12252817/how-chrome-storage-local-get-sets-a-value
 */
 
+
+/*
+ * 解析 URL 的类
+
+ * 实现功能：
+ * 	解析url，并根据url中的action做具体的操作
+ *	在使用时只用调用 resolve 函数即可
+
+ * URL 代码格式
+		var url = "options-page/options.html?";
+		url += "action=addInte&id_entry="+this.prop_id_entry+"&name_entry="+this.prop_name_entry;
+		window.open(chrome.runtime.getURL(url));
+ */
+function ResolveURL() {
+	var resolver = new Object();
+	resolver.GetQueryString = function(name) {
+		/*
+		* 读取url中的参数
+		* 以打开特定页面做某些操作
+		* （网上的代码）
+		*
+		* 假设url地址是http://www.xxx.com?ProID=100&UserID=200，
+		* 可用GetQueryString("ProID")或GetQueryString("UserID")获取相应参数值。
+		*/
+		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+		var r = window.location.search.substr(1).match(reg);
+		if (r != null) return unescape(r[2]); return null;
+	}
+	resolver.addInte = function() {
+		// 添加释义
+		// @param
+		// 	id_entry, name_entry
+		var id_entry = this.GetQueryString('id_entry');
+		var name_entry = this.GetQueryString('name_entry');
+
+		$('#new-inte-modal').modal('open');
+		$('#id-entry').val(id_entry);
+		$('#name-entry').val(name_entry);
+	}
+	resolver.resolve = function() {
+		// 统一处理函数
+		// 先取action的值，然后根据action做不同的操作
+
+		// 要添加新的动作，则新添加 resolver.xxx = function() {}
+		// 然后在次函数中判断并执行即可
+		var action = this.GetQueryString('action');
+		if(action == 'addInte') {
+			this.addInte();
+		}
+		if(action == 'login') {
+			this.login();
+		}
+	}
+
+	return resolver;
+}
+
+
 $(document).ready(function() {
 
 	// 模态框初始化
@@ -41,6 +99,14 @@ $(document).ready(function() {
 		$('#username-div').html(items.BW_username);
 		$('#userId-div').html(items.BW_userId);
 	});
+
+
+	/*
+	 * 在此判断url中是否有参数，以做出相应的操作
+	 */
+	// 类的实例化
+	var resolver = new ResolveURL();
+	resolver.resolve();
 
 
 	/*

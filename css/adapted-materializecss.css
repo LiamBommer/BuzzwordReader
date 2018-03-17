@@ -8,19 +8,19 @@
 * origin: .btn-floating
 * adapted: .
 */
-.btn-floating i {
+.br-btn-floating i {
   /*font-size: 1.3rem;*/
   font-size: 12px;
   line-height: inherit;
 }
-.btn-floating {
+.br-btn-floating {
   font-size: 1rem;
   outline: 0;
 }
-.btn-floating:focus {
+.br-btn-floating:focus {
   background-color: #1d7d74;
 }
-.btn-floating {
+.br-btn-floating {
   display: inline-block;
   color: #fff;
   position: relative;
@@ -38,13 +38,13 @@
   vertical-align: middle;
 }
 
-.btn-floating:hover {
+.br-btn-floating:hover {
   background-color: #26a69a;
 }
-.btn-floating:before {
+.br-btn-floating:before {
   border-radius: 0;
 }
-.btn-floating i {
+.br-btn-floating i {
   width: inherit;
   display: inline-block;
   text-align: center;
@@ -53,11 +53,11 @@
   font-size: 15px;
   line-height: 40px;
 }
-.btn-floating{
+.br-btn-floating{
   -webkit-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
           box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
 }
-.btn-floating:hover {
+.br-btn-floating:hover {
   -webkit-box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.14), 0 1px 7px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -1px rgba(0, 0, 0, 0.2);
           box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.14), 0 1px 7px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -1px rgba(0, 0, 0, 0.2);
 }
@@ -67,9 +67,9 @@
 * origin: .disabled
 * adapted:
 */
-.btn-floating.disabled,
-.btn-floating:disabled,
-.btn-floating[disabled] {
+.br-btn-floating.disabled,
+.br-btn-floating:disabled,
+.br-btn-floating[disabled] {
   /*pointer-events: none;*/
   background-color: #DFDFDF !important;
   -webkit-box-shadow: none;
@@ -77,9 +77,9 @@
   color: #9F9F9F !important;
   cursor: default;
 }
-.btn-floating.disabled:hover,
-.btn-floating:disabled:hover,
-.btn-floating[disabled]:hover {
+.br-btn-floating.disabled:hover,
+.br-btn-floating:disabled:hover,
+.br-btn-floating[disabled]:hover {
   background-color: #DFDFDF !important;
   color: #9F9F9F !important;
 }
@@ -89,12 +89,12 @@
 * origin: .pulse
 * adapted:
 */
-.pulse {
+.br-pulse {
   overflow: initial;
   position: relative;
 }
 
-.pulse::before {
+.br-pulse::before {
   content: '';
   display: block;
   position: absolute;

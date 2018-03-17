@@ -17,6 +17,7 @@ function Select() {
 	// 私有
 	var selected = "";
 	var finalSelected = "";
+	// setter
 	selectItem.setSelected = function() {
 		// 获取选取文本
 		if(document.selection) {
@@ -26,9 +27,11 @@ function Select() {
 		}
 		this.finalSelected = this.selected.toString();
 	}
+	// getter: selected (object)
 	selectItem.getSelected = function() {
 		return this.selected;
 	}
+	// getter: finalSelected (string)
 	selectItem.getFinalSelected = function() {
 		return this.finalSelected;
 	}
@@ -51,7 +54,7 @@ $('body').on('mouseup', function(e) {
 
 		// 提示框html代码，用于后面插入时使用
 		var float_div_html = "<a id='__float-div__' " +
-		" class='btn-floating disabled'><i>BW</i></div>";
+		" class='br-btn-floating disabled'><i>BR</i></div>";
 
 		// 判断浮动框是否存在
 		if($('#__float-div__').length > 0) {
@@ -71,7 +74,7 @@ $('body').on('mouseup', function(e) {
 			// 未放置则3秒自动消失
 			mouseoutTimer = setTimeout(function() {
 				$('#__float-div__').remove();
-			}, 3000);
+			}, 30000);
 		}
 
 	} else {
@@ -96,7 +99,7 @@ $('body').on('click', '#__float-div__', function(event) {
 			var iframe = document.createElement('iframe');
 			iframe.id = "BW-iframe";
 			// Must be declared at web_accessible_resources in manifest.json
-			var url = 'content-scripts/iframe.html?entry=abc';
+			var url = 'content-scripts/iframe.html';
 			iframe.src = chrome.runtime.getURL(url);
 
 			iframe.allowTransparency = "true";
@@ -157,7 +160,7 @@ $('body').on('mouseover', '#__float-div__', function() {
 	clearTimeout(mouseoutTimer);
 
 	mouseoverTimer = setTimeout(function() {
-		$('#__float-div__').addClass('pulse');
+		$('#__float-div__').addClass('br-pulse');
 	},1000);
 
 });

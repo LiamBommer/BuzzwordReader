@@ -163,9 +163,11 @@ $(document).ready(function() {
 
 			<template v-if="is_empty">
 				<div class="row">
-					<div class="col m11">
-						<h5 >暂未有相关词条</h5>
+					<div class="col m12">
+						<h5>暂未有相关词条</h5>
 						<!-- 请求创建词条模块 -->
+						<br/><br/>
+						<p>您可以 <a>创建词条</a></p>
 					</div>
 				</div>
 			</template>
@@ -287,10 +289,7 @@ $(document).ready(function() {
 							id_inte: id_inte
 						},
 						success: function(result) {
-							if(result.result == 'success') {
-								console.log(JSON.stringify(result));
-								alert('点赞成功！')
-							}
+							console.log("点赞： "+JSON.stringify(result));
 							if(result.result == 'failure') {
 								alert('点赞失败!\n' + result.error_msg);
 							}
@@ -332,10 +331,7 @@ $(document).ready(function() {
 							id_inte: id_inte
 						},
 						success: function(result) {
-							if(result.result == 'success') {
-								console.log(JSON.stringify(result));
-								alert('点灭成功！')
-							}
+							console.log("点灭： "+JSON.stringify(result));
 							if(result.result == 'failure') {
 								alert('点灭失败!\n' + result.error_msg);
 							}
@@ -350,6 +346,11 @@ $(document).ready(function() {
 					});
 
 				});
+			},
+			addInte() {
+				var url = "options-page/options.html?";
+				url += "action=addInte&id_entry="+this.prop_id_entry+"&name_entry="+this.prop_name_entry;
+				window.open(chrome.runtime.getURL(url));
 			},
 		},
 		created() {
@@ -400,7 +401,7 @@ $(document).ready(function() {
 				$('.collapsible').collapsible();
 				setTimeout(function() {
 					$('.collapsible').collapsible('open', 0);
-				}, 1);
+				}, 200);
 			});
 		},
 		template: `
@@ -419,9 +420,15 @@ $(document).ready(function() {
 
 			<template v-if="is_empty">
 				<div class="row">
-					<div class="col m11">
-						<h5 >暂未有相关释义</h5>
+					<div class="col m12">
+						<br/>
+						<h5>暂未有相关释义</h5>
 						<!-- 添加释义模块 -->
+						<br/>
+						<p>快来
+						<a style="cursor:pointer"
+						v-on:click="addInte()">添加释义</a> 让别人能更方便地查找！
+						</p>
 					</div>
 				</div>
 			</template>
