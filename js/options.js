@@ -36,8 +36,9 @@ function ResolveURL() {
 		* 可用GetQueryString("ProID")或GetQueryString("UserID")获取相应参数值。
 		*/
 		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
-		var r = window.location.search.substr(1).match(reg);
-		if (r != null) return unescape(r[2]); return null;
+		var r =  window.location.search.substr(1).match(reg);
+		// 为了能够传输中文
+		if (r != null) return  unescape(decodeURI(r[2])); return null;
 	}
 	resolver.addInte = function() {
 		// 添加释义
@@ -49,6 +50,15 @@ function ResolveURL() {
 		$('#new-inte-modal').modal('open');
 		$('#id-entry').val(id_entry);
 		$('#name-entry').val(name_entry);
+	}
+	resolver.addEntry = function() {
+		// 添加释义
+		// @param
+		// 	name_entry
+		var name_entry = this.GetQueryString('name_entry');
+
+		$('#new-entry-modal').modal('open');
+		$('#entry-name').val(name_entry);
 	}
 	resolver.resolve = function() {
 		// 统一处理函数
@@ -62,6 +72,9 @@ function ResolveURL() {
 		}
 		if(action == 'login') {
 			this.login();
+		}
+		if(action == 'addEntry') {
+			this.addEntry();
 		}
 	}
 

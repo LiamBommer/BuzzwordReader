@@ -46,6 +46,7 @@ $(document).ready(function() {
 			return {
 				is_empty: false,
 				search_input: search_content,
+				search_note: '暂未有相关词条',
 				entrys: []
 			}
 		},
@@ -55,7 +56,8 @@ $(document).ready(function() {
 				var _this = this;
 				if(_this.search_input == '' || _this.search_input == null) {
 					// 空搜索内容，提示并返回
-					alert('search somethin!');
+					_this.search_note = '总要搜索点什么吧？';
+					_this.is_empty = true;
 					return;
 				} else {
 					_this.is_empty = false;
@@ -72,6 +74,7 @@ $(document).ready(function() {
 						// 清空原来的结果
 						_this.entrys = [];
 						if(result.result == 'empty') {
+							_this.search_note = '暂未有相关词条';
 							_this.is_empty = true;
 							return;
 						} else {
@@ -102,14 +105,22 @@ $(document).ready(function() {
 				});
 				// 更改视图
 				search_entry_vue.currentView = 'inte-list';
-			}
+			},
+			addEntry(name_entry) {
+				// 添加词条
+				// 跳转到options页中，包含参数
+				var url = "options-page/options.html?";
+				url += "action=addEntry&name_entry="+name_entry;
+				window.open(chrome.runtime.getURL(url));
+			},
 		},
 		created() {
 		  // 在创建后自动查询传来的词条名
 			var _this = this;
 			if(_this.search_input == '' || _this.search_input == null) {
-				// 空搜索内容，提示并返回
-				alert('search somethin!');
+				// 空搜索内容，返回
+				_this.search_note = '总要搜索点什么吧？';
+				_this.is_empty = true;
 				return;
 			} else {
 				_this.is_empty = false;
@@ -127,6 +138,7 @@ $(document).ready(function() {
 					_this.entrys = [];
 					if(result.result == 'empty') {
 						_this.is_empty = true;
+						_this.search_note = '暂未有相关词条';
 						return;
 					} else {
 						// 将查找到的词条数组存起来
@@ -164,10 +176,14 @@ $(document).ready(function() {
 			<template v-if="is_empty">
 				<div class="row">
 					<div class="col m12">
-						<h5>暂未有相关词条</h5>
+						<h5>{{ search_note }}</h5>
 						<!-- 请求创建词条模块 -->
 						<br/><br/>
-						<p>您可以 <a>创建词条</a></p>
+						<p class="note">您可以通过
+							<a style="cursor:pointer"
+							v-on:click="addEntry(search_input)">创建词条</a>
+							来开垦这片荒原！
+						</p>
 					</div>
 				</div>
 			</template>
@@ -187,6 +203,15 @@ $(document).ready(function() {
 					</div>
 				</div>
 			</div>
+			<div class="row">
+				<div class="col m12">
+					<br/>
+					<p class="note">没有找到想要的词条？ 您还可以通过 <a style="cursor:pointer"
+					v-on:click="addEntry(search_input)">创建词条</a>
+					来丰富词条库！
+					</p>
+				</div>
+			</div>
 			`
 	}
 
@@ -202,7 +227,11 @@ $(document).ready(function() {
 				id_entry: this.prop_id_entry,
 				is_empty: false,
 				intes: [],
-				likes: []
+				likes: [],
+				likeClass: '',
+				likeTextClass: '',
+				dislikeClass: '',
+				dislikeTextClass: ''
 			}
 		},
 		methods: {
@@ -265,6 +294,12 @@ $(document).ready(function() {
 			},
 			like(id_inte) {
 				// 释义点赞
+				// 修改样式为蓝底白字
+				this.likeClass = 'blue';
+				this.likeTextClass = 'white-text';
+				this.dislikeClass = '';
+				this.dislikeTextClass = '';
+
 				// 用户id获取
 				var id_user = -1;
 				chrome.storage.sync.get({
@@ -304,9 +339,16 @@ $(document).ready(function() {
 					});
 
 				});
+
 			},
 			dislike(id_inte) {
 				// 点灭
+				// 修改样式为蓝底白字
+				this.dislikeClass = 'blue';
+				this.dislikeTextClass = 'white-text';
+				this.likeClass = '';
+				this.likeTextClass = '';
+
 				// 用户id获取
 				var id_user = -1;
 				chrome.storage.sync.get({
@@ -348,8 +390,10 @@ $(document).ready(function() {
 				});
 			},
 			addInte() {
+				// 添加释义
+				// 跳转到options页中，包含参数
 				var url = "options-page/options.html?";
-				url += "action=addInte&id_entry="+this.prop_id_entry+"&name_entry="+this.prop_name_entry;
+				url += encodeURI("action=addInte&id_entry="+this.prop_id_entry+"&name_entry="+this.prop_name_entry);
 				window.open(chrome.runtime.getURL(url));
 			},
 		},
@@ -399,6 +443,7 @@ $(document).ready(function() {
 			// 在dom渲染完成后执行
 			this.$nextTick(function() {
 				$('.collapsible').collapsible();
+
 				setTimeout(function() {
 					$('.collapsible').collapsible('open', 0);
 				}, 200);
@@ -425,8 +470,7 @@ $(document).ready(function() {
 						<h5>暂未有相关释义</h5>
 						<!-- 添加释义模块 -->
 						<br/>
-						<p>快来
-						<a style="cursor:pointer"
+						<p class="note">快来 <a style="cursor:pointer"
 						v-on:click="addInte()">添加释义</a> 让别人能更方便地查找！
 						</p>
 					</div>
@@ -438,7 +482,7 @@ $(document).ready(function() {
 					<ul class="collapsible popout" data-collapsible="accordion">
 						<li v-for="(index, inte) in intes">
 							<div class="collapsible-header truncate ">
-								<i class='material-icons like-icon'>account_circle</i>
+								<i class='material-icons'>account_circle</i>
 								{{ inte_shortcut(inte.id_interpretation, inte.id_user) }}
 							</div>
 							<div class="collapsible-body ">
@@ -447,18 +491,25 @@ $(document).ready(function() {
 								<p><b>来源：</b>
 									<a href="{{ inte.resource }}">{{ inte.resource }}</a>
 								</p>
-								<a class='chip like-btn' style='cursor:pointer;'
-								v-on:click="like(inte.id_interpretation)">
-									赞{{ like_total(inte.id_interpretation) }}
+								<div class='chip like-btn' style='cursor:pointer;'
+								v-bind:class="[likeClass, likeTextClass]"
+								v-on:click="like(inte.id_interpretation)">赞{{ like_total(inte.id_interpretation) }}
 									<i class='material-icons like-icon'>arrow_drop_up</i>
-								</a>
-								<a class='chip dislike-btn' style='cursor:pointer;'
+								</div>
+								<div class='chip dislike-btn' style='cursor:pointer;'
+								v-bind:class="[dislikeClass, dislikeTextClass]"
 								v-on:click="dislike(inte.id_interpretation)">
-									<i class='material-icons like-icon'>arrow_drop_down</i>
-								</a>
+									灭<i class='material-icons like-icon'>arrow_drop_down</i>
+								</div>
 							</div>
 						</li>
 					</ul>
+					<br/>
+					<p class="note">对这些解释都不满意？ 那不如动手
+						<a style="cursor:pointer"
+						v-on:click="addInte()">添加释义</a>
+						来提供更准确的信息吧！
+					</p>
 				</div>
 			</div>
 			`
