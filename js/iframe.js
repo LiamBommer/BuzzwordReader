@@ -53,7 +53,13 @@ $(document).ready(function() {
 		  search() {
 				// 搜索栏回车搜索时，进行词条查询
 				var _this = this;
-				_this.is_empty = false;
+				if(_this.search_input == '' || _this.search_input == null) {
+					// 空搜索内容，提示并返回
+					alert('search somethin!');
+					return;
+				} else {
+					_this.is_empty = false;
+				}
 				$.ajax({
 					type:'GET',
 					url: server_url + 'Entry/search_entry/',
@@ -101,6 +107,13 @@ $(document).ready(function() {
 		created() {
 		  // 在创建后自动查询传来的词条名
 			var _this = this;
+			if(_this.search_input == '' || _this.search_input == null) {
+				// 空搜索内容，提示并返回
+				alert('search somethin!');
+				return;
+			} else {
+				_this.is_empty = false;
+			}
 			$.ajax({
 				type:'GET',
 				url: server_url + 'Entry/search_entry/',
@@ -135,8 +148,9 @@ $(document).ready(function() {
 		template: `
 			<div class="row">
 				<div class="col m11">
-					<div class="input-field hoverable">
+					<div class="input-field z-depth-2">
 						<input type="search" id="search"
+						placeholder="搜索词条"
 						v-model="search_input"
 						v-on:keyup.enter="search" />
 						<i class="material-icons" id="search-icon">search</i>
@@ -157,13 +171,19 @@ $(document).ready(function() {
 			</template>
 
 			<div class="row" v-if="! is_empty">
-					<div class="collection">
-						<a class="collection-item"
-						v-for="entry in entrys"
-						v-bind:key="entry.id_entry"
-						v-on:click="inte(entry.id_entry, entry.name)">
-						{{ entry.name }}</a>
+				<div class="col m6 s12"
+				v-for="entry in entrys"
+				v-bind:key="entry.id_entry">
+					<div class="card white">
+						<div class="card-content black-text">
+							<a class="collection-item"
+							v-on:click="inte(entry.id_entry, entry.name)">
+								<span class="card-title" style="cursor:pointer">
+									{{ entry.name }}
+								</span>
+							</a>
 					</div>
+				</div>
 			</div>
 			`
 	}
@@ -243,7 +263,6 @@ $(document).ready(function() {
 			},
 			like(id_inte) {
 				// 释义点赞
-
 				// 用户id获取
 				var id_user = -1;
 				chrome.storage.sync.get({
@@ -274,6 +293,51 @@ $(document).ready(function() {
 							}
 							if(result.result == 'failure') {
 								alert('点赞失败!\n' + result.error_msg);
+							}
+						},
+						error: function(error) {
+							alert('ajax错误，请重试');
+							console.log(JSON.stringify(error));
+							$('#entry-modal').html(error.responseText);
+							return;
+						},
+						scriptCharset: 'utf-8'
+					});
+
+				});
+			},
+			dislike(id_inte) {
+				// 点灭
+				// 用户id获取
+				var id_user = -1;
+				chrome.storage.sync.get({
+					BW_userId: -1
+				},
+				function(items) {
+					id_user = items.BW_userId;
+					// validate
+					if(id_user == -1 || id_inte == null) {
+						alert('Cannot get correct user ID.')
+						return;
+					}
+
+					$.ajax({
+						type:'POST',
+						url: server_url + 'Entry/dislike/',
+						timeout: 5000,
+						async: true,
+						dataType: 'json',
+						data: {
+							id_user: id_user,
+							id_inte: id_inte
+						},
+						success: function(result) {
+							if(result.result == 'success') {
+								console.log(JSON.stringify(result));
+								alert('点灭成功！')
+							}
+							if(result.result == 'failure') {
+								alert('点灭失败!\n' + result.error_msg);
 							}
 						},
 						error: function(error) {
@@ -333,8 +397,10 @@ $(document).ready(function() {
 
 			// 在dom渲染完成后执行
 			this.$nextTick(function() {
-				$('.collapsible').collapsible()	;
-				$('.collapsible').collapsible('open', 1);
+				$('.collapsible').collapsible();
+				setTimeout(function() {
+					$('.collapsible').collapsible('open', 0);
+				}, 1);
 			});
 		},
 		template: `
@@ -363,8 +429,9 @@ $(document).ready(function() {
 			<div class="row" v-if="! is_empty">
 				<div class="col m12">
 					<ul class="collapsible popout" data-collapsible="accordion">
-						<li v-for="inte in intes">
-							<div class="collapsible-header truncate flow-text">
+						<li v-for="(index, inte) in intes">
+							<div class="collapsible-header truncate ">
+								<i class='material-icons like-icon'>account_circle</i>
 								{{ inte_shortcut(inte.id_interpretation, inte.id_user) }}
 							</div>
 							<div class="collapsible-body ">
@@ -377,6 +444,10 @@ $(document).ready(function() {
 								v-on:click="like(inte.id_interpretation)">
 									赞{{ like_total(inte.id_interpretation) }}
 									<i class='material-icons like-icon'>arrow_drop_up</i>
+								</a>
+								<a class='chip dislike-btn' style='cursor:pointer;'
+								v-on:click="dislike(inte.id_interpretation)">
+									<i class='material-icons like-icon'>arrow_drop_down</i>
 								</a>
 							</div>
 						</li>

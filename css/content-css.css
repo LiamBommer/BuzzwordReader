@@ -30,6 +30,11 @@ html, body, iframe {
 
 body {
   background-color: transparent;
+	font-size: 100%;
+}
+
+#search {
+	padding-left: 8px;
 }
 
 #search-icon {
