@@ -294,12 +294,7 @@ $(document).ready(function() {
 			},
 			like(id_inte) {
 				// 释义点赞
-				// 修改样式为蓝底白字
-				this.likeClass = 'blue';
-				this.likeTextClass = 'white-text';
-				this.dislikeClass = '';
-				this.dislikeTextClass = '';
-
+				var _this = this;
 				// 用户id获取
 				var id_user = -1;
 				chrome.storage.sync.get({
@@ -325,6 +320,17 @@ $(document).ready(function() {
 						},
 						success: function(result) {
 							console.log("点赞： "+JSON.stringify(result));
+							if(result.result == 'success') {
+								// 更新like_total
+								$.get(server_url+'Entry/search_inte',
+									{entry_id: _this.id_entry}, function(result_inte) {
+										//更新点赞数组
+										if(result_inte.like !== undefined) {
+											_this.likes = [];
+											_this.likes.push(result_inte.like);
+										}
+									}, 'json');
+							}
 							if(result.result == 'failure') {
 								alert('点赞失败!\n' + result.error_msg);
 							}
@@ -343,13 +349,9 @@ $(document).ready(function() {
 			},
 			dislike(id_inte) {
 				// 点灭
-				// 修改样式为蓝底白字
-				this.dislikeClass = 'blue';
-				this.dislikeTextClass = 'white-text';
-				this.likeClass = '';
-				this.likeTextClass = '';
 
 				// 用户id获取
+				var _this = this;
 				var id_user = -1;
 				chrome.storage.sync.get({
 					BW_userId: -1
@@ -376,6 +378,16 @@ $(document).ready(function() {
 							console.log("点灭： "+JSON.stringify(result));
 							if(result.result == 'failure') {
 								alert('点灭失败!\n' + result.error_msg);
+							}else {
+								// 更新like_total
+								$.get(server_url+'Entry/search_inte',
+									{entry_id: _this.id_entry}, function(result_inte) {
+										//更新点赞数组
+										if(result_inte.like !== undefined) {
+											_this.likes = [];
+											_this.likes.push(result_inte.like);
+										}
+									}, 'json');
 							}
 						},
 						error: function(error) {
@@ -404,6 +416,7 @@ $(document).ready(function() {
 				$.ajax({
 					type:'GET',
 					url: server_url + 'Entry/search_inte/',
+					async: false,
 					dataType: 'json',
 					data: {
 						entry_id: _this.id_entry
@@ -492,12 +505,10 @@ $(document).ready(function() {
 									<a href="{{ inte.resource }}">{{ inte.resource }}</a>
 								</p>
 								<div class='chip like-btn' style='cursor:pointer;'
-								v-bind:class="[likeClass, likeTextClass]"
 								v-on:click="like(inte.id_interpretation)">赞{{ like_total(inte.id_interpretation) }}
 									<i class='material-icons like-icon'>arrow_drop_up</i>
 								</div>
 								<div class='chip dislike-btn' style='cursor:pointer;'
-								v-bind:class="[dislikeClass, dislikeTextClass]"
 								v-on:click="dislike(inte.id_interpretation)">
 									灭<i class='material-icons like-icon'>arrow_drop_down</i>
 								</div>
