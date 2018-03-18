@@ -83,8 +83,11 @@ $(document).ready(function() {
 			success: function(result) {
 				console.log(JSON.stringify(result));
 
-				if(JSON.stringify(result) === '[]'|| result.length === 0) {
+				if(JSON.stringify(result.inte) === '[]'|| result.inte.length === 0) {
 					$('#meaning-not-found').show();
+					$('#entry-heading-none').text(entry_name);
+					$('#entry-heading-none').attr('id',"entry-heading-none"+id);
+					$('#search-modal').hide();
 					return;
 				}
 
@@ -120,6 +123,7 @@ $(document).ready(function() {
 
 				// 置顶释义显示
 				$('#entry-heading').text(entry_name);
+				$('#entry-heading').attr("id",'entry-heading-number'+id);
 				$('#entry-meaning').text(top_meaning);
 				$('#meaning-source').text("来源："+top_meaning_source);
 				$('#meaning-daytime').text("创建时间："+top_meaning_daytime);
@@ -191,21 +195,50 @@ $(document).ready(function() {
 		$("#entry-modal").hide();
 	});
 
+  // 点击添加释义按钮
 	$('.add-meaning').click(function(){
-		window.open(chrome.extension.getURL('/options-page/options.html'));
+
+		var url="options-page/options.html?";
+		if($('#entry-modal').css('display') != "none"){
+			var id = $('h1[id^=entry-heading-number]').attr('id');
+			id = id.substring(20);
+			url += encodeURI("action=addInte&id_entry="+id
+			+"&name_entry="+$('h1[id^=entry-heading-number]').text());
+		}
+
+		else{
+			var id = $('h1[id^=entry-heading-none]').attr('id');
+			id = id.substring(18);
+			url += encodeURI("action=addInte&id_entry="+id
+			+"&name_entry="+$('h1[id^=entry-heading-none]').text());
+		}
+		window.open(chrome.runtime.getURL(url));
 	});
 
+  // 点击添加词条按钮
 	$('.add-entry').click(function(){
-		window.open(chrome.extension.getURL('/options-page/options.html'));
+		var url="options-page/options.html?";
+		if($('#entry-modal').css('display') == "none"){
+			url += encodeURI("action=addEntry&name_entry="+$('#search').val());
+		}
+
+		else{
+			url += encodeURI("action=addEntry&name_entry=");
+		}
+		window.open(chrome.runtime.getURL(url));
 	});
 
+  // 点击举报按钮
 	$('#report').click(function(){
-		window.open(chrome.extension.getURL('/options-page/options.html'));
+		// window.open(chrome.extension.getURL('/options-page/options.html'));
 	});
 
+  // popup页面点赞功能
 	$('#like').click(function(){
 		var id_user = -1;
 		var id_inte = $('p[id^="entry-meaning"]').attr("id");
+		id_inte = id_inte.substring(13,id_inte.length);
+		console.log(JSON.stringify("shiyi"+id_inte));
 
 		chrome.storage.sync.get({
 			BW_userId: -1
@@ -252,9 +285,11 @@ $(document).ready(function() {
 
 	});
 
+	// popup页面点灭功能
 	$('#dislike').click(function(){
 		var id_user = -1;
 		var id_inte = $('p[id^="entry-meaning"]').attr("id");
+		id_inte = id_inte.substring(13,id_inte.length);
 
 		chrome.storage.sync.get({
 			BW_userId: -1

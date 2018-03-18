@@ -58,8 +58,16 @@ h5.entry-title {
 	margin-bottom: 0px;
 }
 
-i.like-icon {
-	top: 8px;
+p.note {
+	font-size: 100%;
+	color: gray;
+}
+
+.chip .like-icon {
+	float: right;
+	font-size: 32px;
+	line-height: 32px;
+	padding-left: 8px;
 }
 
 /*
