@@ -86,6 +86,33 @@ function ResolveURL() {
 }
 
 
+function update_user() {
+	// 更新用户数据
+	// 并显示登录用户
+	chrome.storage.sync.get({
+		BW_username: 'unknown',
+		BW_userIdentity: -1,
+		BW_userEmail: '',
+		BW_userPhone: ''
+	},
+	function(items) {
+		$('#username-sideNav').html(items.BW_username);
+		$('#email-sideNav').html(items.BW_userEmail+"<br/>"+items.BW_userPhone);
+		// 验证用户身份，来显示不同区域
+		var user_identity = items.BW_userIdentity;
+		if(user_identity == 0) {
+			// 普通用户
+			$('.admin-visible').hide();
+		} else if(user_identity == 1) {
+			// 管理员
+			$('.admin-visible').slideDown();
+		} else if(user_identity == 2) {
+			// 超级管理员
+		}
+	});
+}
+
+
 $(document).ready(function() {
 
 	// 模态框初始化
@@ -100,22 +127,19 @@ $(document).ready(function() {
 	$('#delete-entry-modal').modal();
 	$('#edit-inte-modal').modal();
 	$('#delete-inte-modal').modal();
+	$('.dropdown-button').dropdown({
+		hover: true,
+		belowOrigin: true,	// 在原来的按钮下面出现
+	});
 
 	// 本机测试用服务器
-	// var server_url = 'http://127.0.0.1/BuzzwordReader/';
+	var server_url = 'http://127.0.0.1/BuzzwordReader/';
 	// 生产环境公网服务器
-	var server_url = 'http://119.29.58.165:81/index.php/';
+	// var server_url = 'http://119.29.58.165:81/index.php/';
 
 
-	// 显示登录用户
-	chrome.storage.sync.get({
-		BW_username: 'unknown',
-		BW_userId: -1
-	},
-	function(items) {
-		$('#username-div').html(items.BW_username);
-		$('#userId-div').html(items.BW_userId);
-	});
+	// 执行函数，更新用户状态
+	update_user();
 
 
 	/*
@@ -250,15 +274,27 @@ $(document).ready(function() {
 						BW_userProfile: result.row.profile,
 					},function() {
 						// 更新登录用户
-						chrome.storage.sync.get({
-							// 取值： 默认值
-							BW_username: 'unknown',
-							BW_userId: -1
-						},
-						function(items) {
-							$('#username-div').html(items.BW_username);
-							$('#userId-div').html(items.BW_userId);
-						});
+						// chrome.storage.sync.get({
+						// 	// 取值： 默认值
+						// 	BW_username: 'unknown',
+						// 	BW_userIdentity: -1,
+						// 	BW_userEmail: '',
+						// 	BW_userPhone: ''
+						// },
+						// function(items) {
+						// 	$('#username-sideNav').html(items.BW_username);
+						// 	$('#email-sideNav').html(items.BW_userEmail+"<br/>"+items.BW_userPhone);
+						// 	// 验证用户身份，来显示不同区域
+						// 	var user_identity = items.BW_userIdentity;
+						// 	if(user_identity == 0) {
+						// 		// 普通用户
+						// 	} else if(user_identity == 1) {
+						// 		// 管理员
+						// 	} else if(user_identity == 2) {
+						// 		// 超级管理员
+						// 	}
+						// });
+						update_user();
 					});
 				}
 				if(result.result == 'failure') {
@@ -1056,6 +1092,67 @@ $(document).ready(function() {
 		return false;
 
 	});
+
+
+	/*
+	 * 侧边栏vue实例
+
+	 !!!!    弃用状态     !!!!
+	 */
+	// var side_out_vue = new Vue({
+	// 	el: '#slide-out',
+	// 	data: {
+	// 		username: 'unknown',
+	// 		email: '',
+	// 		phone: ''
+	// 	},
+	// 	methods: {
+	// 	},
+	// 	computed: {
+	// 		get_username: function() {
+	// 			// 显示当前登录用户名
+	// 			var _this = this;
+	// 			chrome.storage.sync.get({
+	// 				BW_username: 'unknown'
+	// 			},
+	// 			function(items) {
+	// 				_this.username = items.BW_username;
+	// 			});
+	// 			return this.username;
+	// 		},
+	//
+	// 		get_email: function() {
+	// 			var _this = this;
+	// 			chrome.storage.sync.get({
+	// 				BW_userEmail: ''
+	// 			},
+	// 			function(items) {
+	// 				_this.email = items.BW_userEmail;
+	// 			});
+	// 			return _this.email;
+	// 		},
+	//
+	// 		get_phone: function() {
+	// 			var _this = this;
+	// 			chrome.storage.sync.get({
+	// 				BW_userPhone: ''
+	// 			},
+	// 			function(items) {
+	// 				_this.phone = items.BW_userPhone;
+	// 			});
+	// 			return _this.phone;
+	// 		}
+	// 	},
+	// 	create() {
+	// 		// 将用户信息存入数组
+	//
+	// 		// 在dom渲染完成后执行
+	// 		this.$nextTick(function() {
+	//
+	// 		});
+	//
+	// 	}
+	// });
 
 
 });

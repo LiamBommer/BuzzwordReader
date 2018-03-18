@@ -47,7 +47,9 @@ $(document).ready(function() {
 				is_empty: false,
 				search_input: search_content,
 				search_note: '暂未有相关词条',
-				entrys: []
+				entrys: [],
+				intes: [],
+				likes: []
 			}
 		},
 		methods: {
@@ -105,6 +107,87 @@ $(document).ready(function() {
 				});
 				// 更改视图
 				search_entry_vue.currentView = 'inte-list';
+			},
+			get_shortcut(id_entry) {
+				// 获取第一个释义，和用户名
+				// 获取本词条下所有释义和点赞数组
+				var intes = [];
+				if(id_entry != -1) {
+					// 查找词条下的释义
+					$.ajax({
+						type:'GET',
+						url: server_url + 'Entry/search_inte/',
+						async: false,
+						dataType: 'json',
+						data: {
+							entry_id: id_entry
+						},
+						success: function(result) {
+							// console.log("查找释义ajax结果: "+JSON.stringify(result));
+							if(result.result == 'empty') {
+								return;
+							} else {
+								if(JSON.stringify(result.inte) != '[]')
+									for(i in result.inte) {
+										intes.push(result.inte[i]);
+									}
+									console.log("释义数组: "+JSON.stringify(intes));
+							}
+						},
+					});
+				} else {
+					// 获取不到词条id
+					alert('id_entry = '+id_entry);
+					return ;
+				}
+				if(JSON.stringify(intes) != '[]') {
+					// 释义不为空
+					// 根据用户id，获取用户名
+					var username = "";
+					var top_user_id = intes[0].id_user;
+					$.ajax({
+						type:'GET',
+						url: server_url + 'User/search_user/',
+						async: false,
+						dataType: 'json',
+						data: {
+							id_user: top_user_id
+						},
+						success: function(result) {
+							console.log("用户信息： "+JSON.stringify(result));
+							if(result.result == 'empty') {
+								username = "can't find user";
+							} else {
+								username = result.username;
+							}
+						}
+					});
+
+					return username+": "+intes[0].interpretation;
+
+				} else {
+					return '';
+				}
+
+				var likes = _this.likes[0];
+				// var like_most = -1;
+				// var top_inte_id = -1;
+				// var top_inte = "";
+				// var top_user_id = -1;
+				// // 遍历点赞数组和词条数组
+				// for(var i=0; i<likes.length; i++) {
+				// 	for(var j=0; j<_this.intes.length; j++) {
+				// 		// 取出本词条的数组
+				// 		if(likes[i].id_interpretation == _this.intes[j].id_interpretation) {
+				// 			// 比较是否是最多赞的释义
+				// 			top_inte_id = likes[i].id_interpretation;
+				// 			top_inte = _this.intes[j].interpretation;
+				// 			like_most = likes[i].like_total;
+				// 			top_user_id = _this.intes[j].id_user;
+				// 		}
+				// 	}
+				// }
+
 			},
 			addEntry(name_entry) {
 				// 添加词条
@@ -192,17 +275,19 @@ $(document).ready(function() {
 				<div class="col m6 s12"
 				v-for="entry in entrys"
 				v-bind:key="entry.id_entry">
-					<div class="card white">
+					<div class="card white hoverable" style="cursor:pointer"
+					v-on:click="inte(entry.id_entry, entry.name)">
 						<div class="card-content black-text">
-							<a class="collection-item"
-							v-on:click="inte(entry.id_entry, entry.name)">
-								<span class="card-title" style="cursor:pointer">
+							<a>
+								<span class="card-title">
 									{{ entry.name }}
 								</span>
 							</a>
+							<p>{{ get_shortcut(entry.id_entry) }}</p>
 					</div>
 				</div>
 			</div>
+
 			<div class="row">
 				<div class="col m12">
 					<br/>
@@ -240,10 +325,8 @@ $(document).ready(function() {
 				// 返回词条列表组件
 				search_entry_vue.currentView = 'entry-list';
 			},
-			inte_shortcut(id_inte, id_user) {
+			get_username(id_user) {
 				var username = "";
-				var return_str = "";
-				var _this = this;
 
 				// 根据id查找用户
 				$.ajax({
@@ -261,24 +344,16 @@ $(document).ready(function() {
 						} else {
 							username = result.username;
 						}
-					},
-					error: function(error) {
-						alert('查询请求错误，请重试');
-						console.log(JSON.stringify(error));
-						// error display
-						return;
-					},
-					scriptCharset: 'utf-8'
+					}
 				});
 
-				// 返回 “用户名 + 词条前15个字符	”
-				var inte_arr = _this.intes.filter(item => item.id_interpretation == id_inte);
-				var inte = inte_arr[0].interpretation;
+				// 返回 用户名
+				// var inte_arr = _this.intes.filter(item => item.id_interpretation == id_inte);
+				// var inte = inte_arr[0].interpretation;
 				// 截取开头10个字符
-				var inte_short = inte.substr(0, 10);
+				// var inte_short = inte.substr(0, 10);
 				// return_str = username+": "+inte_short+"...";
-				return_str = username+": "+inte;
-				return return_str;
+				return username;
 			},
 			like_total(id_inte) {
 				// 根据释义id在点赞数组里找出点赞数并返回
@@ -496,7 +571,7 @@ $(document).ready(function() {
 						<li v-for="(index, inte) in intes">
 							<div class="collapsible-header truncate ">
 								<i class='material-icons'>account_circle</i>
-								{{ inte_shortcut(inte.id_interpretation, inte.id_user) }}
+								{{ get_username(inte.id_user) }}
 							</div>
 							<div class="collapsible-body ">
 								{{ inte.interpretation }}

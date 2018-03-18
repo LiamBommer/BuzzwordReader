@@ -7,6 +7,7 @@
 	<title>Bw | Options</title>
   <!--Import materialize.css-->
   <link type="text/css" rel="stylesheet" href="/css/materialize.min.css"  media="screen,projection"/>
+  <link type="text/css" rel="stylesheet" href="/css/options.css"  media="screen,projection"/>
   <!--Import Google Icon Font-->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	<!-- <link rel="stylesheet" href="/css/option.css"> -->
@@ -15,51 +16,99 @@
   <!--Import jQuery before materialize.js-->
   <script type="text/javascript" src="/js/jquery-3.2.1.min.js"></script>
   <script type="text/javascript" src="/js/materialize.min.js"></script>
+	<!-- <script type="text/javascript" src="/js/vue.csp.min.js"></script> -->
+	<script type="text/javascript" src="/js/vue.csp.js"></script>
   <script type="text/javascript" src="/js/options.js"></script>
 
 	<header>
+		<!-- Dropdown Structure -->
+		<ul id="dropdown-nav" class="dropdown-content">
+			<!-- <li><a class="disabled"> </a></li> -->
+			<li><a class="waves-effect modal-trigger black-text" href="#login-modal">重新登录</a></li>
+      <li><a class="waves-effect modal-trigger black-text" href="#signup-modal">注册</a></li>
+      <li><a class="waves-effect modal-trigger black-text" href="#pw-modal">修改密码</a></li>
+		</ul>
 		<nav class="teal lighten-1">
 		  <div class="container">
 		    <div id="navigator" class="nav-wrapper">
-		      <a href="#" class="brand-logo left">Buzzword</a>
-		        <ul id="nav-mobile" class="right">
-		          <li><a  href="#" id="username-a">username</a></li>
-		          <li><a id="info-btn">个人信息查看</a></li>
-		          <li><a class="waves-effect modal-trigger" href="#login-modal">登录</a></li>
-		          <li><a class="waves-effect modal-trigger" href="#signup-modal">注册</a></li>
-		          <li><a class="waves-effect modal-trigger" href="#pw-modal">修改密码</a></li>
+		      <a href="#" class="brand-logo left">BuzzwordReader Options</a>
+		        <ul id="nav-mobile" class="right hide-on-med-and-down">
+							<!-- DropDown Trigger -->
+							<li>
+								<i class="material-icons dropdown-button" style="cursor:pointer"
+								data-activates="dropdown-nav">dehaze</i>
+							</li>
+		          <!-- <li><a  href="#" id="username-a">username</a></li> -->
+		          <!-- <li><a id="info-btn">个人信息查看</a></li> -->
+		          <!-- <li><a class="waves-effect modal-trigger" href="#login-modal">登录</a></li> -->
+		          <!-- <li><a class="waves-effect modal-trigger" href="#signup-modal">注册</a></li> -->
+		          <!-- <li><a class="waves-effect modal-trigger" href="#pw-modal">修改密码</a></li> -->
 		        </ul>
 		    </div>
 		  </div>
 		</nav>
-
-		<ul id="slide-out" class="side-nav fixed">
-      <li><a href="#!">First Sidebar Link</a></li>
-      <li><a href="#!">Second Sidebar Link</a></li>
-    </ul>
-    <a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a>
-
 	</header>
 
+		<ul id="slide-out" class="side-nav fixed">
+			<li>
+				<div class="user-view">
+					<div class="background teal lighten-1 white-text">
+						<!-- 背景图片 -->
+						<!-- <img src="/assets/user-background.png" class="responsive-img"> -->
+					</div>
+					<i class="material-icons medium">account_circle</i>
+					<span class="white-text name" id="username-sideNav"></span>
+					<span class="white-text email" id="email-sideNav"></span>
+				</div>
+			</li>
+      <li><a class="waves-effect collection-item modal-trigger black-text" href="#info-modal" id="info-btn">个人信息查看</a></li>
+      <!-- <li><a class="waves-effect collection-item modal-trigger black-text" href="#pw-modal">修改密码</a></li> -->
+			<!-- 应该放在词条内部
+			<li>
+        <a class="waves-effect collection-item modal-trigger black-text" href="#new-entry-modal">创建词条<i class="tiny material-icons icons-order">chevron_right</i></a>
+			</li>
+			<li>
+        <a class="waves-effect collection-item modal-trigger black-text" href="#new-inte-modal">添加释义<i class="tiny material-icons icons-order">chevron_right</i></a>
+			</li> -->
+			<!-- 以下管理员可见 -->
+			<section class="admin-visible" style="display: none">
+			<li>
+				<div class="divider"></div>
+			</li>
+			<li>
+        <a class="waves-effect collection-item modal-trigger black-text" href="#edit-entry-modal">编辑词条<i class="tiny material-icons icons-order">chevron_right</i></a>
+			</li>
+			<li>
+        <a class="waves-effect collection-item modal-trigger black-text" href="#delete-entry-modal">删除词条<i class="tiny material-icons icons-order">chevron_right</i></a>
+			</li>
+			<li>
+        <a class="waves-effect collection-item modal-trigger black-text" href="#edit-inte-modal">编辑释义<i class="tiny material-icons icons-order">chevron_right</i></a>
+			</li>
+			<li>
+	      <a class="waves-effect collection-item modal-trigger black-text" href="#delete-inte-modal">删除释义<i class="tiny material-icons icons-order">chevron_right</i></a>
+			</li>
+			</section>
+    </ul>
+    <!-- <a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a> -->
 
 
-  <div class="container" >
-  	<br/>
-  	<br/>
-  	已登录用户：
-  	<div class="chip" id="username-div"></div>
-  	<div class="chip" id="userId-div"></div>
-		<br/>
-		<br/>
+	<main>
 
-		<div class="divider"></div>
+	  <div class="container" >
+	  	<!-- <br/>
+	  	<br/>
+	  	已登录用户：
+	  	<div class="chip" id="username-div"></div>
+	  	<div class="chip" id="userId-div"></div>
+			<br/>
+			<br/> -->
 
-    <section class="entry-section">
-      <br>
-			<br>
+			<div class="divider"></div>
 
-			<div class="row" >
-				<div id="functions-order">
+	    <section class="entry-section">
+				<br>
+
+				<!-- <div id="functions-order">
 	        <div class="col s2">
 	          <div class="collection">
 	            <a class="waves-effect collection-item modal-trigger black-text" href="#new-entry-modal">&nbsp;&nbsp;&nbsp;创建词条&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="tiny material-icons icons-order">chevron_right</i></a>
@@ -70,7 +119,7 @@
 	            <a class="waves-effect collection-item modal-trigger black-text" href="#delete-inte-modal">&nbsp;&nbsp;&nbsp;删除释义&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="tiny material-icons icons-order">chevron_right</i></a>
 	          </div>
 	        </div>
-	      </div>
+	      </div> -->
 
 				<div id="search-div">
 	        <div class="col s9 offset-s1">
@@ -85,9 +134,12 @@
 	          <div id="search-result-div" class="row"></div>
 	        </div>
 	      </div>
-			</div>
-    </section>
-  </div>
+
+	    </section>
+	  </div>
+
+	</main>
+
 
 	<div id="entry-modal" class="modal">
 		<div id="entry-modal-content" class="modal-content">
