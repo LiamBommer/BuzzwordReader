@@ -1,9 +1,9 @@
 
 
 	// 本机测试用服务器
-	// var server_url = 'http://127.0.0.1/BuzzwordReader/';
+	var server_url = 'http://127.0.0.1/BuzzwordReader/';
 	// 生产环境公网服务器
-	var server_url = 'http://119.29.58.165:81/index.php/';
+	// var server_url = 'http://119.29.58.165:81/index.php/';
 
 
 // receive message function from parent window
@@ -16,6 +16,37 @@ window.addEventListener('message', function(event) {
 	}
 
 }, false);
+
+
+/*
+ * 输入过滤器！
+ *
+ *	将特殊字符变为空格
+ *  被过滤的字符列表如下。。。
+ *
+ */
+function strFilter(str, type) {
+	if(type == 'search') {
+		// 搜索
+		// 	过滤所有特殊符号，转为空格
+		var pattern = new RegExp("[`~!@#$^&*()=|{}':;',\\[\\].<>/?~！@#￥……&*（）——|{}【】‘；：”“'。，、？%+_]");
+
+	} else if(type == 'entry') {
+		// 词条名
+		//	过滤除以下符号： ？ ！ ， 。、
+		var pattern = new RegExp("[`~@#$^&*()=|{}':;'\\[\\]<>/~@#￥……&*（）——|{}【】‘；：”“'%+_]");
+
+	} else if(type == 'inte') {
+		// 释义内容
+		//	暂未想好
+	}
+  var specialStr = "";
+  for(var i=0;i<str.length;i++)
+  {
+       specialStr += str.substr(i, 1).replace(pattern, ' ');
+  }
+  return specialStr;
+}
 
 
 $(document).ready(function() {
@@ -56,21 +87,23 @@ $(document).ready(function() {
 		  search() {
 				// 搜索栏回车搜索时，进行词条查询
 				var _this = this;
-				if(_this.search_input == '' || _this.search_input == null) {
+				var filtedStr = "";
+				// 过滤输入内容： 空格，特殊符号等
+				filtedStr = strFilter(_this.search_input, 'search');
+				if(filtedStr == '' || filtedStr == null) {
 					// 空搜索内容，提示并返回
 					_this.search_note = '总要搜索点什么吧？';
 					_this.is_empty = true;
 					return;
 				} else {
 					_this.is_empty = false;
-				// 过滤输入内容： 空格，特殊符号等
 				}
 				$.ajax({
 					type:'GET',
 					url: server_url + 'Entry/search_entry/',
 					dataType: 'json',
 					data: {
-						search_content: _this.search_input
+						search_content: filtedStr
 					},
 					success: function(result) {
 						console.log('ajax结果： '+JSON.stringify(result));
