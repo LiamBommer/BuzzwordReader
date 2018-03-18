@@ -63,6 +63,7 @@ $(document).ready(function() {
 					return;
 				} else {
 					_this.is_empty = false;
+				// 过滤输入内容： 空格，特殊符号等
 				}
 				$.ajax({
 					type:'GET',
@@ -199,46 +200,7 @@ $(document).ready(function() {
 		},
 		created() {
 		  // 在创建后自动查询传来的词条名
-			var _this = this;
-			if(_this.search_input == '' || _this.search_input == null) {
-				// 空搜索内容，返回
-				_this.search_note = '总要搜索点什么吧？';
-				_this.is_empty = true;
-				return;
-			} else {
-				_this.is_empty = false;
-			}
-			$.ajax({
-				type:'GET',
-				url: server_url + 'Entry/search_entry/',
-				dataType: 'json',
-				data: {
-					search_content: _this.search_input
-				},
-				success: function(result) {
-					console.log('ajax结果： '+JSON.stringify(result));
-					// 清空原来的结果
-					_this.entrys = [];
-					if(result.result == 'empty') {
-						_this.is_empty = true;
-						_this.search_note = '暂未有相关词条';
-						return;
-					} else {
-						// 将查找到的词条数组存起来
-						for(i in result) {
-							console.log(result[i]);
-							_this.entrys.push(result[i]);
-						}
-					}
-				},
-				error: function(error) {
-					alert('查询请求错误，请重试');
-					console.log(JSON.stringify(error));
-					// error display
-					return;
-				},
-				scriptCharset: 'utf-8'
-			});
+			this.search();
 		},
 		template: `
 			<div class="row">
