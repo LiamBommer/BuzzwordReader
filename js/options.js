@@ -39,10 +39,11 @@ function ResolveURL() {
 		var r = window.location.search.substr(1).match(reg);
 		if (r != null) return unescape(r[2]); return null;
 	}
+
+	// 添加释义
+	// @param
+	// 	id_entry, name_entry
 	resolver.addInte = function() {
-		// 添加释义
-		// @param
-		// 	id_entry, name_entry
 		var id_entry = this.GetQueryString('id_entry');
 		var name_entry = this.GetQueryString('name_entry');
 
@@ -50,12 +51,14 @@ function ResolveURL() {
 		$('#id-entry').val(id_entry);
 		$('#name-entry').val(name_entry);
 	}
-	resolver.resolve = function() {
-		// 统一处理函数
-		// 先取action的值，然后根据action做不同的操作
 
-		// 要添加新的动作，则新添加 resolver.xxx = function() {}
-		// 然后在次函数中判断并执行即可
+
+	// 统一处理函数
+	// 先取action的值，然后根据action做不同的操作
+
+	// 要添加新的动作，则新添加 resolver.xxx = function() {}
+	// 然后在次函数中判断并执行即可
+	resolver.resolve = function() {
 		var action = this.GetQueryString('action');
 		if(action == 'addInte') {
 			this.addInte();

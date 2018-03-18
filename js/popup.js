@@ -150,12 +150,15 @@ $(document).ready(function() {
 
 						var other="<li><div class='collapsible-header' id='collection-username'>"
 						+"<i class='material-icons'>account_circle</i>"+result.inte[i].id_user+"</div>"
-						+"<div class='collapsible-body'><span id='other-meaning"+other_meaning_id+"'>"+other_meaning
-						+"</span><div class='chip right'><a href='#' class='dislike'><i class='tiny material-icons'>"
+						+"<div class='collapsible-body'><span id='other-meaning"+other_meaning_id+"'>"
+						+other_meaning+"</span><br/><span class='other-meaning-source'>来源："+other_meaning_source
+						+"</span><br/><span class='other-meaning-daytime'>添加时间："+other_meaning_daytime+"</span>"
+						+"<div class='chip right'><a href='#' class='dislike'>"
+						+"<i class='small material-icons'>"
 						+"arrow_drop_down</i></a></div>"
 						+"<div class='chip right'><a href='#' class='like'>"
-						+"<i class='tiny material-icons'>arrow_drop_up</i>"
-						+like_total+"</a></div>"
+						+"<i class='small material-icons'>arrow_drop_up</i>"
+						+"<span id='like-number'>"+like_total+"</span></a></div>"
 						+"</div></li>";
 						$('#other-meaning-collection').append(other);
 					}
@@ -295,7 +298,111 @@ $(document).ready(function() {
 			});
 
 		});
-
 	});
+
+	$('body').on('click','.like',function(){
+		var id_user = -1;
+		var id_inte = $('span[id^="other-meaning"]').attr("id");
+		id_inte = id_inte.substring(13,id_inte.length);
+		// console.log(JSON.stringify(id_inte));
+
+		chrome.storage.sync.get({
+			BW_userId: -1
+		},
+		function(items) {
+			id_user = items.BW_userId;
+			// validate
+			if(id_user == -1 || id_inte == null) {
+				alert('Cannot get correct user ID.');
+				return;
+			}
+
+			$.ajax({
+				type:'POST',
+				url: server_url + 'Entry/like/',
+				timeout: 5000,
+				async: true,
+				dataType: 'json',
+				data: {
+					id_user: id_user,
+					id_inte: id_inte
+				},
+
+				success: function(result) {
+					if(result.result == 'success') {
+						console.log(JSON.stringify(result));
+						var like_number = $('#like_number').text();
+						like_number+=1;
+						// console.log(JSON.stringify(like_number));
+						// $('#like_number').text(like_number);
+						alert('点赞成功！')
+					}
+					if(result.result == 'failure') {
+						alert('点赞失败!\n' + result.error_msg);
+					}
+				},
+
+				error: function(error) {
+					alert('ajax错误，请重试');
+					console.log(JSON.stringify(error));
+					$('#entry-modal').html(error.responseText);
+					return;
+				},
+				scriptCharset: 'utf-8'
+			});
+
+		});
+	});
+
+	$('body').on('click','.dislike',function(){
+		var id_user = -1;
+		var id_inte = $('span[id^="other-meaning"]').attr("id");
+		id_inte = id_inte.substring(13,id_inte.length);
+		// console.log(JSON.stringify(id_inte));
+
+		chrome.storage.sync.get({
+			BW_userId: -1
+		},
+		function(items) {
+			id_user = items.BW_userId;
+			// validate
+			if(id_user == -1 || id_inte == null) {
+				alert('Cannot get correct user ID.')
+				return;
+			}
+
+			$.ajax({
+				type:'POST',
+				url: server_url + 'Entry/dislike/',
+				timeout: 5000,
+				async: true,
+				dataType: 'json',
+				data: {
+					id_user: id_user,
+					id_inte: id_inte
+				},
+
+				success: function(result) {
+					if(result.result == 'success') {
+						console.log(JSON.stringify(result));
+						alert('点灭成功！')
+					}
+					if(result.result == 'failure') {
+						alert('点灭失败!\n' + result.error_msg);
+					}
+				},
+
+				error: function(error) {
+					alert('ajax错误，请重试');
+					console.log(JSON.stringify(error));
+					$('#entry-modal').html(error.responseText);
+					return;
+				},
+				scriptCharset: 'utf-8'
+			});
+
+		});
+	});
+
 
 });

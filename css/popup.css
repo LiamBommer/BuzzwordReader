@@ -75,3 +75,11 @@ span{
 #meaning-daytime{
 	font-size: 90%;
 }
+
+.like{
+	font-size: 130%;
+}
+
+.other-meaning-source,.other-meaning-daytime,#like-number{
+	font-size: 90%;
+}
