@@ -83,8 +83,11 @@ $(document).ready(function() {
 			success: function(result) {
 				console.log(JSON.stringify(result));
 
-				if(JSON.stringify(result) === '[]'|| result.length === 0) {
+				if(JSON.stringify(result.inte) === '[]'|| result.inte.length === 0) {
 					$('#meaning-not-found').show();
+					$('#entry-heading-none').text(entry_name);
+					$('#entry-heading-none').attr('id',"entry-heading-none"+id);
+					$('#search-modal').hide();
 					return;
 				}
 
@@ -120,6 +123,7 @@ $(document).ready(function() {
 
 				// 置顶释义显示
 				$('#entry-heading').text(entry_name);
+				$('#entry-heading').attr("id",'entry-heading-number'+id);
 				$('#entry-meaning').text(top_meaning);
 				$('#meaning-source').text("来源："+top_meaning_source);
 				$('#meaning-daytime').text("创建时间："+top_meaning_daytime);
@@ -150,12 +154,15 @@ $(document).ready(function() {
 
 						var other="<li><div class='collapsible-header' id='collection-username'>"
 						+"<i class='material-icons'>account_circle</i>"+result.inte[i].id_user+"</div>"
-						+"<div class='collapsible-body'><span id='other-meaning"+other_meaning_id+"'>"+other_meaning
-						+"</span><div class='chip right'><a href='#' class='dislike'><i class='tiny material-icons'>"
+						+"<div class='collapsible-body'><span id='other-meaning"+other_meaning_id+"'>"
+						+other_meaning+"</span><br/><span class='other-meaning-source'>来源："+other_meaning_source
+						+"</span><br/><span class='other-meaning-daytime'>添加时间："+other_meaning_daytime+"</span>"
+						+"<div class='chip right'><a href='#' class='dislike'>"
+						+"<i class='small material-icons'>"
 						+"arrow_drop_down</i></a></div>"
 						+"<div class='chip right'><a href='#' class='like'>"
-						+"<i class='tiny material-icons'>arrow_drop_up</i>"
-						+like_total+"</a></div>"
+						+"<i class='small material-icons'>arrow_drop_up</i>"
+						+"<span id='like-number'>"+like_total+"</span></a></div>"
 						+"</div></li>";
 						$('#other-meaning-collection').append(other);
 					}
@@ -188,21 +195,50 @@ $(document).ready(function() {
 		$("#entry-modal").hide();
 	});
 
+  // 点击添加释义按钮
 	$('.add-meaning').click(function(){
-		window.open(chrome.extension.getURL('/options-page/options.html'));
+
+		var url="options-page/options.html?";
+		if($('#entry-modal').css('display') != "none"){
+			var id = $('h1[id^=entry-heading-number]').attr('id');
+			id = id.substring(20);
+			url += encodeURI("action=addInte&id_entry="+id
+			+"&name_entry="+$('h1[id^=entry-heading-number]').text());
+		}
+
+		else{
+			var id = $('h1[id^=entry-heading-none]').attr('id');
+			id = id.substring(18);
+			url += encodeURI("action=addInte&id_entry="+id
+			+"&name_entry="+$('h1[id^=entry-heading-none]').text());
+		}
+		window.open(chrome.runtime.getURL(url));
 	});
 
+  // 点击添加词条按钮
 	$('.add-entry').click(function(){
-		window.open(chrome.extension.getURL('/options-page/options.html'));
+		var url="options-page/options.html?";
+		if($('#entry-modal').css('display') == "none"){
+			url += encodeURI("action=addEntry&name_entry="+$('#search').val());
+		}
+
+		else{
+			url += encodeURI("action=addEntry&name_entry=");
+		}
+		window.open(chrome.runtime.getURL(url));
 	});
 
+  // 点击举报按钮
 	$('#report').click(function(){
-		window.open(chrome.extension.getURL('/options-page/options.html'));
+		// window.open(chrome.extension.getURL('/options-page/options.html'));
 	});
 
+  // popup页面点赞功能
 	$('#like').click(function(){
 		var id_user = -1;
 		var id_inte = $('p[id^="entry-meaning"]').attr("id");
+		id_inte = id_inte.substring(13,id_inte.length);
+		console.log(JSON.stringify("shiyi"+id_inte));
 
 		chrome.storage.sync.get({
 			BW_userId: -1
@@ -249,9 +285,11 @@ $(document).ready(function() {
 
 	});
 
+	// popup页面点灭功能
 	$('#dislike').click(function(){
 		var id_user = -1;
 		var id_inte = $('p[id^="entry-meaning"]').attr("id");
+		id_inte = id_inte.substring(13,id_inte.length);
 
 		chrome.storage.sync.get({
 			BW_userId: -1
@@ -295,7 +333,111 @@ $(document).ready(function() {
 			});
 
 		});
-
 	});
+
+	$('body').on('click','.like',function(){
+		var id_user = -1;
+		var id_inte = $('span[id^="other-meaning"]').attr("id");
+		id_inte = id_inte.substring(13,id_inte.length);
+		// console.log(JSON.stringify(id_inte));
+
+		chrome.storage.sync.get({
+			BW_userId: -1
+		},
+		function(items) {
+			id_user = items.BW_userId;
+			// validate
+			if(id_user == -1 || id_inte == null) {
+				alert('Cannot get correct user ID.');
+				return;
+			}
+
+			$.ajax({
+				type:'POST',
+				url: server_url + 'Entry/like/',
+				timeout: 5000,
+				async: true,
+				dataType: 'json',
+				data: {
+					id_user: id_user,
+					id_inte: id_inte
+				},
+
+				success: function(result) {
+					if(result.result == 'success') {
+						console.log(JSON.stringify(result));
+						var like_number = $('#like_number').text();
+						like_number+=1;
+						// console.log(JSON.stringify(like_number));
+						// $('#like_number').text(like_number);
+						alert('点赞成功！')
+					}
+					if(result.result == 'failure') {
+						alert('点赞失败!\n' + result.error_msg);
+					}
+				},
+
+				error: function(error) {
+					alert('ajax错误，请重试');
+					console.log(JSON.stringify(error));
+					$('#entry-modal').html(error.responseText);
+					return;
+				},
+				scriptCharset: 'utf-8'
+			});
+
+		});
+	});
+
+	$('body').on('click','.dislike',function(){
+		var id_user = -1;
+		var id_inte = $('span[id^="other-meaning"]').attr("id");
+		id_inte = id_inte.substring(13,id_inte.length);
+		// console.log(JSON.stringify(id_inte));
+
+		chrome.storage.sync.get({
+			BW_userId: -1
+		},
+		function(items) {
+			id_user = items.BW_userId;
+			// validate
+			if(id_user == -1 || id_inte == null) {
+				alert('Cannot get correct user ID.')
+				return;
+			}
+
+			$.ajax({
+				type:'POST',
+				url: server_url + 'Entry/dislike/',
+				timeout: 5000,
+				async: true,
+				dataType: 'json',
+				data: {
+					id_user: id_user,
+					id_inte: id_inte
+				},
+
+				success: function(result) {
+					if(result.result == 'success') {
+						console.log(JSON.stringify(result));
+						alert('点灭成功！')
+					}
+					if(result.result == 'failure') {
+						alert('点灭失败!\n' + result.error_msg);
+					}
+				},
+
+				error: function(error) {
+					alert('ajax错误，请重试');
+					console.log(JSON.stringify(error));
+					$('#entry-modal').html(error.responseText);
+					return;
+				},
+				scriptCharset: 'utf-8'
+			});
+
+		});
+	});
+
 
 });
