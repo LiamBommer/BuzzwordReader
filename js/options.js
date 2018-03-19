@@ -63,6 +63,22 @@ function ResolveURL() {
 		$('#entry-name').val(name_entry);
 	}
 
+	resolver.login = function() {
+		// 登录
+		// @param
+		// login
+
+		$('#login-modal').modal('open');
+	}
+
+	resolver.signup = function() {
+		// 注册
+		// @param
+		// login
+
+		$('#signup-modal').modal('open');
+	}
+
 
 	// 统一处理函数
 	// 先取action的值，然后根据action做不同的操作
@@ -74,11 +90,14 @@ function ResolveURL() {
 		if(action == 'addInte') {
 			this.addInte();
 		}
+		if(action == 'addEntry') {
+			this.addEntry();
+		}
 		if(action == 'login') {
 			this.login();
 		}
-		if(action == 'addEntry') {
-			this.addEntry();
+		if(action == 'signup') {
+			this.signup();
 		}
 	}
 
@@ -133,9 +152,9 @@ $(document).ready(function() {
 	});
 
 	// 本机测试用服务器
-	var server_url = 'http://127.0.0.1/BuzzwordReader/';
+	// var server_url = 'http://127.0.0.1/BuzzwordReader/';
 	// 生产环境公网服务器
-	// var server_url = 'http://119.29.58.165:81/index.php/';
+	var server_url = 'http://119.29.58.165:81/index.php/';
 
 
 	// 执行函数，更新用户状态
@@ -1091,6 +1110,22 @@ $(document).ready(function() {
 		//阻止表单提交
 		return false;
 
+	});
+
+	$('#exit').click(function(){
+		// 将用户名，用户Id存入storage
+		chrome.storage.sync.set({
+			BW_username: 'unknown',
+			BW_userId: -1,
+			BW_userIdentity: -1,
+			BW_userIsBanned: -1,
+			BW_userEmail: '',
+			BW_userPhone: '',
+			BW_userGender: '',
+			BW_userProfile: '',
+		},function() {
+			update_user();
+		});
 	});
 
 
