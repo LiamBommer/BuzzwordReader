@@ -105,9 +105,11 @@ function ResolveURL() {
 }
 
 
+/*
+ * 更新用户数据
+ * 并显示登录用户
+ */
 function update_user() {
-	// 更新用户数据
-	// 并显示登录用户
 	chrome.storage.sync.get({
 		BW_username: 'unknown',
 		BW_userIdentity: -1,
@@ -121,14 +123,43 @@ function update_user() {
 		var user_identity = items.BW_userIdentity;
 		if(user_identity == 0) {
 			// 普通用户
-			$('.admin-visible').hide();
+			$('section.admin-visible').hide();
 		} else if(user_identity == 1) {
 			// 管理员
-			$('.admin-visible').slideDown();
+			$('section.admin-visible').slideDown();
 		} else if(user_identity == 2) {
 			// 超级管理员
 		}
 	});
+}
+
+
+/*
+ * 输入过滤器！
+ *
+ *  过滤特殊字符, 被过滤的字符列表如下。。。
+ */
+function strFilter(str, type) {
+	if(type == 'search') {
+		// 搜索
+		// 	过滤所有特殊符号，转为空格
+		var pattern = new RegExp("[`~!@#$^&*()=|{}':;',\\[\\].<>/?~！@#￥……&*（）——|{}【】‘；：”“'。，、？%+_]");
+
+	} else if(type == 'entry') {
+		// 词条名
+		//	过滤除以下符号： ？ ！ ， 。、
+		var pattern = new RegExp("[`~@#$^&*()=|{}':;'\\[\\]<>/~@#￥……&*（）——|{}【】‘；：”“'%+_]");
+
+	} else if(type == 'inte') {
+		// 释义内容
+		//	暂未想好
+	}
+  var specialStr = "";
+  for(var i=0;i<str.length;i++)
+  {
+       specialStr += str.substr(i, 1).replace(pattern, ' ');
+  }
+  return specialStr;
 }
 
 

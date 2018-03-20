@@ -14,14 +14,14 @@
     },
 
     "permissions": [
-        "*://116.57.53.135/*",
+        "http://119.29.58.165:81/index.php/",
         "storage"
     ],
 
     "background":
     {
         "scripts": ["js/jquery-3.2.1.min.js", "background-scripts/background-script.js"],
-        "persistent": false
+        "persistent": true
     },
 
     "browser_action":

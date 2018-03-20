@@ -58,7 +58,15 @@ h5.entry-title {
 	margin-bottom: 0px;
 }
 
-p.note {
+div.card {
+	/*height: 180px;*/
+}
+
+.card .card-action {
+	/*height: 10px;*/
+}
+
+.note {
 	font-size: 100%;
 	color: gray;
 }

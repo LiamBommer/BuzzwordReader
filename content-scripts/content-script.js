@@ -50,7 +50,8 @@ $('body').on('mouseup', function(e) {
 	selectItem.setSelected();
 
 	// 若选中不为空		此处选择有bug:双击空白会出现按钮
-	if(selectItem.getSelected() != "") {
+	// if(selectItem.getSelected() != "") {
+	if(selectItem.getFinalSelected() != "") {
 
 		// 提示框html代码，用于后面插入时使用
 		var float_div_html = "<a id='__float-div__' " +

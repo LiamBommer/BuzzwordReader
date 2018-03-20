@@ -10,12 +10,43 @@
 // Here because it can't wait to receive message until
 // the page is loaded
 var search_content = "";
+
+// receive message from parent window
 window.addEventListener('message', function(event) {
 	if(event.data.act == 'search_content') {
 		search_content = event.data.msg;
 	}
-
 }, false);
+
+/*
+ * 输入过滤器！
+ *
+ *	将特殊字符变为空格
+ *  被过滤的字符列表如下。。。
+ *
+ */
+function strFilter(str, type) {
+	if(type == 'search') {
+		// 搜索
+		// 	过滤所有特殊符号，转为空格
+		var pattern = new RegExp("[`~!@#$^&*()=|{}':;',\\[\\].<>/?~！@#￥……&*（）——|{}【】‘；：”“'。，、？%+_]");
+
+	} else if(type == 'entry') {
+		// 词条名
+		//	过滤除以下符号： ？ ！ ， 。、
+		var pattern = new RegExp("[`~@#$^&*()=|{}':;'\\[\\]<>/~@#￥……&*（）——|{}【】‘；：”“'%+_]");
+
+	} else if(type == 'inte') {
+		// 释义内容
+		//	暂未想好
+	}
+  var specialStr = "";
+  for(var i=0;i<str.length;i++)
+  {
+       specialStr += str.substr(i, 1).replace(pattern, ' ');
+  }
+  return specialStr;
+}
 
 
 $(document).ready(function() {
@@ -45,62 +76,90 @@ $(document).ready(function() {
 		data: function() {
 			return {
 				is_empty: false,
+				is_searched: false,
 				search_input: search_content,
 				search_note: '暂未有相关词条',
 				entrys: [],
 				intes: [],
+				intes: [],
+				username: [],
 				likes: []
 			}
 		},
 		methods: {
-		  search() {
+		  	search_entry() {
 				// 搜索栏回车搜索时，进行词条查询
 				var _this = this;
-				if(_this.search_input == '' || _this.search_input == null) {
+				var filtedStr = "";
+				// 过滤输入内容： 空格，特殊符号等
+				filtedStr = strFilter(_this.search_input, 'search');
+				if(filtedStr == '' || filtedStr == null) {
 					// 空搜索内容，提示并返回
-					_this.search_note = '总要搜索点什么吧？';
+					_this.search_note = 'oops...未能获取到您想搜索什么？';
 					_this.is_empty = true;
+					_this.is_searched = false;
 					return;
 				} else {
 					_this.is_empty = false;
-				// 过滤输入内容： 空格，特殊符号等
+					_this.is_searched = true;
 				}
-				$.ajax({
-					type:'GET',
-					url: server_url + 'Entry/search_entry/',
-					dataType: 'json',
-					data: {
-						search_content: _this.search_input
-					},
-					success: function(result) {
-						console.log('ajax结果： '+JSON.stringify(result));
-						// 清空原来的结果
-						_this.entrys = [];
-						if(result.result == 'empty') {
-							_this.search_note = '暂未有相关词条';
-							_this.is_empty = true;
-							return;
-						} else {
-							// 将查找到的词条数组存起来
-							for(i in result) {
-								console.log(result[i]);
-								_this.entrys.push(result[i]);
-							}
-						}
-					},
-					error: function(error) {
-						alert('查询请求错误，请重试');
-						console.log(JSON.stringify(error));
-						// error display
+
+				// send message to background for searching result
+				chrome.runtime.sendMessage({
+					act: 'search_entry',
+					filtedStr: filtedStr
+				}, function(result) {
+					console.log('词条查询ajax结果： '+JSON.stringify(result));
+					// 清空原来的结果
+					_this.entrys = [];
+					_this.intes = [];
+					if(result.result == 'empty') {
+						_this.search_note = '暂未有相关词条';
+						_this.is_empty = true;
+						_this.is_searched = false;
 						return;
-					},
-					scriptCharset: 'utf-8'
+					} else {
+						// 将查找到的词条数组存起来
+						for(i in result) {
+							_this.entrys.push(result[i]);
+						}
+
+						// 遍历词条数组，查询释义
+						for(i in _this.entrys) {
+
+							// send message to background for searching result
+							chrome.runtime.sendMessage({
+								act: 'search_inte',
+								// id_entry: _this.entrys.id_entry
+								id_entry: _this.entrys[i].id_entry
+							}, function(result) {
+
+								console.log("查找释义ajax结果: "+JSON.stringify(result));
+								if(JSON.stringify(result.inte) == '[]') {
+									// return;
+									// 此处为了不出错： read property of undefined
+									// 需要手动赋值为空
+									result.inte[0]['interpretation'] = ' ';
+									result.inte[0]['username'] = ' ';
+								}
+
+								// 只插入第一条释义
+								// _this.intes.push(result.inte[0]);
+								_this.intes.push(result.inte[0]);
+
+								// console.log("释义数组: "+JSON.stringify(_this.intes))
+								console.log("释义数组: "+JSON.stringify(_this.intes));
+
+							});
+
+						}
+					}
 				});
 
 				// 改变search_content,使得返回这界面时能够保存查找信息
 				search_content = _this.search_input;
-		  },
-			inte(id_entry, name_entry) {
+		  	},
+			goto_inte(id_entry, name_entry) {
 				// 将词条id赋值给释义列表页面
 				this.$emit('id_entry_pass', {
 					id_entry: id_entry,
@@ -109,86 +168,12 @@ $(document).ready(function() {
 				// 更改视图
 				search_entry_vue.currentView = 'inte-list';
 			},
-			get_shortcut(id_entry) {
-				// 获取第一个释义，和用户名
-				// 获取本词条下所有释义和点赞数组
-				var intes = [];
-				if(id_entry != -1) {
-					// 查找词条下的释义
-					$.ajax({
-						type:'GET',
-						url: server_url + 'Entry/search_inte/',
-						async: false,
-						dataType: 'json',
-						data: {
-							entry_id: id_entry
-						},
-						success: function(result) {
-							// console.log("查找释义ajax结果: "+JSON.stringify(result));
-							if(result.result == 'empty') {
-								return;
-							} else {
-								if(JSON.stringify(result.inte) != '[]')
-									for(i in result.inte) {
-										intes.push(result.inte[i]);
-									}
-									console.log("释义数组: "+JSON.stringify(intes));
-							}
-						},
-					});
+			shortcut(index) {
+				if(JSON.stringify(this.intes[index]) != '[]') {
+					return this.intes[index].username + ": " + this.intes[index].interpretation;
 				} else {
-					// 获取不到词条id
-					alert('id_entry = '+id_entry);
-					return ;
+					return ''
 				}
-				if(JSON.stringify(intes) != '[]') {
-					// 释义不为空
-					// 根据用户id，获取用户名
-					var username = "";
-					var top_user_id = intes[0].id_user;
-					$.ajax({
-						type:'GET',
-						url: server_url + 'User/search_user/',
-						async: false,
-						dataType: 'json',
-						data: {
-							id_user: top_user_id
-						},
-						success: function(result) {
-							console.log("用户信息： "+JSON.stringify(result));
-							if(result.result == 'empty') {
-								username = "can't find user";
-							} else {
-								username = result.username;
-							}
-						}
-					});
-
-					return username+": "+intes[0].interpretation;
-
-				} else {
-					return '';
-				}
-
-				var likes = _this.likes[0];
-				// var like_most = -1;
-				// var top_inte_id = -1;
-				// var top_inte = "";
-				// var top_user_id = -1;
-				// // 遍历点赞数组和词条数组
-				// for(var i=0; i<likes.length; i++) {
-				// 	for(var j=0; j<_this.intes.length; j++) {
-				// 		// 取出本词条的数组
-				// 		if(likes[i].id_interpretation == _this.intes[j].id_interpretation) {
-				// 			// 比较是否是最多赞的释义
-				// 			top_inte_id = likes[i].id_interpretation;
-				// 			top_inte = _this.intes[j].interpretation;
-				// 			like_most = likes[i].like_total;
-				// 			top_user_id = _this.intes[j].id_user;
-				// 		}
-				// 	}
-				// }
-
 			},
 			addEntry(name_entry) {
 				// 添加词条
@@ -200,7 +185,7 @@ $(document).ready(function() {
 		},
 		created() {
 		  // 在创建后自动查询传来的词条名
-			this.search();
+			this.search_entry();
 		},
 		template: `
 			<div class="row">
@@ -209,7 +194,7 @@ $(document).ready(function() {
 						<input type="search" id="search"
 						placeholder="搜索词条"
 						v-model="search_input"
-						v-on:keyup.enter="search" />
+						v-on:keyup.enter="search_entry" />
 						<i class="material-icons" id="search-icon">search</i>
 					</div>
 				</div>
@@ -235,22 +220,29 @@ $(document).ready(function() {
 
 			<div class="row" v-if="! is_empty">
 				<div class="col m6 s12"
-				v-for="entry in entrys"
+				v-for="(index, entry) in entrys"
 				v-bind:key="entry.id_entry">
 					<div class="card white hoverable" style="cursor:pointer"
-					v-on:click="inte(entry.id_entry, entry.name)">
-						<div class="card-content black-text">
+					v-on:click="goto_inte(entry.id_entry, entry.name)">
+						<div class="card-content black-text ">
 							<a>
 								<span class="card-title">
 									{{ entry.name }}
 								</span>
 							</a>
-							<p>{{ get_shortcut(entry.id_entry) }}</p>
+							<div class="truncate">
+								<!-- {{ intes[index].username }}: {{ intes[index].interpretation }} -->
+								{{ shortcut(index) }}
+							</div>
+						</div>
+						<div class="card-action">
+							<span class="note">创建于 {{ entry.datetime }}</span>
+						</div>
 					</div>
 				</div>
 			</div>
 
-			<div class="row">
+			<div class="row" v-if="is_searched">
 				<div class="col m12">
 					<br/>
 					<p class="note">没有找到想要的词条？ 您还可以通过 <a style="cursor:pointer"
@@ -274,11 +266,8 @@ $(document).ready(function() {
 				id_entry: this.prop_id_entry,
 				is_empty: false,
 				intes: [],
+				username: [],
 				likes: [],
-				likeClass: '',
-				likeTextClass: '',
-				dislikeClass: '',
-				dislikeTextClass: ''
 			}
 		},
 		methods: {
@@ -286,36 +275,6 @@ $(document).ready(function() {
 			back_to_entry() {
 				// 返回词条列表组件
 				search_entry_vue.currentView = 'entry-list';
-			},
-			get_username(id_user) {
-				var username = "";
-
-				// 根据id查找用户
-				$.ajax({
-					type:'GET',
-					url: server_url + 'User/search_user/',
-					async: false,
-					dataType: 'json',
-					data: {
-						id_user: id_user
-					},
-					success: function(result) {
-						console.log("用户信息： "+JSON.stringify(result));
-						if(result.result == 'empty') {
-							username = "can't find user";
-						} else {
-							username = result.username;
-						}
-					}
-				});
-
-				// 返回 用户名
-				// var inte_arr = _this.intes.filter(item => item.id_interpretation == id_inte);
-				// var inte = inte_arr[0].interpretation;
-				// 截取开头10个字符
-				// var inte_short = inte.substr(0, 10);
-				// return_str = username+": "+inte_short+"...";
-				return username;
 			},
 			like_total(id_inte) {
 				// 根据释义id在点赞数组里找出点赞数并返回
@@ -345,40 +304,33 @@ $(document).ready(function() {
 						return;
 					}
 
-					$.ajax({
-						type:'POST',
-						url: server_url + 'Entry/like/',
-						timeout: 5000,
-						async: true,
-						dataType: 'json',
-						data: {
-							id_user: id_user,
-							id_inte: id_inte
-						},
-						success: function(result) {
-							console.log("点赞： "+JSON.stringify(result));
-							if(result.result == 'success') {
-								// 更新like_total
-								$.get(server_url+'Entry/search_inte',
-									{entry_id: _this.id_entry}, function(result_inte) {
-										//更新点赞数组
-										if(result_inte.like !== undefined) {
-											_this.likes = [];
-											_this.likes.push(result_inte.like);
-										}
-									}, 'json');
-							}
-							if(result.result == 'failure') {
-								alert('点赞失败!\n' + result.error_msg);
-							}
-						},
-						error: function(error) {
-							alert('ajax错误，请重试');
-							console.log(JSON.stringify(error));
-							$('#entry-modal').html(error.responseText);
-							return;
-						},
-						scriptCharset: 'utf-8'
+					chrome.runtime.sendMessage({
+						act: 'like',
+						id_user: id_user,
+						id_inte: id_inte
+					}, function(result) {
+
+						console.log("点赞： "+JSON.stringify(result));
+						if(result.result == 'success') {
+							// 更新like_total
+
+							chrome.runtime.sendMessage({
+								act: 'search_inte',
+								id_entry: _this.id_entry
+							}, function(result) {
+									//更新点赞数组
+									console.log("点赞后刷新词条： "+JSON.stringify(result));
+									if(result.like !== undefined) {
+										_this.likes = [];
+										_this.likes.push(result.like);
+									}
+							});
+
+						} // result == 'success'
+						if(result.result == 'failure') {
+							alert('点赞失败!\n' + result.error_msg);
+						}
+
 					});
 
 				});
@@ -401,39 +353,33 @@ $(document).ready(function() {
 						return;
 					}
 
-					$.ajax({
-						type:'POST',
-						url: server_url + 'Entry/dislike/',
-						timeout: 5000,
-						async: true,
-						dataType: 'json',
-						data: {
-							id_user: id_user,
-							id_inte: id_inte
-						},
-						success: function(result) {
-							console.log("点灭： "+JSON.stringify(result));
-							if(result.result == 'failure') {
-								alert('点灭失败!\n' + result.error_msg);
-							}else {
-								// 更新like_total
-								$.get(server_url+'Entry/search_inte',
-									{entry_id: _this.id_entry}, function(result_inte) {
-										//更新点赞数组
-										if(result_inte.like !== undefined) {
-											_this.likes = [];
-											_this.likes.push(result_inte.like);
-										}
-									}, 'json');
-							}
-						},
-						error: function(error) {
-							alert('ajax错误，请重试');
-							console.log(JSON.stringify(error));
-							$('#entry-modal').html(error.responseText);
-							return;
-						},
-						scriptCharset: 'utf-8'
+					chrome.runtime.sendMessage({
+						act: 'dislike',
+						id_user: id_user,
+						id_inte: id_inte
+					}, function(result) {
+
+						console.log("点灭： "+JSON.stringify(result));
+						if(result.result == 'success') {
+							// 更新like_total
+
+							chrome.runtime.sendMessage({
+								act: 'search_inte',
+								id_entry: _this.id_entry
+							}, function(result) {
+									//更新点赞数组
+									console.log("点灭后刷新词条： "+JSON.stringify(result));
+									if(result.like !== undefined) {
+										_this.likes = [];
+										_this.likes.push(result.like);
+									}
+							});
+
+						} // result == 'success'
+						if(result.result == 'failure') {
+							alert('点灭失败!\n' + result.error_msg);
+						}
+
 					});
 
 				});
@@ -448,47 +394,41 @@ $(document).ready(function() {
 		},
 		created() {
 			var _this = this;
+
+			// 查找词条下的释义
 			if(_this.id_entry != -1) {
-				// 查找词条下的释义
-				$.ajax({
-					type:'GET',
-					url: server_url + 'Entry/search_inte/',
-					async: false,
-					dataType: 'json',
-					data: {
-						entry_id: _this.id_entry
-					},
-					success: function(result) {
-						console.log("查找释义ajax结果: "+JSON.stringify(result));
-						if(result.result == 'empty') {
-							return;
-						}
-						for(i in result.inte) {
-							_this.intes.push(result.inte[i]);
-						}
-						if(result.like !== undefined) {
-							_this.likes.push(result.like);
-						}
-						console.log("点赞数组: "+JSON.stringify(_this.likes))
-						console.log("释义数组: "+JSON.stringify(_this.intes))
-						// 若释义为空，则显示添加释义界面
-						if(_this.intes === undefined || _this.intes.length == 0) {
-							_this.is_empty = true;
-						}
-					},
-					error: function(error) {
-						alert('查询请求错误，请重试');
-						console.log(JSON.stringify(error));
-						// error display
+
+				// send message to background for searching result
+				chrome.runtime.sendMessage({
+					act: 'search_inte',
+					id_entry: _this.id_entry
+				}, function(result) {
+
+					console.log("查找释义ajax结果: "+JSON.stringify(result));
+					if(result.result == 'empty') {
 						return;
-					},
-					scriptCharset: 'utf-8'
+					}
+					for(i in result.inte) {
+						_this.intes.push(result.inte[i]);
+					}
+					if(result.like !== undefined) {
+						_this.likes.push(result.like);
+					}
+					console.log("点赞数组: "+JSON.stringify(_this.likes))
+					console.log("释义数组: "+JSON.stringify(_this.intes))
+					// 若释义为空，则显示添加释义界面
+					if(_this.intes === undefined || _this.intes.length == 0) {
+						_this.is_empty = true;
+					}
+
 				});
+
 			} else {
 				// 获取不到词条id
 				alert('id_entry = '+_this.id_entry);
 				return;
 			}
+
 
 			// 在dom渲染完成后执行
 			this.$nextTick(function() {
@@ -533,7 +473,7 @@ $(document).ready(function() {
 						<li v-for="(index, inte) in intes">
 							<div class="collapsible-header truncate ">
 								<i class='material-icons'>account_circle</i>
-								{{ get_username(inte.id_user) }}
+								{{ inte.username }}
 							</div>
 							<div class="collapsible-body ">
 								{{ inte.interpretation }}
@@ -590,6 +530,7 @@ $(document).ready(function() {
 
 
 });
+
 
 
 
