@@ -5,6 +5,31 @@ $(document).ready(function() {
 
 	$('.tabs').tabs();
 
+	// 判断用户是否已经登录，获取权限
+	chrome.storage.sync.get({
+		BW_username: 'unknown'
+	},
+	function(items) {
+		name_user = items.BW_username;
+
+		// validate
+		if(name_user == 'unknown') {
+			$('#username').hide();
+			$('#login-btn').show();
+			$('#login-btn').text('登录');
+			$('#signup-btn').show();
+			$('#signup-btn').text('注册');
+			return;
+		}
+
+		else{
+			$('#username').show();
+			$('#username').text(name_user);
+			$('#login-btn').hide();
+			$('#signup-btn').hide();
+		}
+	});
+
 	//搜索词条并反馈
 	document.getElementById('search').onsearch=function(event){
 		var entry_content = $('#search').val();
@@ -238,7 +263,6 @@ $(document).ready(function() {
 		var id_user = -1;
 		var id_inte = $('p[id^="entry-meaning"]').attr("id");
 		id_inte = id_inte.substring(13,id_inte.length);
-		console.log(JSON.stringify("shiyi"+id_inte));
 
 		chrome.storage.sync.get({
 			BW_userId: -1
@@ -439,5 +463,20 @@ $(document).ready(function() {
 		});
 	});
 
+  // 点击用户名可查看选项页
+	$('#username').click(function(){
+		var url="options-page/options.html";
+		window.open(chrome.runtime.getURL(url));
+	});
+
+	$('#login-btn').click(function(){
+		var url="options-page/options.html?action=login&";
+		window.open(chrome.runtime.getURL(url));
+	});
+
+	$('#signup-btn').click(function(){
+		var url="options-page/options.html?action=signup&";
+		window.open(chrome.runtime.getURL(url));
+	});
 
 });

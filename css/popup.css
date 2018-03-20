@@ -83,3 +83,7 @@ span{
 .other-meaning-source,.other-meaning-daytime,#like-number{
 	font-size: 90%;
 }
+
+#login-popup-modal{
+	display: none;
+}
