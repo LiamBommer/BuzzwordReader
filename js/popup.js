@@ -88,6 +88,7 @@ $(document).ready(function() {
 
 	// 点击相应词条并显示置顶释义和其他释义
 	$('body').on('click','a[id^="contentid"]',function(){
+		$('#other-meaning-collection').empty();
 		var entry_id=$(this).attr('id');
 		var id=entry_id.substring(9,entry_id.length);
 		var entry_name=$(this).text();
@@ -206,18 +207,15 @@ $(document).ready(function() {
 
 	});
 
-	$('#login-btn').click(function(){
-		chrome.tabs.create({url: '/options-page/options.html'});
-		$('#signup-modal').open();
-	});
-
-	$('#signup-btn').click(function(){
-		window.open(chrome.extension.getURL('/options-page/options.html'));
-	});
-
 	$('#return-search').click(function(){
 		$("#search-modal").show();
 		$("#entry-modal").hide();
+	});
+
+	$('#return-search02').click(function(){
+		$('#search').val('');
+		$("#search-modal").show();
+		$("#meaning-not-found").hide();
 	});
 
   // 点击添加释义按钮
@@ -271,7 +269,8 @@ $(document).ready(function() {
 			id_user = items.BW_userId;
 			// validate
 			if(id_user == -1 || id_inte == null) {
-				alert('Cannot get correct user ID.')
+				console.log('Cannot get correct user ID.');
+				alert('请先登录！');
 				return;
 			}
 
@@ -322,7 +321,8 @@ $(document).ready(function() {
 			id_user = items.BW_userId;
 			// validate
 			if(id_user == -1 || id_inte == null) {
-				alert('Cannot get correct user ID.')
+				console.log('Cannot get correct user ID.');
+				alert('请先登录！');
 				return;
 			}
 
@@ -372,7 +372,8 @@ $(document).ready(function() {
 			id_user = items.BW_userId;
 			// validate
 			if(id_user == -1 || id_inte == null) {
-				alert('Cannot get correct user ID.');
+				console.log('Cannot get correct user ID.');
+				alert('请先登录！')
 				return;
 			}
 
@@ -390,11 +391,31 @@ $(document).ready(function() {
 				success: function(result) {
 					if(result.result == 'success') {
 						console.log(JSON.stringify(result));
-						var like_number = $('#like_number').text();
-						like_number+=1;
 						// console.log(JSON.stringify(like_number));
 						// $('#like_number').text(like_number);
-						alert('点赞成功！')
+
+						var id_entry = $('h1[id^=entry-heading-number]').attr('id');
+						id_entry = id_entry.substring(20);
+						$.get(server_url+'Entry/search_inte',
+							{entry_id: id_entry}, function(result) {
+								//更新点赞数组
+								var like_total = 0;
+								for(i in result.inte) {
+				          if(result.inte[i].id_interpretation == id_inte){
+										var like = result.like.filter(item => item.id_interpretation == result.inte[i].id_interpretation);
+
+										if(JSON.stringify(like) === '[]' || like.length === 0) {
+											like_total = 0;
+										} else {
+											like_total = like[0].like_total;
+										}
+									}
+								}
+								$('#like-number').text(like_total);
+
+							}, 'json');
+
+						alert('点赞成功！');
 					}
 					if(result.result == 'failure') {
 						alert('点赞失败!\n' + result.error_msg);
@@ -426,7 +447,8 @@ $(document).ready(function() {
 			id_user = items.BW_userId;
 			// validate
 			if(id_user == -1 || id_inte == null) {
-				alert('Cannot get correct user ID.')
+				console.log('Cannot get correct user ID.');
+				alert('请先登录！')
 				return;
 			}
 

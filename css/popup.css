@@ -57,7 +57,14 @@ span{
 
 #add-meaning02{
 	position: relative;
-	bottom: 12px;
+	bottom: 14px;
+	left:30px;
+}
+
+#return-search02{
+	position: relative;
+	bottom: 14px;
+	left: 23px;
 }
 
 #result-collection{
