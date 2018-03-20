@@ -34,7 +34,7 @@ id_entry, name, is_open, request, datetime
 ### @return
 
 * inte (释义数组)
-> id_interpretation, id_entry, id_user, interpretation, resource, datetime
+> id_interpretation, id_entry, id_user, interpretation, resource, datetime, username
 
 * like (点赞数组)
 > id_interpretation: like_total
