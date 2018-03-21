@@ -1,11 +1,5 @@
 
 
-	// 本机测试用服务器
-	// var server_url = 'http://127.0.0.1/BuzzwordReader/';
-	// 生产环境公网服务器
-	var server_url = 'http://119.29.58.165:81/index.php/';
-
-
 // receive message function from parent window
 // Here because it can't wait to receive message until
 // the page is loaded
@@ -31,21 +25,16 @@ function strFilter(str, type) {
 		// 	过滤所有特殊符号，转为空格
 		var pattern = new RegExp("[`~!@#$^&*()=|{}':;',\\[\\].<>/?~！@#￥……&*（）——|{}【】‘；：”“'。，、？%+_]");
 
-	} else if(type == 'entry') {
-		// 词条名
-		//	过滤除以下符号： ？ ！ ， 。、
-		var pattern = new RegExp("[`~@#$^&*()=|{}':;'\\[\\]<>/~@#￥……&*（）——|{}【】‘；：”“'%+_]");
+		var specialStr = "";
+	  for(var i=0;i<str.length;i++)
+	  {
+	       specialStr += str.substr(i, 1).replace(pattern, '');
+	  }
 
-	} else if(type == 'inte') {
-		// 释义内容
-		//	暂未想好
 	}
-  var specialStr = "";
-  for(var i=0;i<str.length;i++)
-  {
-       specialStr += str.substr(i, 1).replace(pattern, ' ');
-  }
-  return specialStr;
+
+	alert(specialStr);
+	return specialStr;
 }
 
 
@@ -189,7 +178,7 @@ $(document).ready(function() {
 		},
 		template: `
 			<div class="row">
-				<div class="col m11">
+				<div class="col m11 s11">
 					<div class="input-field z-depth-2">
 						<input type="search" id="search"
 						placeholder="搜索词条"
@@ -198,14 +187,14 @@ $(document).ready(function() {
 						<i class="material-icons" id="search-icon">search</i>
 					</div>
 				</div>
-				<div class="col m1">
+				<div class="col m1 s1">
 					<i class="material-icons small modal-action modal-close" id="close-btn">close</i>
 				</div>
 			</div>
 
 			<template v-if="is_empty">
 				<div class="row">
-					<div class="col m12">
+					<div class="col m12 s12">
 						<h5>{{ search_note }}</h5>
 						<!-- 请求创建词条模块 -->
 						<br/><br/>
@@ -243,7 +232,7 @@ $(document).ready(function() {
 			</div>
 
 			<div class="row" v-if="is_searched">
-				<div class="col m12">
+				<div class="col m12 s12">
 					<br/>
 					<p class="note">没有找到想要的词条？ 您还可以通过 <a style="cursor:pointer"
 					v-on:click="addEntry(search_input)">创建词条</a>
@@ -441,21 +430,22 @@ $(document).ready(function() {
 		},
 		template: `
 			<div class="row">
-				<div class="col m1">
+				<div class="col m1 s1">
 					<i class="material-icons small" id="back-btn"
-					v-on:click="back_to_entry">arrow_back</i>
+					v-on:click="back_to_entry"
+					v-on:esc="back_to_entry">arrow_back</i>
 				</div>
-				<div class="col m10">
+				<div class="col m10 s10">
 					<h5 class="entry-title">{{ prop_name_entry }}</h5>
 				</div>
-				<div class="col m1">
+				<div class="col m1 s1">
 					<i class="material-icons small modal-action modal-close" id="close-btn">close</i>
 				</div>
 			</div>
 
 			<template v-if="is_empty">
 				<div class="row">
-					<div class="col m12">
+					<div class="col m12 s12">
 						<br/>
 						<h5>暂未有相关释义</h5>
 						<!-- 添加释义模块 -->
@@ -468,7 +458,7 @@ $(document).ready(function() {
 			</template>
 
 			<div class="row" v-if="! is_empty">
-				<div class="col m12">
+				<div class="col m12 s12">
 					<ul class="collapsible popout" data-collapsible="accordion">
 						<li v-for="(index, inte) in intes">
 							<div class="collapsible-header truncate ">
@@ -479,7 +469,7 @@ $(document).ready(function() {
 								{{ inte.interpretation }}
 								<br/><br/><div class="divider"></div>
 								<p><b>来源：</b>
-									<a href="{{ inte.resource }}">{{ inte.resource }}</a>
+									<a target="_blank" href="{{ inte.resource }}">{{ inte.resource }}</a>
 								</p>
 								<div class='chip like-btn' style='cursor:pointer;'
 								v-on:click="like(inte.id_interpretation)">赞{{ like_total(inte.id_interpretation) }}
