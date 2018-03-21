@@ -33,7 +33,6 @@ function strFilter(str, type) {
 
 	}
 
-	alert(specialStr);
 	return specialStr;
 }
 

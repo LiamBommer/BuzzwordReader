@@ -140,26 +140,46 @@ function update_user() {
  *  过滤特殊字符, 被过滤的字符列表如下。。。
  */
 function strFilter(str, type) {
+
 	if(type == 'search') {
 		// 搜索
 		// 	过滤所有特殊符号，转为空格
 		var pattern = new RegExp("[`~!@#$^&*()=|{}':;',\\[\\].<>/?~！@#￥……&*（）——|{}【】‘；：”“'。，、？%+_]");
 
-	} else if(type == 'entry') {
+	  var specialStr = "";
+	  for(var i=0;i<str.length;i++)
+	  {
+	       specialStr += str.substr(i, 1).replace(pattern, ' ');
+	  }
+	  return specialStr;
+
+	} else if(type == 'entry_name') {
+
 		// 词条名
 		//	过滤除以下符号： ？ ！ ， 。、
 		var pattern = new RegExp("[`~@#$^&*()=|{}':;'\\[\\]<>/~@#￥……&*（）——|{}【】‘；：”“'%+_]");
 
+		if(pattern.test(str)) {
+			// 含有特殊符号，不合格， return false
+			return false;
+		} else {
+			// 不含特殊符号，合格，  return true
+			return true;
+		}
+
 	} else if(type == 'inte') {
+
 		// 释义内容
-		//	暂未想好
-	}
-  var specialStr = "";
-  for(var i=0;i<str.length;i++)
-  {
-       specialStr += str.substr(i, 1).replace(pattern, ' ');
-  }
-  return specialStr;
+		//	防 SQL 注入
+		var re= /select|update|drop|delete|exec|count|’|"|=|;|>|<|%/i;
+    if(re.test(str))
+    {
+     return false;
+	  } else {
+		 return true;
+	 }
+
+ }
 }
 
 
@@ -730,6 +750,11 @@ $(document).ready(function() {
 
 		var entry_name = $('#entry-name').val();
 
+		if( ! strFilter(entry_name, 'entry_name')) {
+			alert('不能输入特殊符号！除: ? ! , 。')
+			return;
+		}
+
 		$.ajax({
 			type:'GET',
 			url: server_url + 'Entry/new_entry',
@@ -777,6 +802,13 @@ $(document).ready(function() {
 		var inte = $('#inte').val();
 		var resource = $('#resource').val();
 		var id_user = -1;
+
+		// 验证 inte 和 resource 的内容， 防SQL注入
+		if( ! (strFilter(inte, 'inte') && strFilter(resource, 'inte'))) {
+	    alert("大佬放过我吧"); //注意中文乱码
+			return false;
+		}
+
 		// 获取当前登录用户id
 		/*
 		* !!! IMPORTANT !!!
@@ -860,6 +892,13 @@ $(document).ready(function() {
 		var entry_id = $('#edit-entry-id').val();
 		var entry_name = $('#edit-entry-name').val();
 		var id_user = -1;
+
+		// 输入内容过滤验证
+		if( ! strFilter(entry_name, 'entry_name')) {
+			alert('不能输入特殊符号！除: ? ! , 。')
+			return;
+		}
+
 		// 获取当前登录用户id
 		/*
 		* !!! IMPORTANT !!!
@@ -1016,6 +1055,12 @@ $(document).ready(function() {
 		var inte = $('#edit-inte').val();
 		var resource = $('#edit-resource').val();
 		var id_user = -1;
+		
+		// 验证 inte 和 resource 的内容， 防SQL注入
+		if( ! (strFilter(inte, 'inte') && strFilter(resource, 'inte'))) {
+	    alert("大佬放过我吧"); //注意中文乱码
+			return false;
+		}
 
 		chrome.storage.sync.get({
 			BW_userId: -1,
@@ -1143,6 +1188,7 @@ $(document).ready(function() {
 
 	});
 
+
 	$('#exit').click(function(){
 		// 将用户名，用户Id存入storage
 		chrome.storage.sync.set({
@@ -1158,67 +1204,6 @@ $(document).ready(function() {
 			update_user();
 		});
 	});
-
-
-	/*
-	 * 侧边栏vue实例
-
-	 !!!!    弃用状态     !!!!
-	 */
-	// var side_out_vue = new Vue({
-	// 	el: '#slide-out',
-	// 	data: {
-	// 		username: 'unknown',
-	// 		email: '',
-	// 		phone: ''
-	// 	},
-	// 	methods: {
-	// 	},
-	// 	computed: {
-	// 		get_username: function() {
-	// 			// 显示当前登录用户名
-	// 			var _this = this;
-	// 			chrome.storage.sync.get({
-	// 				BW_username: 'unknown'
-	// 			},
-	// 			function(items) {
-	// 				_this.username = items.BW_username;
-	// 			});
-	// 			return this.username;
-	// 		},
-	//
-	// 		get_email: function() {
-	// 			var _this = this;
-	// 			chrome.storage.sync.get({
-	// 				BW_userEmail: ''
-	// 			},
-	// 			function(items) {
-	// 				_this.email = items.BW_userEmail;
-	// 			});
-	// 			return _this.email;
-	// 		},
-	//
-	// 		get_phone: function() {
-	// 			var _this = this;
-	// 			chrome.storage.sync.get({
-	// 				BW_userPhone: ''
-	// 			},
-	// 			function(items) {
-	// 				_this.phone = items.BW_userPhone;
-	// 			});
-	// 			return _this.phone;
-	// 		}
-	// 	},
-	// 	create() {
-	// 		// 将用户信息存入数组
-	//
-	// 		// 在dom渲染完成后执行
-	// 		this.$nextTick(function() {
-	//
-	// 		});
-	//
-	// 	}
-	// });
 
 
 });
