@@ -159,39 +159,62 @@ $(document).ready(function() {
         // 其他释义显示
 				$('#entry-heading02').text(entry_name);
 
-				var other_meaning;
-				var other_meaning_id;
-				var other_meaning_source;
-				var other_meaning_daytime;
+				// var other_meaning;
+				// var other_meaning_id;
+				// var other_meaning_source;
+				// var other_meaning_daytime;
+
+        // 排序
+				var result_sort=new Array();
 				for(i in result.inte) {
 					var like = result.like.filter(item => item.id_interpretation == result.inte[i].id_interpretation);
 					var like_total = 0;
 					if(JSON.stringify(like) === '[]' || like.length === 0) {
 						like_total = 0;
-					} else {
+					}
+					else {
 						like_total = like[0].like_total;
 					}
 
-          if(result.inte[i].id_interpretation != top_meaning_id){
-						other_meaning_id = result.inte[i].id_interpretation;
-						other_meaning = result.inte[i].interpretation;
-						other_meaning_source = result.inte[i].resource;
-						other_meaning_daytime = result.inte[i].datetime;
-
-						var other="<li><div class='collapsible-header' id='collection-username'>"
-						+"<i class='material-icons'>account_circle</i>"+result.inte[i].id_user+"</div>"
-						+"<div class='collapsible-body'><span id='other-meaning"+other_meaning_id+"'>"
-						+other_meaning+"</span><br/><span class='other-meaning-source'>来源："+other_meaning_source
-						+"</span><br/><span class='other-meaning-daytime'>添加时间："+other_meaning_daytime+"</span>"
-						+"<div class='chip right'><a href='#' class='dislike' id='dislike"+other_meaning_id+"'>"
-						+"<i class='small material-icons myclose'>"
-						+"arrow_drop_down</i></a></div>"
-						+"<div class='chip right'><a href='#' class='like' id='like-number"+other_meaning_id+"'>"
-						+"<i class='small material-icons myclose'>arrow_drop_up</i>"
-						+"<span class='like-number' id='"+other_meaning_id+"'>"+like_total+"</span></a></div>"
-						+"</div></li>";
-						$('#other-meaning-collection').append(other);
+					if(result.inte[i].id_interpretation != top_meaning_id){
+						var one_entry=new Object();
+						one_entry.other_meaning_id = result.inte[i].id_interpretation;
+						one_entry.other_meaning = result.inte[i].interpretation;
+						one_entry.other_meaning_source = result.inte[i].resource;
+						one_entry.other_meaning_daytime = result.inte[i].datetime;
+						one_entry.like_total = like_total;
+						result_sort.push(one_entry);
 					}
+				}
+
+				result_sort.sort(function(a,b){
+					return b.like_total-a.like_total;
+				});
+				console.log(JSON.stringify(result_sort));
+
+
+        // 其他释义
+
+				for(i in result_sort){
+					other_meaning_id = result_sort[i].other_meaning_id;
+					other_meaning = result_sort[i].other_meaning;
+					other_meaning_source = result_sort[i].other_meaning_source;
+					other_meaning_daytime = result_sort[i].other_meaning_daytime;
+					like_total = result_sort[i].like_total;
+
+					var other="<li><div class='collapsible-header' id='collection-username'>"
+					+"<i class='material-icons'>account_circle</i>"+result.inte[i].id_user+"</div>"
+					+"<div class='collapsible-body'><span id='other-meaning"+other_meaning_id+"'>"
+					+other_meaning+"</span><br/><span class='other-meaning-source'>来源："+other_meaning_source
+					+"</span><br/><span class='other-meaning-daytime'>添加时间："+other_meaning_daytime+"</span>"
+					+"<div class='chip right'><a href='#' class='dislike' id='dislike"+other_meaning_id+"'>"
+					+"<i class='small material-icons myclose'>"
+					+"arrow_drop_down</i></a></div>"
+					+"<div class='chip right'><a href='#' class='like' id='like-number"+other_meaning_id+"'>"
+					+"<i class='small material-icons myclose'>arrow_drop_up</i>"
+					+"<span class='like-number' id='"+other_meaning_id+"'>"+like_total+"</span></a></div>"
+					+"</div></li>";
+					$('#other-meaning-collection').append(other);
 				}
 			},
 
