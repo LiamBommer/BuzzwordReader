@@ -183,12 +183,12 @@ $(document).ready(function() {
 						+"<div class='collapsible-body'><span id='other-meaning"+other_meaning_id+"'>"
 						+other_meaning+"</span><br/><span class='other-meaning-source'>来源："+other_meaning_source
 						+"</span><br/><span class='other-meaning-daytime'>添加时间："+other_meaning_daytime+"</span>"
-						+"<div class='chip right'><a href='#' class='dislike'>"
-						+"<i class='small material-icons'>"
+						+"<div class='chip right'><a href='#' class='dislike' id='dislike"+other_meaning_id+"'>"
+						+"<i class='small material-icons myclose'>"
 						+"arrow_drop_down</i></a></div>"
-						+"<div class='chip right'><a href='#' class='like'>"
-						+"<i class='small material-icons'>arrow_drop_up</i>"
-						+"<span id='like-number'>"+like_total+"</span></a></div>"
+						+"<div class='chip right'><a href='#' class='like' id='like-number"+other_meaning_id+"'>"
+						+"<i class='small material-icons myclose'>arrow_drop_up</i>"
+						+"<span class='like-number' id='"+other_meaning_id+"'>"+like_total+"</span></a></div>"
 						+"</div></li>";
 						$('#other-meaning-collection').append(other);
 					}
@@ -207,11 +207,13 @@ $(document).ready(function() {
 
 	});
 
+  // 返回搜索框
 	$('#return-search').click(function(){
 		$("#search-modal").show();
 		$("#entry-modal").hide();
 	});
 
+  // 返回搜索框
 	$('#return-search02').click(function(){
 		$('#search').val('');
 		$("#search-modal").show();
@@ -361,9 +363,11 @@ $(document).ready(function() {
 
 	$('body').on('click','.like',function(){
 		var id_user = -1;
-		var id_inte = $('span[id^="other-meaning"]').attr("id");
-		id_inte = id_inte.substring(13,id_inte.length);
-		// console.log(JSON.stringify(id_inte));
+		var id_inte = $(this).attr("id");
+		id_inte = id_inte.substring(11,id_inte.length);
+		var son_node=$(this);
+		var parent_node=$(this).parent();
+		console.log(JSON.stringify(id_inte));
 
 		chrome.storage.sync.get({
 			BW_userId: -1
@@ -411,11 +415,19 @@ $(document).ready(function() {
 										}
 									}
 								}
-								$('#like-number').text(like_total);
+								var select = '#'+id_inte;
+								$(select).text(like_total);
+								parent_node.css('background-color','#80cbc4');
+								son_node.addClass('white-text');
+								if(parent_node.prev().children("a:first-child").hasClass('white-text').toString()=='true'){
+									var pre=parent_node.prev();
+									pre.children("a:first-child").removeClass('white-text');
+									pre.css('background-color','#eeeeee')
+								}
 
 							}, 'json');
 
-						alert('点赞成功！');
+						// alert('点赞成功！');
 					}
 					if(result.result == 'failure') {
 						alert('点赞失败!\n' + result.error_msg);
@@ -436,8 +448,10 @@ $(document).ready(function() {
 
 	$('body').on('click','.dislike',function(){
 		var id_user = -1;
-		var id_inte = $('span[id^="other-meaning"]').attr("id");
-		id_inte = id_inte.substring(13,id_inte.length);
+		var id_inte = $(this).attr("id");
+		id_inte = id_inte.substring(7,id_inte.length);
+		var son_node=$(this);
+		var parent_node=$(this).parent();
 		// console.log(JSON.stringify(id_inte));
 
 		chrome.storage.sync.get({
@@ -466,7 +480,37 @@ $(document).ready(function() {
 				success: function(result) {
 					if(result.result == 'success') {
 						console.log(JSON.stringify(result));
-						alert('点灭成功！')
+
+						var id_entry = $('h1[id^=entry-heading-number]').attr('id');
+						id_entry = id_entry.substring(20);
+						$.get(server_url+'Entry/search_inte',
+							{entry_id: id_entry}, function(result) {
+								//更新点赞数组
+								var like_total = 0;
+								for(i in result.inte) {
+				          if(result.inte[i].id_interpretation == id_inte){
+										var like = result.like.filter(item => item.id_interpretation == result.inte[i].id_interpretation);
+
+										if(JSON.stringify(like) === '[]' || like.length === 0) {
+											like_total = 0;
+										} else {
+											like_total = like[0].like_total;
+										}
+									}
+								}
+								var select = '#'+id_inte;
+								$(select).text(like_total);
+								parent_node.css('background-color','#80cbc4');
+								son_node.addClass('white-text');
+								if(parent_node.next().children("a:first-child").hasClass("white-text").toString()=='true'){
+									var nex=parent_node.next();
+									nex.children("a:first-child").removeClass('white-text');
+									nex.css('background-color','#eeeeee');
+								}
+								// alert(id_inte);
+
+							}, 'json');
+						// alert('点灭成功！');
 					}
 					if(result.result == 'failure') {
 						alert('点灭失败!\n' + result.error_msg);

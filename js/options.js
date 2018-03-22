@@ -202,6 +202,8 @@ $(document).ready(function() {
 		belowOrigin: true,	// 在原来的按钮下面出现
 	});
 
+	$('select').material_select();
+
 	// 本机测试用服务器
 	// var server_url = 'http://127.0.0.1/BuzzwordReader/';
 	// 生产环境公网服务器
@@ -270,6 +272,7 @@ $(document).ready(function() {
 					// $('.modal-content > h4').html('注册成功');
 					console.log(JSON.stringify(result));
 					$('#signup-modal').modal('close');
+					alert('注册失败!\n');
 				}
 				if(result.result == 'failure') {
 					// $('.modal-content > h4').html('注册失败');
@@ -287,6 +290,22 @@ $(document).ready(function() {
 
 		// 阻止表单提交
 		return false;
+	});
+
+  // 转换登录方式
+	$('#trun-to-phone').click(function(){
+		$('#email-login-div').css('display','none');
+		$('#phone-login-div').css('display','block');
+		$('#trun-to-phone').css('display','none');
+		$('#trun-to-email').css('display','block');
+	});
+
+
+	$('#trun-to-email').click(function(){
+		$('#phone-login-div').css('display','none');
+		$('#email-login-div').css('display','block');
+		$('#trun-to-email').css('display','none');
+		$('#trun-to-phone').css('display','block');
 	});
 
 
@@ -367,6 +386,11 @@ $(document).ready(function() {
 						update_user();
 					});
 				}
+				if(result.result == 'success') {
+					// $('.modal-content > h4').html('注册失败');
+					alert('登录成功！');
+				}
+
 				if(result.result == 'failure') {
 					// $('.modal-content > h4').html('注册失败');
 					alert('登录失败!\n' + result.error_msg);
@@ -1055,7 +1079,7 @@ $(document).ready(function() {
 		var inte = $('#edit-inte').val();
 		var resource = $('#edit-resource').val();
 		var id_user = -1;
-		
+
 		// 验证 inte 和 resource 的内容， 防SQL注入
 		if( ! (strFilter(inte, 'inte') && strFilter(resource, 'inte'))) {
 	    alert("大佬放过我吧"); //注意中文乱码

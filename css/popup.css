@@ -87,10 +87,25 @@ span{
 	font-size: 130%;
 }
 
-.other-meaning-source,.other-meaning-daytime,#like-number{
+.other-meaning-source,.other-meaning-daytime{
 	font-size: 90%;
+}
+
+ .like-number{
+	font-size: 18px;
+	line-height: 32px;
+}
+
+.myclose{
+	float: left;
+	font-size: 32px;
+	line-height: 32px;
 }
 
 #login-popup-modal{
 	display: none;
+}
+
+.chip{
+
 }

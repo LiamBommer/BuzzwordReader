@@ -180,8 +180,15 @@
           </div>
           <div class="input-field col m6">
             <i class="material-icons prefix">person</i>
-            <input type="text" id="gender" name="gender" placeholder="male/female" class="validate">
-            <label for="gender">Gender</label>
+						<select id="gender">
+      				<option value="" disabled selected>male/female</option>
+      				<option value="male">male</option>
+      				<option value="female">female</option>
+		    		</select>
+		    		<label for="gender">Gender</label>
+
+            <!-- <input type="text" id="gender" name="gender" placeholder="" class="validate"> -->
+
           </div>
           <div class="input-field col m12">
             <i class="material-icons prefix">pets</i>
@@ -206,19 +213,23 @@
         <h4>登录</h4>
         <div class="divider"></div>
         <div class="row">
-          <div class="input-field col m5">
+          <div class="input-field col m10" id="email-login-div">
             <i class="material-icons prefix">email</i>
             <input type="email" id="email-login" name="email" class="validate">
             <label for="email">Email</label>
           </div>
-          <div class="input-field col m1">
-            <h5>OR</h5>
-          </div>
-          <div class="input-field col m6">
+
+					<div class="input-field col m10" id="phone-login-div">
             <i class="material-icons prefix">phone</i>
             <input type="text" id="phone-login" name="phone" class="validate">
             <label for="phone">Phone Number</label>
           </div>
+
+          <div class="input-field col m1">
+            <a class="btn-floating teal lighten-1" id="trun-to-email"><i class="material-icons">email</i></a></li>
+						<a class="btn-floating teal lighten-1" id="trun-to-phone"><i class="material-icons">phone</i></a></li>
+          </div>
+
           <div class="input-field col m12">
             <i class="material-icons prefix">lock</i>
             <input type="password" id="password-login" name="password" class="validate">

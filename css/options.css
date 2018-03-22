@@ -14,7 +14,11 @@
 
 header, main, footer {
     padding-left: 300px;
-  }
+}
+
+#trun-to-email,#phone-login-div{
+	display: none;
+}
 
 @media only screen and (max-width : 992px) {
   header, main, footer {
