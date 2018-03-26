@@ -109,3 +109,8 @@ span{
 .chip{
 
 }
+
+#dislike-chip{
+	position: relative;
+	top: 15px;
+}

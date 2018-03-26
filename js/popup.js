@@ -89,12 +89,35 @@ $(document).ready(function() {
 	// 点击相应词条并显示置顶释义和其他释义
 	$('body').on('click','a[id^="contentid"]',function(){
 		$('#other-meaning-collection').empty();
+
+		// 修正id
+		var find_node = $('#top-meaning').children("div:first-child");
+		find_node = find_node.children("h1:first-child");
+		find_node.attr('id','entry-heading');
+		find_node = find_node.next().next();
+		find_node = find_node.children("p:first-child");
+		find_node.attr('id','entry-meaning');
+		find_node = $('#meaning-not-found').children("h1:first-child");
+		find_node.attr('id','entry-heading-none');
+
 		var entry_id=$(this).attr('id');
 		var id=entry_id.substring(9,entry_id.length);
 		var entry_name=$(this).text();
 
     // 测试用
 		// alert(id+entry_name);
+
+    // 调整置顶释义点赞chip样式
+		var middle_node=$('#like');
+		if(middle_node.hasClass('white-text').toString()=='true'){
+			middle_node.removeClass('white-text');
+			middle_node.parent().css('background-color','#eeeeee');
+		}
+		middle_node=$('#dislike');
+		if(middle_node.hasClass('white-text').toString()=='true'){
+			middle_node.removeClass('white-text');
+			middle_node.parent().css('background-color','#eeeeee');
+		}
 
 		$.ajax({
 			type:'GET',
@@ -111,14 +134,13 @@ $(document).ready(function() {
 
 				if(JSON.stringify(result.inte) === '[]'|| result.inte.length === 0) {
 					$('#meaning-not-found').show();
-					$('#entry-heading-none').text(entry_name);
+					$('#entry-heading').empty();
+					$('#entry-heading-none').html(entry_name);
 					$('#entry-heading-none').attr('id',"entry-heading-none"+id);
 					$('#search-modal').hide();
 					return;
 				}
 
-				$('#entry-modal').show();
-				$('#search-modal').hide();
 				var most_like = 0;
 				var top_meaning;
 				var top_meaning_id; // 做标记显示其他释义
@@ -148,16 +170,17 @@ $(document).ready(function() {
 				}
 
 				// 置顶释义显示
-				$('#entry-heading').text(entry_name);
+				$('#entry-heading').html(entry_name);
 				$('#entry-heading').attr("id",'entry-heading-number'+id);
-				$('#entry-meaning').text(top_meaning);
-				$('#meaning-source').text("来源："+top_meaning_source);
-				$('#meaning-daytime').text("创建时间："+top_meaning_daytime);
+				$('#entry-meaning').html(top_meaning);
+				$('#meaning-source').html("来源："+top_meaning_source);
+				$('#meaning-daytime').html("创建时间："+top_meaning_daytime);
 				$('#entry-meaning').attr("id","entry-meaning"+result.inte[0].id_interpretation);
-				// alert($('#entry-meaning').attr());
+				$('#top_like_total').text(most_like);
+
 
         // 其他释义显示
-				$('#entry-heading02').text(entry_name);
+				$('#entry-heading02').html(entry_name);
 
 				// var other_meaning;
 				// var other_meaning_id;
@@ -190,32 +213,48 @@ $(document).ready(function() {
 				result_sort.sort(function(a,b){
 					return b.like_total-a.like_total;
 				});
-				console.log(JSON.stringify(result_sort));
 
-
-        // 其他释义
-
-				for(i in result_sort){
-					other_meaning_id = result_sort[i].other_meaning_id;
-					other_meaning = result_sort[i].other_meaning;
-					other_meaning_source = result_sort[i].other_meaning_source;
-					other_meaning_daytime = result_sort[i].other_meaning_daytime;
-					like_total = result_sort[i].like_total;
-
-					var other="<li><div class='collapsible-header' id='collection-username'>"
-					+"<i class='material-icons'>account_circle</i>"+result.inte[i].id_user+"</div>"
-					+"<div class='collapsible-body'><span id='other-meaning"+other_meaning_id+"'>"
-					+other_meaning+"</span><br/><span class='other-meaning-source'>来源："+other_meaning_source
-					+"</span><br/><span class='other-meaning-daytime'>添加时间："+other_meaning_daytime+"</span>"
-					+"<div class='chip right'><a href='#' class='dislike' id='dislike"+other_meaning_id+"'>"
-					+"<i class='small material-icons myclose'>"
-					+"arrow_drop_down</i></a></div>"
-					+"<div class='chip right'><a href='#' class='like' id='like-number"+other_meaning_id+"'>"
-					+"<i class='small material-icons myclose'>arrow_drop_up</i>"
-					+"<span class='like-number' id='"+other_meaning_id+"'>"+like_total+"</span></a></div>"
-					+"</div></li>";
-					$('#other-meaning-collection').append(other);
+				var temp_node = $('#other-meaning').children("div:first-child");
+				if(result_sort.length == 0){
+					$('#other-meaning-collection').hide();
+					$('#non-other-meaning1').show();
+					$('#non-other-meaning2').show();
 				}
+
+				else{
+
+					// 其他释义
+					for(i in result_sort){
+						other_meaning_id = result_sort[i].other_meaning_id;
+						other_meaning = result_sort[i].other_meaning;
+						other_meaning_source = result_sort[i].other_meaning_source;
+						other_meaning_daytime = result_sort[i].other_meaning_daytime;
+						like_total = result_sort[i].like_total;
+
+						var other="<li><div class='collapsible-header' id='collection-username'>"
+						+"<i class='material-icons'>account_circle</i>"+result.inte[i].id_user+"</div>"
+						+"<div class='collapsible-body'><span id='other-meaning"+other_meaning_id+"'>"
+						+other_meaning+"</span><br/><span class='other-meaning-source'>来源："+other_meaning_source
+						+"</span><br/><span class='other-meaning-daytime'>添加时间："+other_meaning_daytime+"</span>"
+						+"<div class='chip right'><a href='#' class='dislike' id='dislike"+other_meaning_id+"'>"
+						+"<i class='small material-icons myclose'>"
+						+"arrow_drop_down</i></a></div>"
+						+"<div class='chip right'><a href='#' class='like' id='like-number"+other_meaning_id+"'>"
+						+"<i class='small material-icons myclose'>arrow_drop_up</i>"
+						+"<span class='like-number' id='"+other_meaning_id+"'>"+like_total+"</span></a></div>"
+						+"</div></li>";
+						$('#other-meaning-collection').append(other);
+					}
+
+					$('#other-meaning-collection').show();
+					$('#non-other-meaning1').hide();
+					$('#non-other-meaning2').hide();
+
+				}
+
+				$('#entry-modal').show();
+				$('#search-modal').hide();
+
 			},
 
 			error: function(error) {
@@ -286,6 +325,11 @@ $(document).ready(function() {
 		var id_user = -1;
 		var id_inte = $('p[id^="entry-meaning"]').attr("id");
 		id_inte = id_inte.substring(13,id_inte.length);
+		var id_entry = $('h1[id^="entry-heading-number"]').attr("id");
+		id_entry = id_entry.substring(20);
+
+		var son_node=$(this);
+		var parent_node=$(this).parent();
 
 		chrome.storage.sync.get({
 			BW_userId: -1
@@ -313,8 +357,37 @@ $(document).ready(function() {
 				success: function(result) {
 					if(result.result == 'success') {
 						console.log(JSON.stringify(result));
-						alert('点赞成功！')
-					}
+						// alert('点赞成功！')
+
+						$.get(server_url+'Entry/search_inte',
+							{entry_id: id_entry}, function(result) {
+
+								//更新点赞数组
+								var like_total = 0;
+								for(i in result.inte) {
+				          if(result.inte[i].id_interpretation == id_inte){
+										var like = result.like.filter(item => item.id_interpretation == result.inte[i].id_interpretation);
+
+										if(JSON.stringify(like) === '[]' || like.length === 0) {
+											like_total = 0;
+										} else {
+											like_total = like[0].like_total;
+										}
+									}
+								}
+
+								$('#top_like_total').text(like_total);
+								parent_node.css('background-color','#80cbc4');
+								son_node.addClass('white-text');
+								if(parent_node.next().children("a:first-child").hasClass('white-text').toString()=='true'){
+									var nex=parent_node.next();
+									nex.children("a:first-child").removeClass('white-text');
+									nex.css('background-color','#eeeeee');
+								}
+
+					}, 'json');
+				}
+
 					if(result.result == 'failure') {
 						alert('点赞失败!\n' + result.error_msg);
 					}
@@ -338,6 +411,11 @@ $(document).ready(function() {
 		var id_user = -1;
 		var id_inte = $('p[id^="entry-meaning"]').attr("id");
 		id_inte = id_inte.substring(13,id_inte.length);
+		var id_entry = $('h1[id^="entry-heading-number"]').attr("id");
+		id_entry = id_entry.substring(20);
+
+		var son_node=$(this);
+		var parent_node=$(this).parent();
 
 		chrome.storage.sync.get({
 			BW_userId: -1
@@ -365,8 +443,36 @@ $(document).ready(function() {
 				success: function(result) {
 					if(result.result == 'success') {
 						console.log(JSON.stringify(result));
-						alert('点灭成功！')
+						// alert('点灭成功！')
+
+						$.get(server_url+'Entry/search_inte',
+							{entry_id: id_entry}, function(result) {
+
+								//更新点赞数组
+								var like_total = 0;
+								for(i in result.inte) {
+				          if(result.inte[i].id_interpretation == id_inte){
+										var like = result.like.filter(item => item.id_interpretation == result.inte[i].id_interpretation);
+
+										if(JSON.stringify(like) === '[]' || like.length === 0) {
+											like_total = 0;
+										} else {
+											like_total = like[0].like_total;
+										}
+									}
+								}
+
+								$('#top_like_total').text(like_total);
+								parent_node.css('background-color','#80cbc4');
+								son_node.addClass('white-text');
+								if(parent_node.prev().children("a:first-child").hasClass('white-text').toString()=='true'){
+									var pre=parent_node.prev();
+									pre.children("a:first-child").removeClass('white-text');
+									pre.css('background-color','#eeeeee')
+								}
+							}, 'json');
 					}
+
 					if(result.result == 'failure') {
 						alert('点灭失败!\n' + result.error_msg);
 					}
@@ -438,6 +544,7 @@ $(document).ready(function() {
 										}
 									}
 								}
+
 								var select = '#'+id_inte;
 								$(select).text(like_total);
 								parent_node.css('background-color','#80cbc4');

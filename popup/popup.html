@@ -90,25 +90,28 @@
   				<p id="entry-meaning"></p>
   				<p id="meaning-source"></p>
           <p id="meaning-daytime"></p>
+
+          <div class='chip'><a href='#' id="like">
+            <i class='small material-icons myclose'>arrow_drop_up</i>
+          <span class='like-number' id='top_like_total'></span></a></div>
+          <div class='chip' id="dislike-chip"><a href='#' id="dislike">
+            <i class='small material-icons myclose'>arrow_drop_down</i></a></div>
+
   			</div>
   		</div>
 
   		<div class="fixed-action-btn">
-  			<a class="btn-floating"><i class="large material-icons">add</i></a>
+  			<a class="btn-floating teal lighten-3"><i class="large material-icons">add</i></a>
   			<ul>
-  				<li><a class="btn-floating red add-meaning" id="add-meaning01"><i class="material-icons">edit</i></a></li>
+  				<li><a class="btn-floating red lighten-2 add-meaning" id="add-meaning01"><i class="material-icons">edit</i></a></li>
   				<li><a class="btn-floating yellow darken-1 add-entry" id="add-entry01"><i class="material-icons">border_color</i></a></li>
-  				<li><a class="btn-floating green" id="report"><i class="material-icons">report</i></a></li>
-  				<li><a class="btn-floating blue" id="return-search"><i class="material-icons">search</i></a></li>
+  				<li><a class="btn-floating green lighten-2" id="report"><i class="material-icons">report</i></a></li>
+  				<li><a class="btn-floating blue lighten-2" id="return-search"><i class="material-icons">search</i></a></li>
   			</ul>
   		</div>
 
   		<nav class="teal lighten-2">
   			<div class="container nav-wrapper">
-  				<ul id="nav-mobile" class="left">
-  					<li><a href="#" id="like">赞</a></li>
-  					<li><a href="#" id="dislike">踩</a></li>
-  				</ul>
   			</div>
   		</nav>
     </div>
@@ -118,6 +121,9 @@
         <h1 id="entry-heading02"></h1>
         <div class="divider"></div>
         <ul class="collapsible" data-collapsible="expandable" id="other-meaning-collection">
+        </ul>
+        <p id="non-other-meaning1">目前该词条没有其他释义</p>
+        <p id="non-other-meaning2">可返回置顶释义处点击右下按钮添加你的答案</p>
       </div>
       <nav class="teal lighten-2">
         <div class="container nav-wrapper">
