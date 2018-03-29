@@ -591,22 +591,24 @@ $(document).ready(function() {
 					$('#search-result-div').append("<br/><h6>没有相关结果</h6>");
 					return;
 				}
-				for(i in result) {
-					var html = "<div class='col l4 m6 s12'>" +
-					"<div class='card z-depth-2'>" +
-					"<div class='card-content'>" +
-					"<a class='modal-trigger' href='#entry-modal'>" +
-					"<span class='card-title'>"+result[i].name+"</span>" +
-					"</a>" +
-					"<p>"+result[i].id_entry+"</p>" +
-					"<p>是否已开放: "+result[i].is_open+"</p>" +
-					"<p>请求次数: "+result[i].request+"</p>" +
-					"<p>创建时间: "+result[i].datetime+"</p>";
-					html += "</div>" +
-					"</div>" +
-					"</div>";
-					$('#search-result-div').append(html);
-				}
+				
+
+				// for(i in result) {
+				// 	var html = "<div class='col l4 m6 s12'>" +
+				// 	"<div class='card z-depth-2'>" +
+				// 	"<div class='card-content'>" +
+				// 	"<a class='modal-trigger' href='#entry-modal'>" +
+				// 	"<span class='card-title'>"+result[i].name+"</span>" +
+				// 	"</a>" +
+				// 	"<p>"+result[i].id_entry+"</p>" +
+				// 	"<p>是否已开放: "+result[i].is_open+"</p>" +
+				// 	"<p>请求次数: "+result[i].request+"</p>" +
+				// 	"<p>创建时间: "+result[i].datetime+"</p>";
+				// 	html += "</div>" +
+				// 	"</div>" +
+				// 	"</div>";
+				// 	$('#search-result-div').append(html);
+				// }
 
 			},
 			error: function(error) {

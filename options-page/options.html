@@ -20,80 +20,95 @@
 	<script type="text/javascript" src="/js/vue.csp.js"></script>
   <script type="text/javascript" src="/js/options.js"></script>
 
-	<header>
-		<!-- Dropdown Structure -->
-		<ul id="dropdown-nav" class="dropdown-content">
-			<!-- <li><a class="disabled"> </a></li> -->
-			<li><a class="waves-effect modal-trigger black-text" href="#login-modal">重新登录</a></li>
-      <li><a class="waves-effect modal-trigger black-text" href="#signup-modal">注册</a></li>
-      <li><a class="waves-effect modal-trigger black-text" href="#pw-modal">修改密码</a></li>
-			<li><a class="waves-effect modal-trigger black-text" href="#" id="exit">退出</a></li>
-		</ul>
-		<nav class="teal lighten-1">
+
+		<!-- <nav class="teal lighten-1">
 		  <div class="container">
 		    <div id="navigator" class="nav-wrapper">
 		      <a href="#" class="brand-logo left">BuzzwordReader Options</a>
 		        <ul id="nav-mobile" class="right hide-on-med-and-down">
-							<!-- DropDown Trigger -->
+
 							<li>
 								<i class="material-icons dropdown-button" style="cursor:pointer"
 								data-activates="dropdown-nav">dehaze</i>
 							</li>
-		          <!-- <li><a  href="#" id="username-a">username</a></li> -->
+		          <!<li><a  href="#" id="username-a">username</a></li> -->
 		          <!-- <li><a id="info-btn">个人信息查看</a></li> -->
 		          <!-- <li><a class="waves-effect modal-trigger" href="#login-modal">登录</a></li> -->
 		          <!-- <li><a class="waves-effect modal-trigger" href="#signup-modal">注册</a></li> -->
 		          <!-- <li><a class="waves-effect modal-trigger" href="#pw-modal">修改密码</a></li> -->
-		        </ul>
+		        <!-- </ul>
 		    </div>
 		  </div>
 		</nav>
-	</header>
+	</header> -->
 
-		<ul id="slide-out" class="side-nav fixed">
-			<li>
-				<div class="user-view">
-					<div class="background teal lighten-1 white-text">
-						<!-- 背景图片 -->
-						<!-- <img src="/assets/user-background.png" class="responsive-img"> -->
-					</div>
-					<i class="material-icons medium">account_circle</i>
-					<span class="white-text name" id="username-sideNav"></span>
-					<span class="white-text email" id="email-sideNav"></span>
+
+
+	<ul id="slide-out" class="side-nav fixed">
+		<li>
+			<div class="user-view">
+				<div class="background teal lighten-1 white-text">
+					<!-- 背景图片 -->
+					<!-- <img src="/assets/user-background.png" class="responsive-img"> -->
 				</div>
-			</li>
-      <li><a class="waves-effect collection-item modal-trigger black-text" href="#info-modal" id="info-btn">个人信息查看</a></li>
-      <!-- <li><a class="waves-effect collection-item modal-trigger black-text" href="#pw-modal">修改密码</a></li> -->
-			<!-- 应该放在词条内部
-			<li>
-        <a class="waves-effect collection-item modal-trigger black-text" href="#new-entry-modal">创建词条<i class="tiny material-icons icons-order">chevron_right</i></a>
-			</li>
-			<li>
-        <a class="waves-effect collection-item modal-trigger black-text" href="#new-inte-modal">添加释义<i class="tiny material-icons icons-order">chevron_right</i></a>
-			</li> -->
-			<!-- 以下管理员可见 -->
-			<section class="admin-visible" style="display: none">
-			<li>
-				<div class="divider"></div>
-			</li>
-			<li>
-        <a class="waves-effect collection-item modal-trigger black-text" href="#edit-entry-modal">编辑词条<i class="tiny material-icons icons-order">chevron_right</i></a>
-			</li>
-			<li>
-        <a class="waves-effect collection-item modal-trigger black-text" href="#delete-entry-modal">删除词条<i class="tiny material-icons icons-order">chevron_right</i></a>
-			</li>
-			<li>
-        <a class="waves-effect collection-item modal-trigger black-text" href="#edit-inte-modal">编辑释义<i class="tiny material-icons icons-order">chevron_right</i></a>
-			</li>
-			<li>
-	      <a class="waves-effect collection-item modal-trigger black-text" href="#delete-inte-modal">删除释义<i class="tiny material-icons icons-order">chevron_right</i></a>
-			</li>
-			</section>
-    </ul>
-    <!-- <a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a> -->
+				<i class="material-icons medium">account_circle</i>
+				<span class="white-text name" id="username-sideNav"></span>
+				<span class="white-text email" id="email-sideNav"></span>
+			</div>
+		</li>
+		<li><a class="waves-effect collection-item modal-trigger black-text" href="#info-modal" id="info-btn">个人信息查看</a></li>
+		<li><a class="waves-effect collection-item modal-trigger black-text" href="#login-modal">重新登录</a></li>
+		<li><a class="waves-effect collection-item modal-trigger black-text" href="#signup-modal">注册</a></li>
+		<li><a class="waves-effect collection-item modal-trigger black-text" href="#pw-modal">修改密码</a></li>
+		<li><a class="waves-effect collection-item modal-trigger black-text" href="#" id="exit">退出</a></li>
+		<!-- <li><a class="waves-effect collection-item modal-trigger black-text" href="#pw-modal">修改密码</a></li> -->
+		<!-- 应该放在词条内部
+		<li>
+			<a class="waves-effect collection-item modal-trigger black-text" href="#new-entry-modal">创建词条<i class="tiny material-icons icons-order">chevron_right</i></a>
+		</li>
+		<li>
+			<a class="waves-effect collection-item modal-trigger black-text" href="#new-inte-modal">添加释义<i class="tiny material-icons icons-order">chevron_right</i></a>
+		</li> -->
+		<!-- 以下管理员可见 -->
+		<section class="admin-visible" style="display: none">
+		<li>
+			<div class="divider"></div>
+		</li>
+		<li>
+			<a class="waves-effect collection-item modal-trigger black-text" href="#edit-entry-modal">编辑词条<i class="tiny material-icons icons-order">chevron_right</i></a>
+		</li>
+		<li>
+			<a class="waves-effect collection-item modal-trigger black-text" href="#delete-entry-modal">删除词条<i class="tiny material-icons icons-order">chevron_right</i></a>
+		</li>
+		<li>
+			<a class="waves-effect collection-item modal-trigger black-text" href="#edit-inte-modal">编辑释义<i class="tiny material-icons icons-order">chevron_right</i></a>
+		</li>
+		<li>
+			<a class="waves-effect collection-item modal-trigger black-text" href="#delete-inte-modal">删除释义<i class="tiny material-icons icons-order">chevron_right</i></a>
+		</li>
+		</section>
+	</ul>
+	<!-- <a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a> -->
+
+
+
+
 
 
 	<main>
+
+		<div class="center">
+			<div class=" col s8 offset-s3">
+				<h1 class="header teal-text">BuzzwordReader</h1>
+				<p class="right" id="subheading">——你的流行语库</p>
+			</div>
+		</div>
+
+		<br><br><br>
+
+		<div class="container">
+			<div class="divider"></div>
+		</div>
 
 	  <div class="container" >
 	  	<!-- <br/>
@@ -103,8 +118,6 @@
 	  	<div class="chip" id="userId-div"></div>
 			<br/>
 			<br/> -->
-
-			<div class="divider"></div>
 
 	    <section class="entry-section">
 				<br>
@@ -122,8 +135,8 @@
 	        </div>
 	      </div> -->
 
-				<div id="search-div">
-	        <div class="col s9 offset-s1">
+				<div class="row" id="search-div">
+	        <div class="col s7">
 	          <div class="input-field">
 	            <input type="search" id="search-field">
 	            <label for="search-field" class="label-icon">
@@ -131,10 +144,33 @@
 	            </label>
 	            <i class="material-icons">close</i>
 	          </div>
-						<h5>相关词条：</h5>
-	          <div id="search-result-div" class="row"></div>
+						<!-- <h5>相关词条：</h5> -->
+
 	        </div>
 	      </div>
+
+				<div id="search-result-div" class="row">
+					<ul class="collapsible"  data-collapsible="accordion">
+						<li class="collection-item avatar">
+							<div class="collapsible-header">
+								<i class="material-icons teal-text text-darken-3">attach_file</i>
+					      <h6 class="title" id="entry-title-top">老铁</h6>
+								<span class="badge">共有n条释义</span>
+							</div>
+				      <div class="collapsible-body">
+								<a href="#!" class="secondary-content" title="其他释义"><i class="material-icons cyan-text">more</i></a>
+								<div class="entry-top">
+									<div class="row">
+										<div class="col s12 m10 l9"><p id="entry-meaning-top">老铁，网络流行词，东北方言，对“哥们”的别称，类似的变形称呼还有“铁子”，“铁哥们”等称呼，意思都是一样的，说的是关系亲近，牢靠，值得信任。解释形容朋友之间的关系非常好。网络流行新词语，亲切而有亲和力。</p></div>
+									</div>
+									<span><i class="material-icons cyan-text tiny close blue-grey-text">find_in_page</i>other_meaning_source</span><br>
+									<span><i class="material-icons cyan-text tiny close blue-grey-text">access_time</i>other_meaning_daytime</span><br>
+									
+								</div>
+				      </div>
+				    </li>
+				  </ul>
+				</div>
 
 	    </section>
 	  </div>

@@ -20,6 +20,26 @@ header, main, footer {
 	display: none;
 }
 
+#subheading{
+	font-size: 200%;
+	position: relative;
+	right: 160px;
+	bottom: 30px;
+}
+
+#entry-meaning-top{
+	margin:0px 0px 10px 0px;
+		font-size: 140%;
+}
+
+.badge{
+	font-size: 75%;
+}
+
+.entry-top{
+	margin:0px 0px 0px 30px;
+}
+
 @media only screen and (max-width : 992px) {
   header, main, footer {
     padding-left: 0;
