@@ -20,16 +20,18 @@ header, main, footer {
 	display: none;
 }
 
-#subheading{
-	font-size: 200%;
-	position: relative;
-	right: 160px;
-	bottom: 30px;
-}
-
-#entry-meaning-top{
+#entry-inte-top{
 	margin:0px 0px 10px 0px;
 		font-size: 140%;
+}
+
+#option-title{
+	vertical-align: center;
+	font-size: 680%;
+}
+
+.myclose{
+	vertical-align: center;
 }
 
 .badge{

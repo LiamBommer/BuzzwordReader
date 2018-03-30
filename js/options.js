@@ -588,29 +588,60 @@ $(document).ready(function() {
 			success: function(result) {
 				console.log(JSON.stringify(result));
 				if(result.result == 'empty') {
-					$('#search-result-div').append("<br/><h6>没有相关结果</h6>");
+					// $('#search-result-div').append("<br/><h6>没有相关结果</h6>");
+					alert('没有相关结果');
 					return;
 				}
-				
 
-				// for(i in result) {
-				// 	var html = "<div class='col l4 m6 s12'>" +
-				// 	"<div class='card z-depth-2'>" +
-				// 	"<div class='card-content'>" +
-				// 	"<a class='modal-trigger' href='#entry-modal'>" +
-				// 	"<span class='card-title'>"+result[i].name+"</span>" +
-				// 	"</a>" +
-				// 	"<p>"+result[i].id_entry+"</p>" +
-				// 	"<p>是否已开放: "+result[i].is_open+"</p>" +
-				// 	"<p>请求次数: "+result[i].request+"</p>" +
-				// 	"<p>创建时间: "+result[i].datetime+"</p>";
-				// 	html += "</div>" +
-				// 	"</div>" +
-				// 	"</div>";
-				// 	$('#search-result-div').append(html);
-				// }
+				// 显示词条和添加置顶释义
 
+				for(var i=0;i<result.length;i++) {
+
+					var id_entry = result[i].id_entry; // 词条id号
+					var name = result[i].name; // 词条名称
+					var most_like = 0;
+					var inte_number = 0; // 释义数目
+
+					var top_id_inte;
+					var top_inte;
+					var top_inte_source;
+					var top_inte_daytime;
+
+        	// 更改为同步
+					$.ajaxSettings.async = false;
+
+					$.get(server_url+'Entry/search_inte',
+						{entry_id: id_entry}, function(result) {
+							console.log(JSON.stringify(result));
+							if(JSON.stringify(result.inte) === '[]'|| result.inte.length === 0){
+								inte_number = 0;
+							}
+							else{
+								inte_number = result.inte.length;
+							}
+
+						}, 'json');
+
+					var html = '<li class="collection-item avatar"><div class="collapsible-header" id="entry-id'+id_entry+'">'
+								+'<i class="material-icons teal-text text-darken-3">attach_file</i>'
+								+'<h6 class="title" id="entry-title-top">'+name+'</h6><span class="badge">共有'+inte_number+'条释义</span></div>'
+								+'<div class="collapsible-body"><a href="#!" class="secondary-content" title="其他释义">'
+								+'<i class="material-icons cyan-text">more</i></a>'
+								+'<div class="entry-top"><div class="row">'
+								+'<div class="col s12 m10 l9"><p id="entry-inte-top"></p></div>'
+								+'</div><i class="material-icons cyan-text tiny close blue-grey-text">find_in_page</i><span class="top-inte-source"></span><br>'
+								+'<i class="material-icons cyan-text tiny close blue-grey-text">access_time</i><span class="top-inte-daytime"></span><br><br>'
+								+"<div class='chip chip-like'><a href='#' class='like'>"
+								+"<i class='small material-icons myclose'>arrow_drop_up</i><span class='like-number' id='top_like_total'></span></a></div>"
+								+"<div class='chip chip-dislike'><a href='#' class='dislike'>"
+								+" <i class='small material-icons myclose'>arrow_drop_down</i></a></div>"
+								+'</div></div></li>';
+
+					$('#search-result-div').append(html);
+
+				}
 			},
+
 			error: function(error) {
 				alert('查询请求错误，请重试');
 				console.log(JSON.stringify(error));
@@ -620,7 +651,6 @@ $(document).ready(function() {
 			},
 			scriptCharset: 'utf-8'
 		});
-
 
 	});
 
@@ -695,6 +725,76 @@ $(document).ready(function() {
 
 	});
 
+	/*
+	* 词条置顶释义显示
+	* 功能：
+	*	点开词条，显示释义（只显示置顶释义）
+	*
+	*/
+	$('body').on('click','div[id^="entry-id"]',function(){
+		var this_node = $(this);
+		var id_entry=$(this).attr('id');
+		var id_entry=id_entry.substring(8);
+
+		// 更改为同步
+		$.ajaxSettings.async = false;
+
+		$.get(server_url+'Entry/search_inte',
+			{entry_id: id_entry}, function(result) {
+				console.log(JSON.stringify(result));
+				if(JSON.stringify(result.inte) === '[]'|| result.inte.length === 0){
+					inte_number = 0;
+				}
+				else{
+					inte_number = result.inte.length;
+				}
+
+				// 当词条没有释义时，出现提示
+				if(inte_number==0){
+					this_node.next().html('');
+				}
+
+				// 显示置顶释义
+				else{
+					var most_like = 0;
+					var top_id_inte = result.inte[0].id_interpretation;
+					var top_inte = result.inte[0].interpretation;
+					var top_inte_source = result.inte[0].resource;
+					var top_inte_daytime = result.inte[0].datetime;
+
+					// 选出置顶释义
+					for(i in result.inte) {
+						var like_total = 0;
+						var like = result.like.filter(item => item.id_interpretation == result.inte[i].id_interpretation);
+						if(JSON.stringify(like) === '[]' || like.length === 0) {
+							like_total = 0;
+						} else {
+							like_total = like[0].like_total;
+						}
+
+				    if(like_total > most_like){
+							most_like = like_total;
+							top_inte = result.inte[i].interpretation;
+							top_id_inte = result.inte[i].id_interpretation;
+							top_inte_source = result.inte[i].resource;
+							top_inte_daytime = result.inte[i].datetime;
+						}
+					}
+
+					var inte_node = this_node.next().children('.entry-top').children('.row').children('.col').children('#entry-inte-top');
+					inte_node.html(top_inte);
+					var source_node = this_node.next().children('.entry-top').children('.top-inte-source');
+					source_node.html(top_inte_source);
+					var daytime_node = this_node.next().children('.entry-top').children('.top-inte-daytime');
+					daytime_node.html(top_inte_daytime);
+					var daytime_node = this_node.next().children('.entry-top').children('.chip-like').children('a');
+					daytime_node.attr('id',top_id_inte);
+					daytime_node.children('#top_like_total').html(most_like);
+				}
+
+			}, 'json');
+
+	});
 
 	/*
 	* 点赞
