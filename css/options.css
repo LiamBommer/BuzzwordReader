@@ -16,6 +16,10 @@ header, main, footer {
     padding-left: 300px;
 }
 
+.card-inte-title{
+	font-size: 145%;
+}
+
 #trun-to-email,#phone-login-div{
 	display: none;
 }
@@ -28,6 +32,31 @@ header, main, footer {
 #option-title{
 	vertical-align: center;
 	font-size: 680%;
+}
+
+.top-title{
+	font-size: 175%;
+}
+
+.chip-dislike{
+	position: relative;
+	top: 15px;
+}
+
+.myclose{
+	float: left;
+	font-size: 32px;
+	line-height: 32px;
+}
+
+.other-close{
+	font-size: 32px;
+	line-height: 32px;
+}
+
+.like-number{
+ font-size: 18px;
+ line-height: 32px;
 }
 
 .myclose{

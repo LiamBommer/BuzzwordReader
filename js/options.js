@@ -576,6 +576,23 @@ $(document).ready(function() {
 			return ;
 		}
 
+		// for(i in result) {
+		// 	var html = "<div class='col l4 m6 s12'>" +
+		// 	"<div class='card z-depth-2'>" +
+		// 	"<div class='card-content'>" +
+		// 	"<a class='modal-trigger' href='#entry-modal'>" +
+		// 	"<span class='card-title'>"+result[i].name+"</span>" +
+		// 	"</a>" +
+		// 	"<p>"+result[i].id_entry+"</p>" +
+		// 	"<p>是否已开放: "+result[i].is_open+"</p>" +
+		// 	"<p>请求次数: "+result[i].request+"</p>" +
+		// 	"<p>创建时间: "+result[i].datetime+"</p>";
+		// 	html += "</div>" +
+		// 	"</div>" +
+		// 	"</div>";
+		// 	$('#search-result-div').append(html);
+		// }
+
 		$.ajax({
 			type:'GET',
 			url: server_url + 'Entry/search_entry/',
@@ -598,6 +615,7 @@ $(document).ready(function() {
 				for(var i=0;i<result.length;i++) {
 
 					var id_entry = result[i].id_entry; // 词条id号
+					var id_inte = result[i].id_interpretation;
 					var name = result[i].name; // 词条名称
 					var most_like = 0;
 					var inte_number = 0; // 释义数目
@@ -623,14 +641,14 @@ $(document).ready(function() {
 						}, 'json');
 
 					var html = '<li class="collection-item avatar"><div class="collapsible-header" id="entry-id'+id_entry+'">'
-								+'<i class="material-icons teal-text text-darken-3">attach_file</i>'
-								+'<h6 class="title" id="entry-title-top">'+name+'</h6><span class="badge">共有'+inte_number+'条释义</span></div>'
-								+'<div class="collapsible-body"><a href="#!" class="secondary-content" title="其他释义">'
+								+'<i class="material-icons teal-text text-darken-3 large">attach_file</i>'
+								+'<h6 class="top-title" id="entry-title-top">'+name+'</h6><span class="badge">共有'+inte_number+'条释义</span></div>'
+								+'<div class="collapsible-body"><a href="#!" class="secondary-content modal-trigger" title="其他释义" href="#entry-modal">'
 								+'<i class="material-icons cyan-text">more</i></a>'
 								+'<div class="entry-top"><div class="row">'
 								+'<div class="col s12 m10 l9"><p id="entry-inte-top"></p></div>'
 								+'</div><i class="material-icons cyan-text tiny close blue-grey-text">find_in_page</i><span class="top-inte-source"></span><br>'
-								+'<i class="material-icons cyan-text tiny close blue-grey-text">access_time</i><span class="top-inte-daytime"></span><br><br>'
+								+'<i class="material-icons cyan-text tiny close blue-grey-text">access_time</i><span class="top-inte-daytime"></span><br>'
 								+"<div class='chip chip-like'><a href='#' class='like'>"
 								+"<i class='small material-icons myclose'>arrow_drop_up</i><span class='like-number' id='top_like_total'></span></a></div>"
 								+"<div class='chip chip-dislike'><a href='#' class='dislike'>"
@@ -656,9 +674,9 @@ $(document).ready(function() {
 
 
 	/*
-	* 词条释义显示
+	* 词条其他释义显示
 	* 功能：
-	*	点开词条，显示释义
+	*	点开词条，显示其他释义
 	*
 	* 待完成功能：
 	*	现在只做了能查询到，查询的id是固定的
@@ -666,38 +684,45 @@ $(document).ready(function() {
 	*	接下来要设置点击时自动获取词条id进行查询
 	*
 	*/
-	$('#entry-modal').modal({
-		ready: function(modal, trigger) {
-			console.log(trigger[0]);
 
-			// 清空词条框
-			$('#entry-modal-content').html('');
+	$('body').on('click','a[id^="otherinte-"]',function(){
+		var ids = $(this).attr('id');
+		ids = ids.split('-');
+		var id_entry = ids[1];
+		var top_id_inte = ids[2];
 
-			// 获取trigger(a标签)的同级下一个节点，即之前查询词条时放在那的p标签里的词条id
-			var entry_id = trigger[0].nextSibling.innerHTML;
+		// console.log(trigger[0]);
 
-			$.ajax({
-				type:'GET',
-				url: server_url + 'Entry/search_inte/',
-				timeout: 3000,
-				async: true,
-				dataType: 'json',
-				data: {
-					entry_id: entry_id
-				},
-				success: function(result) {
-					console.log(JSON.stringify(result));
-					if(result.result == 'empty') {
-						$('#entry-modal-title').html("没有相关结果");
-						return;
-					}
-					for(i in result.inte) {
-						var html = "<h4>词条id: "+entry_id+"</h4>" +
-						"<p id='id-inte-p'> "+result.inte[i].id_interpretation+"</p>" +
-						"<p>用户id: "+result.inte[i].id_user+"</p>" +
-						"<p>释义: "+result.inte[i].interpretation+"</p>" +
-						"<p>来源: "+result.inte[i].resource+"</p>" +
-						"<p>创建时间: "+result.inte[i].datetime+"</p>";
+		// 清空词条框
+		$('#entry-modal-content').html('');
+
+		// 获取trigger(a标签)的同级下一个节点，即之前查询词条时放在那的p标签里的词条id
+		// var entry_id = trigger[0].nextSibling.innerHTML;
+
+		$.ajax({
+			type:'GET',
+			url: server_url + 'Entry/search_inte/',
+			timeout: 3000,
+			async: true,
+			dataType: 'json',
+			data: {
+				entry_id: id_entry
+			},
+			success: function(result) {
+				console.log(JSON.stringify(result));
+				if(result.result == 'empty') {
+					$('#entry-modal-title').html("没有相关结果");
+					return;
+				}
+				for(i in result.inte) {
+					// 			"<h5>词条id: "+id_entry+"</h5>" +
+					// "<p id='id-inte-p'> "++"</p>" +
+					// "<p>用户id: "+result.inte[i].id_user+"</p>" +
+					// "<p>释义: "+result.inte[i].interpretation+"</p>" +
+					// "<p>来源: "+result.inte[i].resource+"</p>" +
+					// "<p>创建时间: "+result.inte[i].datetime+"</p>";
+
+					if(result.inte[i].id_interpretation != top_id_inte){
 						var like = result.like.filter(item => item.id_interpretation == result.inte[i].id_interpretation);
 						var like_total = 0;
 						if(JSON.stringify(like) === '[]' || like.length === 0) {
@@ -705,25 +730,94 @@ $(document).ready(function() {
 						} else {
 							like_total = like[0].like_total;
 						}
-						html += "<a class='chip like-btn' style='cursor:pointer;'>赞"+
-							like_total+"<i class='material-icons'>arrow_drop_up</i></a>";
+
+						var html = '<div class="row"><div class="col s12 m10"><div class="card blue-grey darken-1">'
+						+'<div class="card-content white-text"><span class="card-inte-title">'+result.inte[i].interpretation+'</span><br><br>'
+						+'<i class="material-icons tiny close">find_in_page</i><span class="other-inte-source">'+result.inte[i].resource+'</span><br>'
+						+'<i class="material-icons tiny close">access_time</i><span class="other-inte-daytime">'+result.inte[i].datetime+'</span><br>'
+						+'</div><div class="card-action"><a href="#" class="like other-inte"  id="othermeaning-'+id_entry+"-"+result.inte[i].id_interpretation+'"><i class="tiny material-icons other-close">thumb_up</i>'
+						+'<span class="like-number" id="other_like_total">'+like_total+'</span></a>'
+						+'<a href="#" class="dislike other-inte" id="othermeaning-'+id_entry+"-"+result.inte[i].id_interpretation+'"><i class="tiny material-icons other-close">thumb_down</i></a>'
+						+'</div></div></div></div>';
+
 						$('#entry-modal-content').append(html);
 					}
 
-				},
-				error: function(error) {
-					alert('查询请求错误，请重试');
-					console.log(JSON.stringify(error));
-					// error display
-					$('#entry-modal-content').html(error.responseText);
-					return;
-				},
-				scriptCharset: 'utf-8'
-			});
+				}
 
-		}
-
+			},
+			error: function(error) {
+				alert('查询请求错误，请重试');
+				console.log(JSON.stringify(error));
+				// error display
+				$('#entry-modal-content').html(error.responseText);
+				return;
+			},
+			scriptCharset: 'utf-8'
+		});
+		$('#entry-modal').modal('open');
 	});
+
+
+	// $('#entry-modal').modal({
+	// 	ready: function(modal, trigger) {
+		// 	console.log(trigger[0]);
+    //
+		// 	// 清空词条框
+		// 	$('#entry-modal-content').html('');
+		// 	$('#entry-modal').modal('open');
+    //
+		// 	获取trigger(a标签)的同级下一个节点，即之前查询词条时放在那的p标签里的词条id
+		// 	var entry_id = trigger[0].nextSibling.innerHTML;
+    //
+		// 	$.ajax({
+		// 		type:'GET',
+		// 		url: server_url + 'Entry/search_inte/',
+		// 		timeout: 3000,
+		// 		async: true,
+		// 		dataType: 'json',
+		// 		data: {
+		// 			entry_id: entry_id
+		// 		},
+		// 		success: function(result) {
+		// 			console.log(JSON.stringify(result));
+		// 			if(result.result == 'empty') {
+		// 				$('#entry-modal-title').html("没有相关结果");
+		// 				return;
+		// 			}
+		// 			for(i in result.inte) {
+		// 				var html = "<h4>词条id: "+entry_id+"</h4>" +
+		// 				"<p id='id-inte-p'> "+result.inte[i].id_interpretation+"</p>" +
+		// 				"<p>用户id: "+result.inte[i].id_user+"</p>" +
+		// 				"<p>释义: "+result.inte[i].interpretation+"</p>" +
+		// 				"<p>来源: "+result.inte[i].resource+"</p>" +
+		// 				"<p>创建时间: "+result.inte[i].datetime+"</p>";
+		// 				var like = result.like.filter(item => item.id_interpretation == result.inte[i].id_interpretation);
+		// 				var like_total = 0;
+		// 				if(JSON.stringify(like) === '[]' || like.length === 0) {
+		// 					like_total = 0;
+		// 				} else {
+		// 					like_total = like[0].like_total;
+		// 				}
+		// 				html += "<a class='chip like-btn' style='cursor:pointer;'>赞"+
+		// 					like_total+"<i class='material-icons'>arrow_drop_up</i></a>";
+		// 				$('#entry-modal-content').append(html);
+		// 			}
+    //
+		// 		},
+		// 		error: function(error) {
+		// 			alert('查询请求错误，请重试');
+		// 			console.log(JSON.stringify(error));
+		// 			// error display
+		// 			$('#entry-modal-content').html(error.responseText);
+		// 			return;
+		// 		},
+		// 		scriptCharset: 'utf-8'
+		// 	});
+    //
+		// }
+  //
+	// });
 
 	/*
 	* 词条置顶释义显示
@@ -787,9 +881,14 @@ $(document).ready(function() {
 					source_node.html(top_inte_source);
 					var daytime_node = this_node.next().children('.entry-top').children('.top-inte-daytime');
 					daytime_node.html(top_inte_daytime);
-					var daytime_node = this_node.next().children('.entry-top').children('.chip-like').children('a');
-					daytime_node.attr('id',top_id_inte);
-					daytime_node.children('#top_like_total').html(most_like);
+					var like_node = this_node.next().children('.entry-top').children('.chip-like').children('a');
+					like_node.attr('id',"top-like"+id_entry+"-"+top_id_inte);
+					like_node.children('#top_like_total').html(most_like);
+					var dislike_node = this_node.next().children('.entry-top').children('.chip-dislike').children('a');
+					dislike_node.attr('id',"top-like"+id_entry+"-"+top_id_inte);
+					var other_inte_node = this_node.next().children('a:first-child');
+					other_inte_node.attr('id','otherinte-'+id_entry+'-'+top_id_inte);
+
 				}
 
 			}, 'json');
@@ -805,6 +904,197 @@ $(document).ready(function() {
 	* 待完成功能：
 	*
 	*/
+	$('body').on('click','.like',function(){
+		var id_user = -1;
+		var id= $(this).attr("id").split('-');
+		var id_entry = id[1];
+		var id_inte = id[2];
+		var son_node=$(this);
+		var parent_node=$(this).parent();
+		console.log(JSON.stringify(id_inte));
+
+		chrome.storage.sync.get({
+			BW_userId: -1
+		},
+		function(items) {
+			id_user = items.BW_userId;
+			// validate
+			if(id_user == -1 || id_inte == null) {
+				console.log('Cannot get correct user ID.');
+				alert('请先登录！');
+				return;
+			}
+
+			$.ajax({
+				type:'POST',
+				url: server_url + 'Entry/like/',
+				timeout: 5000,
+				async: true,
+				dataType: 'json',
+				data: {
+					id_user: id_user,
+					id_inte: id_inte
+				},
+
+				success: function(result) {
+					if(result.result == 'success') {
+						console.log(JSON.stringify(result));
+						// console.log(JSON.stringify(like_number));
+						// $('#like_number').text(like_number);
+
+						$.get(server_url+'Entry/search_inte',
+							{entry_id: id_entry}, function(result) {
+								//更新点赞数组
+								var like_total = 0;
+								for(i in result.inte) {
+				          if(result.inte[i].id_interpretation == id_inte){
+										var like = result.like.filter(item => item.id_interpretation == result.inte[i].id_interpretation);
+
+										if(JSON.stringify(like) === '[]' || like.length === 0) {
+											like_total = 0;
+										} else {
+											like_total = like[0].like_total;
+										}
+									}
+								}
+								alert(like_total);
+
+								if(son_node.hasClass('other-inte').toString()!='true'){
+									son_node.children('#top_like_total').text(like_total);
+									parent_node.css('background-color','#80cbc4');
+									son_node.addClass('white-text');
+									if(parent_node.next().children("a:first-child").hasClass('white-text').toString()=='true'){
+										var nex=parent_node.next();
+										nex.children("a:first-child").removeClass('white-text');
+										nex.css('background-color','#eeeeee')
+									}
+								}
+
+								else{
+									son_node.children('#other_like_total').text(like_total);
+								}
+
+							}, 'json');
+
+						// alert('点赞成功！');
+					}
+					if(result.result == 'failure') {
+						alert('点赞失败!\n' + result.error_msg);
+					}
+				},
+
+				error: function(error) {
+					alert('ajax错误，请重试');
+					console.log(JSON.stringify(error));
+					$('#entry-modal').html(error.responseText);
+					return;
+				},
+				scriptCharset: 'utf-8'
+			});
+
+		});
+	});
+
+	/*
+	* 点灭
+	*
+	* 功能：
+	*  获取释义id
+	*  获取用户id
+	*
+	* 待完成功能：
+	*
+	*/
+	$('body').on('click','.dislike',function(){
+		var id_user = -1;
+		var id= $(this).attr("id").split('-');
+		var id_entry = id[1];
+		var id_inte = id[2];
+		var son_node=$(this);
+		var parent_node=$(this).parent();
+		console.log(JSON.stringify(id_inte));
+
+		chrome.storage.sync.get({
+			BW_userId: -1
+		},
+		function(items) {
+			id_user = items.BW_userId;
+			// validate
+			if(id_user == -1 || id_inte == null) {
+				console.log('Cannot get correct user ID.');
+				alert('请先登录！');
+				return;
+			}
+
+			$.ajax({
+				type:'POST',
+				url: server_url + 'Entry/dislike/',
+				timeout: 5000,
+				async: true,
+				dataType: 'json',
+				data: {
+					id_user: id_user,
+					id_inte: id_inte
+				},
+
+				success: function(result) {
+					if(result.result == 'success') {
+						console.log(JSON.stringify(result));
+						// console.log(JSON.stringify(like_number));
+						// $('#like_number').text(like_number);
+
+						$.get(server_url+'Entry/search_inte',
+							{entry_id: id_entry}, function(result) {
+								//更新点赞数组
+								var like_total = 0;
+								for(i in result.inte) {
+				          if(result.inte[i].id_interpretation == id_inte){
+										var like = result.like.filter(item => item.id_interpretation == result.inte[i].id_interpretation);
+
+										if(JSON.stringify(like) === '[]' || like.length === 0) {
+											like_total = 0;
+										} else {
+											like_total = like[0].like_total;
+										}
+									}
+								}
+								alert(like_total);
+
+								if(son_node.hasClass('other-inte').toString()!='true'){
+									parent_node.prev().children("a:first-child").children('#top_like_total').text(like_total);
+									parent_node.css('background-color','#80cbc4');
+									son_node.addClass('white-text');
+									if(parent_node.prev().children("a:first-child").hasClass('white-text').toString()=='true'){
+										var pre=parent_node.prev();
+										pre.children("a:first-child").removeClass('white-text');
+										pre.css('background-color','#eeeeee')
+									}
+								}
+								else{
+									son_node.prev().children('#other_like_total').text(like_total);
+								}
+
+							}, 'json');
+
+						// alert('点赞成功！');
+					}
+					if(result.result == 'failure') {
+						alert('点赞失败!\n' + result.error_msg);
+					}
+				},
+
+				error: function(error) {
+					alert('ajax错误，请重试');
+					console.log(JSON.stringify(error));
+					$('#entry-modal').html(error.responseText);
+					return;
+				},
+				scriptCharset: 'utf-8'
+			});
+
+		});
+	});
+
 	$('#entry-modal').on('click', 'a.like-btn', function() {
 
 		var id_user = -1;
