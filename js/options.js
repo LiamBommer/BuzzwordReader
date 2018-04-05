@@ -640,22 +640,59 @@ $(document).ready(function() {
 
 						}, 'json');
 
-					var html = '<li class="collection-item avatar"><div class="collapsible-header" id="entry-id'+id_entry+'">'
-								+'<i class="material-icons teal-text text-darken-3 large">attach_file</i>'
-								+'<h6 class="top-title" id="entry-title-top">'+name+'</h6><span class="badge">共有'+inte_number+'条释义</span></div>'
-								+'<div class="collapsible-body"><a href="#!" class="secondary-content modal-trigger" title="其他释义" href="#entry-modal">'
-								+'<i class="material-icons cyan-text">more</i></a>'
-								+'<div class="entry-top"><div class="row">'
-								+'<div class="col s12 m10 l9"><p id="entry-inte-top"></p></div>'
-								+'</div><i class="material-icons cyan-text tiny close blue-grey-text">find_in_page</i><span class="top-inte-source"></span><br>'
-								+'<i class="material-icons cyan-text tiny close blue-grey-text">access_time</i><span class="top-inte-daytime"></span><br>'
-								+"<div class='chip chip-like'><a href='#' class='like'>"
-								+"<i class='small material-icons myclose'>arrow_drop_up</i><span class='like-number' id='top_like_total'></span></a></div>"
-								+"<div class='chip chip-dislike'><a href='#' class='dislike'>"
-								+" <i class='small material-icons myclose'>arrow_drop_down</i></a></div>"
-								+'</div></div></li>';
+						var html;
 
-					$('#search-result-div').append(html);
+						if(inte_number == 0){
+							html = '<li class="collection-item avatar"><div class="collapsible-header no-inte" id="entry-id'+id_entry+'">'
+									+'<i class="material-icons teal-text text-darken-3 large">attach_file</i>'
+									+'<h6 class="top-title" id="entry-title-top">'+name+'</h6><span class="badge">共有'+inte_number+'条释义</span></div>'
+									+'<div class="collapsible-body"><a href="#!" class="secondary-content modal-trigger" title="其他释义" href="#entry-modal">'
+									+'<i class="material-icons cyan-text">more</i></a>'
+									+'<div class="entry-top"><div class="row">'
+									+'<div class="col s12 m10 l9"><p id="entry-inte-top"></p></div>'
+									+'</div><i class="material-icons cyan-text tiny close blue-grey-text">find_in_page</i><span class="top-inte-source"></span><br>'
+									+'<i class="material-icons cyan-text tiny close blue-grey-text">access_time</i><span class="top-inte-daytime"></span><br>'
+									+"<div class='chip chip-like'><a href='#' class='like'>"
+									+"<i class='small material-icons myclose'>arrow_drop_up</i><span class='like-number' id='top_like_total'></span></a></div>"
+									+"<div class='chip chip-dislike'><a href='#' class='dislike'>"
+									+" <i class='small material-icons myclose'>arrow_drop_down</i></a></div>"
+									+'</div></div></li>';
+						}
+
+						else if(inte_number == 1){
+							html = '<li class="collection-item avatar"><div class="collapsible-header" id="entry-id'+id_entry+'">'
+									+'<i class="material-icons teal-text text-darken-3 large">attach_file</i>'
+									+'<h6 class="top-title" id="entry-title-top">'+name+'</h6><span class="badge">共有'+inte_number+'条释义</span></div>'
+									+'<div class="collapsible-body"><a href="#!" class="secondary-content modal-trigger no-other-inte" title="其他释义" href="#entry-modal">'
+									+'<i class="material-icons cyan-text">more</i></a>'
+									+'<div class="entry-top"><div class="row">'
+									+'<div class="col s12 m10 l9"><p id="entry-inte-top"></p></div>'
+									+'</div><i class="material-icons cyan-text tiny close blue-grey-text">find_in_page</i><span class="top-inte-source"></span><br>'
+									+'<i class="material-icons cyan-text tiny close blue-grey-text">access_time</i><span class="top-inte-daytime"></span><br>'
+									+"<div class='chip chip-like'><a href='#' class='like'>"
+									+"<i class='small material-icons myclose'>arrow_drop_up</i><span class='like-number' id='top_like_total'></span></a></div>"
+									+"<div class='chip chip-dislike'><a href='#' class='dislike'>"
+									+" <i class='small material-icons myclose'>arrow_drop_down</i></a></div>"
+									+'</div></div></li>';
+						}
+
+						else{
+							html = '<li class="collection-item avatar"><div class="collapsible-header" id="entry-id'+id_entry+'">'
+									+'<i class="material-icons teal-text text-darken-3 large">attach_file</i>'
+									+'<h6 class="top-title" id="entry-title-top">'+name+'</h6><span class="badge">共有'+inte_number+'条释义</span></div>'
+									+'<div class="collapsible-body"><a href="#!" class="secondary-content modal-trigger" title="其他释义" href="#entry-modal">'
+									+'<i class="material-icons cyan-text">more</i></a>'
+									+'<div class="entry-top"><div class="row">'
+									+'<div class="col s12 m10 l9"><p id="entry-inte-top"></p></div>'
+									+'</div><i class="material-icons cyan-text tiny close blue-grey-text">find_in_page</i><span class="top-inte-source"></span><br>'
+									+'<i class="material-icons cyan-text tiny close blue-grey-text">access_time</i><span class="top-inte-daytime"></span><br>'
+									+"<div class='chip chip-like'><a href='#' class='like'>"
+									+"<i class='small material-icons myclose'>arrow_drop_up</i><span class='like-number' id='top_like_total'></span></a></div>"
+									+"<div class='chip chip-dislike'><a href='#' class='dislike'>"
+									+" <i class='small material-icons myclose'>arrow_drop_down</i></a></div>"
+									+'</div></div></li>';
+						}
+						$('#search-result-div').append(html);
 
 				}
 			},
@@ -699,62 +736,73 @@ $(document).ready(function() {
 		// 获取trigger(a标签)的同级下一个节点，即之前查询词条时放在那的p标签里的词条id
 		// var entry_id = trigger[0].nextSibling.innerHTML;
 
-		$.ajax({
-			type:'GET',
-			url: server_url + 'Entry/search_inte/',
-			timeout: 3000,
-			async: true,
-			dataType: 'json',
-			data: {
-				entry_id: id_entry
-			},
-			success: function(result) {
-				console.log(JSON.stringify(result));
-				if(result.result == 'empty') {
-					$('#entry-modal-title').html("没有相关结果");
-					return;
-				}
-				for(i in result.inte) {
-					// 			"<h5>词条id: "+id_entry+"</h5>" +
-					// "<p id='id-inte-p'> "++"</p>" +
-					// "<p>用户id: "+result.inte[i].id_user+"</p>" +
-					// "<p>释义: "+result.inte[i].interpretation+"</p>" +
-					// "<p>来源: "+result.inte[i].resource+"</p>" +
-					// "<p>创建时间: "+result.inte[i].datetime+"</p>";
+		if($(this).hasClass('no-other-inte').toString()=='true'){
+			var html = "<div class='div-otherinte'><p>目前该词条没有其他释义</p><span>可点击右侧按钮添加你的答案</span>"
+			+'<a class="btn-floating btn-tiny waves-light waves-effect add-meaning modal-trigger right" id="addinte-'
+			+id_entry+'"><i class="material-icons">edit</i></a></div>';
 
-					if(result.inte[i].id_interpretation != top_id_inte){
-						var like = result.like.filter(item => item.id_interpretation == result.inte[i].id_interpretation);
-						var like_total = 0;
-						if(JSON.stringify(like) === '[]' || like.length === 0) {
-							like_total = 0;
-						} else {
-							like_total = like[0].like_total;
+			$('#entry-modal-content').append(html);
+		}
+
+		else{
+			$.ajax({
+				type:'GET',
+				url: server_url + 'Entry/search_inte/',
+				timeout: 3000,
+				async: true,
+				dataType: 'json',
+				data: {
+					entry_id: id_entry
+				},
+				success: function(result) {
+					console.log(JSON.stringify(result));
+					if(result.result == 'empty') {
+						$('#entry-modal-title').html("没有相关结果");
+						return;
+					}
+					for(i in result.inte) {
+						// "<h5>词条id: "+id_entry+"</h5>" +
+						// "<p id='id-inte-p'> "++"</p>" +
+						// "<p>用户id: "+result.inte[i].id_user+"</p>" +
+						// "<p>释义: "+result.inte[i].interpretation+"</p>" +
+						// "<p>来源: "+result.inte[i].resource+"</p>" +
+						// "<p>创建时间: "+result.inte[i].datetime+"</p>";
+
+						if(result.inte[i].id_interpretation != top_id_inte){
+							var like = result.like.filter(item => item.id_interpretation == result.inte[i].id_interpretation);
+							var like_total = 0;
+							if(JSON.stringify(like) === '[]' || like.length === 0) {
+								like_total = 0;
+							} else {
+								like_total = like[0].like_total;
+							}
+
+							var html = '<div class="row"><div class="col s12 m10"><div class="card blue-grey darken-1">'
+							+'<div class="card-content white-text"><span class="card-inte-title">'+result.inte[i].interpretation+'</span><br><br>'
+							+'<i class="material-icons tiny close">find_in_page</i><span class="other-inte-source">'+result.inte[i].resource+'</span><br>'
+							+'<i class="material-icons tiny close">access_time</i><span class="other-inte-daytime">'+result.inte[i].datetime+'</span><br>'
+							+'</div><div class="card-action"><a href="#" class="like other-inte"  id="othermeaning-'+id_entry+"-"+result.inte[i].id_interpretation+'"><i class="tiny material-icons other-close">thumb_up</i>'
+							+'<span class="like-number" id="other_like_total">'+like_total+'</span></a>'
+							+'<a href="#" class="dislike other-inte" id="othermeaning-'+id_entry+"-"+result.inte[i].id_interpretation+'"><i class="tiny material-icons other-close">thumb_down</i></a>'
+							+'</div></div></div></div>';
+
+							$('#entry-modal-content').append(html);
 						}
 
-						var html = '<div class="row"><div class="col s12 m10"><div class="card blue-grey darken-1">'
-						+'<div class="card-content white-text"><span class="card-inte-title">'+result.inte[i].interpretation+'</span><br><br>'
-						+'<i class="material-icons tiny close">find_in_page</i><span class="other-inte-source">'+result.inte[i].resource+'</span><br>'
-						+'<i class="material-icons tiny close">access_time</i><span class="other-inte-daytime">'+result.inte[i].datetime+'</span><br>'
-						+'</div><div class="card-action"><a href="#" class="like other-inte"  id="othermeaning-'+id_entry+"-"+result.inte[i].id_interpretation+'"><i class="tiny material-icons other-close">thumb_up</i>'
-						+'<span class="like-number" id="other_like_total">'+like_total+'</span></a>'
-						+'<a href="#" class="dislike other-inte" id="othermeaning-'+id_entry+"-"+result.inte[i].id_interpretation+'"><i class="tiny material-icons other-close">thumb_down</i></a>'
-						+'</div></div></div></div>';
-
-						$('#entry-modal-content').append(html);
 					}
 
-				}
+				},
+				error: function(error) {
+					alert('查询请求错误，请重试');
+					console.log(JSON.stringify(error));
+					// error display
+					$('#entry-modal-content').html(error.responseText);
+					return;
+				},
+				scriptCharset: 'utf-8'
+			});
+		}
 
-			},
-			error: function(error) {
-				alert('查询请求错误，请重试');
-				console.log(JSON.stringify(error));
-				// error display
-				$('#entry-modal-content').html(error.responseText);
-				return;
-			},
-			scriptCharset: 'utf-8'
-		});
 		$('#entry-modal').modal('open');
 	});
 
@@ -830,68 +878,82 @@ $(document).ready(function() {
 		var id_entry=$(this).attr('id');
 		var id_entry=id_entry.substring(8);
 
-		// 更改为同步
-		$.ajaxSettings.async = false;
+		if($(this).hasClass('no-inte').toString()=='true'){
+			this_node.next().html('');
 
-		$.get(server_url+'Entry/search_inte',
-			{entry_id: id_entry}, function(result) {
-				console.log(JSON.stringify(result));
-				if(JSON.stringify(result.inte) === '[]'|| result.inte.length === 0){
-					inte_number = 0;
-				}
-				else{
-					inte_number = result.inte.length;
-				}
+			var html = "<div class='div-otherinte'><p>目前该词条没有释义</p><span>可点击右侧按钮添加新的释义</span>"
+			+'<a class="btn-floating btn-tiny waves-light waves-effect add-meaning modal-trigger right" id="addinte-'
+			+id_entry+'"><i class="material-icons">edit</i></a></div>';
 
-				// 当词条没有释义时，出现提示
-				if(inte_number==0){
-					this_node.next().html('');
-				}
+			this_node.next().append(html);
+		}
 
-				// 显示置顶释义
-				else{
-					var most_like = 0;
-					var top_id_inte = result.inte[0].id_interpretation;
-					var top_inte = result.inte[0].interpretation;
-					var top_inte_source = result.inte[0].resource;
-					var top_inte_daytime = result.inte[0].datetime;
+		else{
+			// 更改为同步
+			$.ajaxSettings.async = false;
 
-					// 选出置顶释义
-					for(i in result.inte) {
-						var like_total = 0;
-						var like = result.like.filter(item => item.id_interpretation == result.inte[i].id_interpretation);
-						if(JSON.stringify(like) === '[]' || like.length === 0) {
-							like_total = 0;
-						} else {
-							like_total = like[0].like_total;
-						}
-
-				    if(like_total > most_like){
-							most_like = like_total;
-							top_inte = result.inte[i].interpretation;
-							top_id_inte = result.inte[i].id_interpretation;
-							top_inte_source = result.inte[i].resource;
-							top_inte_daytime = result.inte[i].datetime;
-						}
+			$.get(server_url+'Entry/search_inte',
+				{entry_id: id_entry}, function(result) {
+					console.log(JSON.stringify(result));
+					if(JSON.stringify(result.inte) === '[]'|| result.inte.length === 0){
+						inte_number = 0;
+					}
+					else{
+						inte_number = result.inte.length;
 					}
 
-					var inte_node = this_node.next().children('.entry-top').children('.row').children('.col').children('#entry-inte-top');
-					inte_node.html(top_inte);
-					var source_node = this_node.next().children('.entry-top').children('.top-inte-source');
-					source_node.html(top_inte_source);
-					var daytime_node = this_node.next().children('.entry-top').children('.top-inte-daytime');
-					daytime_node.html(top_inte_daytime);
-					var like_node = this_node.next().children('.entry-top').children('.chip-like').children('a');
-					like_node.attr('id',"top-like"+id_entry+"-"+top_id_inte);
-					like_node.children('#top_like_total').html(most_like);
-					var dislike_node = this_node.next().children('.entry-top').children('.chip-dislike').children('a');
-					dislike_node.attr('id',"top-like"+id_entry+"-"+top_id_inte);
-					var other_inte_node = this_node.next().children('a:first-child');
-					other_inte_node.attr('id','otherinte-'+id_entry+'-'+top_id_inte);
+					// 当词条没有释义时，出现提示
+					if(inte_number==0){
+						this_node.next().html('');
+					}
 
-				}
+					// 显示置顶释义
+					else{
+						var most_like = 0;
+						var top_id_inte = result.inte[0].id_interpretation;
+						var top_inte = result.inte[0].interpretation;
+						var top_inte_source = result.inte[0].resource;
+						var top_inte_daytime = result.inte[0].datetime;
 
-			}, 'json');
+						// 选出置顶释义
+						for(i in result.inte) {
+							var like_total = 0;
+							var like = result.like.filter(item => item.id_interpretation == result.inte[i].id_interpretation);
+							if(JSON.stringify(like) === '[]' || like.length === 0) {
+								like_total = 0;
+							} else {
+								like_total = like[0].like_total;
+							}
+
+					    if(like_total > most_like){
+								most_like = like_total;
+								top_inte = result.inte[i].interpretation;
+								top_id_inte = result.inte[i].id_interpretation;
+								top_inte_source = result.inte[i].resource;
+								top_inte_daytime = result.inte[i].datetime;
+							}
+						}
+
+						var inte_node = this_node.next().children('.entry-top').children('.row').children('.col').children('#entry-inte-top');
+						inte_node.html(top_inte);
+						var source_node = this_node.next().children('.entry-top').children('.top-inte-source');
+						source_node.html(top_inte_source);
+						var daytime_node = this_node.next().children('.entry-top').children('.top-inte-daytime');
+						daytime_node.html(top_inte_daytime);
+						var like_node = this_node.next().children('.entry-top').children('.chip-like').children('a');
+						like_node.attr('id',"toplike-"+id_entry+"-"+top_id_inte);
+						like_node.children('#top_like_total').html(most_like);
+						var dislike_node = this_node.next().children('.entry-top').children('.chip-dislike').children('a');
+						dislike_node.attr('id',"topdislike-"+id_entry+"-"+top_id_inte);
+						var other_inte_node = this_node.next().children('a:first-child');
+						other_inte_node.attr('id','otherinte-'+id_entry+'-'+top_id_inte);
+
+					}
+
+				}, 'json');
+		}
+
+
 
 	});
 
@@ -957,7 +1019,7 @@ $(document).ready(function() {
 										}
 									}
 								}
-								alert(like_total);
+								alert(like_total)
 
 								if(son_node.hasClass('other-inte').toString()!='true'){
 									son_node.children('#top_like_total').text(like_total);
@@ -1058,7 +1120,6 @@ $(document).ready(function() {
 										}
 									}
 								}
-								alert(like_total);
 
 								if(son_node.hasClass('other-inte').toString()!='true'){
 									parent_node.prev().children("a:first-child").children('#top_like_total').text(like_total);
@@ -1619,6 +1680,16 @@ $(document).ready(function() {
 		},function() {
 			update_user();
 		});
+	});
+
+	$('body').on('click','a[id^="addinte-"]',function(){
+		// var id_entry = $(this).attr('id');
+		// var temp = id_entry.split('-');
+		// id_entry = temp[1];
+
+		$('#new-inte-modal').modal('open');
+		// $('#id-entry').val(id_entry);
+		// $('#name-entry').val(name_entry);
 	});
 
 

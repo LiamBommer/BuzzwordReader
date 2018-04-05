@@ -7,13 +7,17 @@
    font-size: 100%;
  }*/
 
- img.responsive-img {
+img.responsive-img {
    height: 100%;
    width: auto;
  }
 
 header, main, footer {
     padding-left: 300px;
+}
+
+.div-otherinte p,.div-otherinte span{
+	font-size: 150%;
 }
 
 .card-inte-title{
