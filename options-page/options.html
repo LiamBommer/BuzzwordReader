@@ -20,6 +20,8 @@
 	<script type="text/javascript" src="/js/vue.csp.js"></script>
   <script type="text/javascript" src="/js/options.js"></script>
 
+	<canvas id="cas" width="676" height="713"></canvas>
+
 
 		<!-- <nav class="teal lighten-1">
 		  <div class="container">
@@ -56,7 +58,7 @@
 				<span class="white-text email" id="email-sideNav"></span>
 			</div>
 		</li>
-		
+
 		<!-- 以下管理员可见 -->
 		<section class="admin-visible" style="display: none">
 		<li>
@@ -73,6 +75,9 @@
 		</li>
 		<li>
 			<a class="waves-effect collection-item modal-trigger black-text" href="#delete-inte-modal">删除释义<i class="tiny material-icons icons-order">chevron_right</i></a>
+		</li>
+		<li>
+			<a class="waves-effect collection-item modal-trigger black-text" href="#turn-report-modal">反馈信息<i class="tiny material-icons icons-order">chevron_right</i></a>
 		</li>
 		</section>
 
@@ -93,7 +98,29 @@
 	</ul>
 	<!-- <a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a> -->
 
-	<main>
+	<div id="first-page">
+		<div class="row center">
+			<div class=" col s8 offset-s3">
+				<h1 class="header teal-text" id="first-page-title">BuzzwordReader</h1>
+
+				<!--唯一搜索框-->
+				<!-- <div class="col s7 offset-s1">
+					<div class="input-field">
+						<input type="search" id="search-field">
+						<label for="search-field" class="label-icon">
+							<i class="material-icons">search</i>
+						</label>
+						<i class="material-icons">close</i>
+					</div>
+				</div> -->
+
+				<a class="waves-effect waves-light btn" id="first-page-search"><i class="material-icons left">search</i>Search!</a>
+			</div>
+		</div>
+</div>
+
+
+	<main id="main-page">
 		<div class="row center" id="move-title">
 			<div class=" col s8 offset-s2">
 				<h1 class="header teal-text" id="option-title">BuzzwordReader</h1>
@@ -132,6 +159,7 @@
 	        </div>
 	      </div> -->
 
+				<!--唯一搜索框-->
 				<div class="row" id="search-div">
 	        <div class="col s7 offset-s1">
 	          <div class="input-field">
@@ -141,17 +169,15 @@
 	            </label>
 	            <i class="material-icons">close</i>
 	          </div>
-						<!-- <h5>相关词条：</h5> -->
-
 	        </div>
 	      </div>
 
-				<div class="row">
+				<div class="row" id="main-page-search-results">
 					<div class="col s10 offset-s1">
 						<ul class="collapsible" data-collapsible="accordion" id="search-result-div">
-							<li class="collection-item avatar">
+							<!-- <li class="collection-item avatar">
 
-				    	</li>
+				    	</li> -->
 				 	 </ul>
 				 </div>
 				</div>
@@ -444,6 +470,74 @@
 	    </div>
     </div>
   </div>
+
+	<div id="turn-report-modal" class="modal">
+		<div class="modal-content">
+			<h4>反馈信息</h4>
+			<div class="row">
+		    <div class="col s15 m10">
+		      <div class="card grey lighten-1">
+		        <div class="card-content white-text">
+		          <span class="card-title">举报信息</span>
+		          <p class="report-card-pass">Entry</p>
+							<p class="report-card-pass">Inte</p>
+							<br>
+							<p class="report-card-pass">Reason  I am a very simple card. I am good at containing small bits of information.
+		          I am convenient because I require little markup to use effectively.</p>
+		        </div>
+		        <div class="card-action white-text">
+		          <a href="#" class="white-text">查看释义</a>
+		          <a href="#" class="white-text">忽略</a>
+		        </div>
+		      </div>
+		    </div>
+		  </div>
+
+			<div class="modal-footer">
+				<a href="#" class="modal-action modal-close waves-effect
+					waves-black btn-flat">取消</a>
+					<button id="report" type="submit" class="modal-action waves-effect
+		        waves-green btn-flat">确认</a>
+			</div>
+		</div>
+	</div>
+
+	<div id="submit-report-modal" class="modal">
+		<div class="modal-content">
+			<h4>提交举报信息</h4>
+			<div class="row">
+				<div class="input-field col m6">
+          <input type="text" id="edit-entry-id" name="edit-entry-id">
+          <label for="edit-entry-id">Entry Id</label>
+        </div>
+        <div class="input-field col m6">
+          <input type="text" id="edit-entry-name" name="edit-entry-name">
+          <label for="edit-entry-name">Entry Name</label>
+        </div>
+
+				<div class="row">
+					<div class="input-field col m6">
+						<input type="text">
+						<label for="delete-inte-id">Interpretation Id</label>
+					</div>
+				</div>
+
+				<div class="input-field col m12">
+					<i class="material-icons prefix">description</i>
+					<textarea id="profile" name="reason" class="materialize-textarea"></textarea>
+					<label for="profile">Reason</label>
+				</div>
+			</div>
+
+			<div class="modal-footer">
+				<a href="#" class="modal-action modal-close waves-effect
+					waves-black btn-flat">取消</a>
+					<button id="report" type="submit" class="modal-action waves-effect
+		        waves-green btn-flat">确认</a>
+			</div>
+		</div>
+	</div>
+
 
 </body>
 </html>

@@ -1,6 +1,46 @@
+html, body {
+	margin: 0;
+	padding: 0;
+	/* height: 100%; */
+
+}
+
+body{
+	background-color: rgba(1,1,1,0);
+}
+
+
+#cas{
+	/* width: 100%;
+	height: 100%; */
+	z-index : -2;
+	position : fixed;
+}
+
+
 #icons-order{
 	align-items: right;
 	vertical-align: center;
+ }
+
+ #main-page{
+	 display: none;
+ }
+
+ #first-page-title{
+	 font-size: 850%;
+ }
+
+ #first-page{
+	 padding-top: 100px;
+ }
+
+ #first-page-search{
+	 margin-top: 100px;
+ }
+
+ #main-page-search-results{
+	 display: none;
  }
 
  /*body {
@@ -58,6 +98,11 @@ header, main, footer {
 	line-height: 32px;
 }
 
+.other-inte-report{
+	font-size: 32px;
+	line-height: 32px;
+}
+
 .like-number{
  font-size: 18px;
  line-height: 32px;
@@ -73,6 +118,15 @@ header, main, footer {
 
 .entry-top{
 	margin:0px 0px 0px 30px;
+}
+
+.top-add-inte,.top-inte-report{
+	position: relative;
+	top: 20px;
+}
+
+.report-card-pass{
+	font-size: 150%;
 }
 
 @media only screen and (max-width : 992px) {
