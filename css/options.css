@@ -129,6 +129,17 @@ header, main, footer {
 	font-size: 150%;
 }
 
+#page-footer{
+	position: relative;
+	top: 200px;
+	font-size: 120%;
+	color: #78909c ;
+}
+
+.footer-icon{
+	color: #009688;
+}
+
 @media only screen and (max-width : 992px) {
   header, main, footer {
     padding-left: 0;
