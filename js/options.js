@@ -794,6 +794,7 @@ $(document).ready(function() {
 							+'<a href="#submit-report-modal" class="other-inte-report report" title="举报"><i class="material-icons">report</i></a>'
 							+'</div></div></div></div>';
 
+              // 其他释义的显示
 							$('#entry-modal-content').append(html);
 						}
 
@@ -942,6 +943,7 @@ $(document).ready(function() {
 							}
 						}
 
+            // 置顶释义的显示
 						var inte_node = this_node.next().children('.entry-top').children('.row').children('.col').children('#entry-inte-top');
 						inte_node.html(top_inte);
 						var source_node = this_node.next().children('.entry-top').children('.top-inte-source');
@@ -993,6 +995,7 @@ $(document).ready(function() {
 				return;
 			}
 
+      // 点赞请求
 			$.ajax({
 				type:'POST',
 				url: server_url + 'Entry/like/',
@@ -1025,8 +1028,9 @@ $(document).ready(function() {
 										}
 									}
 								}
-								alert(like_total)
+								// alert(like_total)
 
+								// 改变点赞按钮样式
 								if(son_node.hasClass('other-inte').toString()!='true'){
 									son_node.children('#top_like_total').text(like_total);
 									parent_node.css('background-color','#80cbc4');
@@ -1094,6 +1098,7 @@ $(document).ready(function() {
 				return;
 			}
 
+      // 点灭请求
 			$.ajax({
 				type:'POST',
 				url: server_url + 'Entry/dislike/',
@@ -1127,6 +1132,7 @@ $(document).ready(function() {
 									}
 								}
 
+								// 改变点赞按钮样式
 								if(son_node.hasClass('other-inte').toString()!='true'){
 									parent_node.prev().children("a:first-child").children('#top_like_total').text(like_total);
 									parent_node.css('background-color','#80cbc4');
@@ -1146,7 +1152,7 @@ $(document).ready(function() {
 						// alert('点赞成功！');
 					}
 					if(result.result == 'failure') {
-						alert('点赞失败!\n' + result.error_msg);
+						alert('点灭失败!\n' + result.error_msg);
 					}
 				},
 
@@ -1187,6 +1193,7 @@ $(document).ready(function() {
 				return;
 			}
 
+      // 点赞请求
 			$.ajax({
 				type:'POST',
 				url: server_url + 'Entry/like/',
@@ -1238,6 +1245,7 @@ $(document).ready(function() {
 			return;
 		}
 
+		// 创建词条请求
 		$.ajax({
 			type:'GET',
 			url: server_url + 'Entry/new_entry',
@@ -1320,6 +1328,7 @@ $(document).ready(function() {
 				return;
 			}
 
+      // 添加释义请求
 			$.ajax({
 				type:'POST',
 				url: server_url + 'Entry/insert_inte/',
@@ -1412,6 +1421,7 @@ $(document).ready(function() {
 				return;
 			}
 
+			// 编辑词条请求
 			$.ajax({
 				type:'POST',
 				url: server_url + 'Entry/edit_entry/',
@@ -1483,6 +1493,7 @@ $(document).ready(function() {
 				return;
 			}
 
+      // 删除词条请求
 			$.ajax({
 				type:'POST',
 				url: server_url + 'Entry/delete_entry/',
@@ -1562,6 +1573,7 @@ $(document).ready(function() {
 				return;
 			}
 
+      // 编辑释义请求
 			$.ajax({
 				type:'POST',
 				url: server_url + 'Entry/edit_inte/',
@@ -1671,7 +1683,7 @@ $(document).ready(function() {
 
 	});
 
-
+  // 用户登出
 	$('#exit').click(function(){
 		// 将用户名，用户Id存入storage
 		chrome.storage.sync.set({
@@ -1688,30 +1700,33 @@ $(document).ready(function() {
 		});
 	});
 
-	$('body').on('click','a[id^="addinte-"]',function(){
-		// var id_entry = $(this).attr('id');
-		// var temp = id_entry.split('-');
-		// id_entry = temp[1];
+  // 将添加的数据传入新的modal
+	// $('body').on('click','a[id^="addinte-"]',function(){
+	// 	var id_entry = $(this).attr('id');
+	// 	var temp = id_entry.split('-');
+	// 	id_entry = temp[1];
+  //
+	// $('#new-inte-modal').modal('open');
+	// 	$('#id-entry').val(id_entry);
+	// 	$('#name-entry').val(name_entry);
+	// });
 
-		$('#new-inte-modal').modal('open');
-		// $('#id-entry').val(id_entry);
-		// $('#name-entry').val(name_entry);
-	});
-
+  // 首页的search按页面转换
 	$('#first-page-search').click(function(){
 		$('#main-page').show();
 		$('#first-page').hide();
 
 	});
 
+  // 输入信息向管理员发送举报信息
 	$('body').on('click','.report',function(){
-		alert('已经向管理员成功发送举报消息！');
+		$('#submit-report-modal').modal('open');
+		// alert('已经向管理员成功发送举报消息！');
 		// alert('发送举报消息失败！\n请再次尝试！');
 	});
 
 
-	// 背景粒子特效
-
+	// 背景canvas画布粒子特效
 	var canvas = document.getElementById("cas");
 	var ctx = canvas.getContext("2d");
 

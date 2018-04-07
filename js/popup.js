@@ -12,7 +12,7 @@ $(document).ready(function() {
 	function(items) {
 		name_user = items.BW_username;
 
-		// validate
+		// 根据是否已经登录来确定popup右上角按钮选项
 		if(name_user == 'unknown') {
 			$('#username').hide();
 			$('#login-btn').show();
@@ -33,12 +33,14 @@ $(document).ready(function() {
 	//搜索词条并反馈
 	document.getElementById('search').onsearch=function(event){
 		var entry_content = $('#search').val();
+    // 输入不能为空
 		if( entry_content == null || entry_content == '' ){
 			alert('不能为空！');
 			return;
 		}
 
 		else{
+      // 查询词条请求
 			$.ajax({
 				type:'GET',
 				url: server_url + 'Entry/search_entry/',
@@ -141,6 +143,7 @@ $(document).ready(function() {
 					return;
 				}
 
+        // 选取释义数组中的置顶释义
 				var most_like = 0;
 				var top_meaning;
 				var top_meaning_id; // 做标记显示其他释义
@@ -187,7 +190,7 @@ $(document).ready(function() {
 				// var other_meaning_source;
 				// var other_meaning_daytime;
 
-        // 排序
+        // 其他释义根据点赞数排序
 				var result_sort=new Array();
 				for(i in result.inte) {
 					var like = result.like.filter(item => item.id_interpretation == result.inte[i].id_interpretation);
@@ -214,6 +217,7 @@ $(document).ready(function() {
 					return b.like_total-a.like_total;
 				});
 
+        // 当其他释义数目为零时，显示提示
 				var temp_node = $('#other-meaning').children("div:first-child");
 				if(result_sort.length == 0){
 					$('#other-meaning-collection').hide();
@@ -223,7 +227,7 @@ $(document).ready(function() {
 
 				else{
 
-					// 其他释义
+					// 其他释义显示
 					for(i in result_sort){
 						other_meaning_id = result_sort[i].other_meaning_id;
 						other_meaning = result_sort[i].other_meaning;
@@ -257,6 +261,7 @@ $(document).ready(function() {
 
 			},
 
+      // 查询出现错误
 			error: function(error) {
 				alert('查询请求错误，请重试');
 				console.log(JSON.stringify(error));
@@ -282,9 +287,8 @@ $(document).ready(function() {
 		$("#meaning-not-found").hide();
 	});
 
-  // 点击添加释义按钮
+  // 点击添加释义按钮事件
 	$('.add-meaning').click(function(){
-
 		var url="options-page/options.html?";
 		if($('#entry-modal').css('display') != "none"){
 			var id = $('h1[id^=entry-heading-number]').attr('id');
@@ -306,6 +310,7 @@ $(document).ready(function() {
 	$('.add-entry').click(function(){
 		var url="options-page/options.html?";
 		if($('#entry-modal').css('display') == "none"){
+			// 将查询词条信息传入浏览器选项页中
 			url += encodeURI("action=addEntry&name_entry="+$('#search').val());
 		}
 
@@ -320,8 +325,9 @@ $(document).ready(function() {
 		// window.open(chrome.extension.getURL('/options-page/options.html'));
 	});
 
-  // popup页面点赞功能
+  // popup页面置顶释义点赞功能
 	$('#like').click(function(){
+    // 获取用户ID和点赞词条ID
 		var id_user = -1;
 		var id_inte = $('p[id^="entry-meaning"]').attr("id");
 		id_inte = id_inte.substring(13,id_inte.length);
@@ -343,6 +349,7 @@ $(document).ready(function() {
 				return;
 			}
 
+      // 点赞请求
 			$.ajax({
 				type:'POST',
 				url: server_url + 'Entry/like/',
@@ -376,6 +383,7 @@ $(document).ready(function() {
 									}
 								}
 
+                // 修改点赞按钮样式
 								$('#top_like_total').text(like_total);
 								parent_node.css('background-color','#80cbc4');
 								son_node.addClass('white-text');
@@ -406,8 +414,9 @@ $(document).ready(function() {
 
 	});
 
-	// popup页面点灭功能
+	// popup页面置顶释义点灭功能
 	$('#dislike').click(function(){
+    // 获取用户ID和点灭词条ID
 		var id_user = -1;
 		var id_inte = $('p[id^="entry-meaning"]').attr("id");
 		id_inte = id_inte.substring(13,id_inte.length);
@@ -429,6 +438,7 @@ $(document).ready(function() {
 				return;
 			}
 
+      // 点灭请求
 			$.ajax({
 				type:'POST',
 				url: server_url + 'Entry/dislike/',
@@ -462,6 +472,7 @@ $(document).ready(function() {
 									}
 								}
 
+								// 修改点灭按钮样式
 								$('#top_like_total').text(like_total);
 								parent_node.css('background-color','#80cbc4');
 								son_node.addClass('white-text');
@@ -490,7 +501,9 @@ $(document).ready(function() {
 		});
 	});
 
+	// popup页面其他释义点赞功能
 	$('body').on('click','.like',function(){
+		// 获取用户ID和点赞词条ID
 		var id_user = -1;
 		var id_inte = $(this).attr("id");
 		id_inte = id_inte.substring(11,id_inte.length);
@@ -510,6 +523,7 @@ $(document).ready(function() {
 				return;
 			}
 
+      // 点赞请求
 			$.ajax({
 				type:'POST',
 				url: server_url + 'Entry/like/',
@@ -545,6 +559,7 @@ $(document).ready(function() {
 									}
 								}
 
+                // 修改点赞按钮样式
 								var select = '#'+id_inte;
 								$(select).text(like_total);
 								parent_node.css('background-color','#80cbc4');
@@ -576,7 +591,9 @@ $(document).ready(function() {
 		});
 	});
 
+  // popup页面其他释义点灭功能
 	$('body').on('click','.dislike',function(){
+		// 获取用户ID和点灭词条ID
 		var id_user = -1;
 		var id_inte = $(this).attr("id");
 		id_inte = id_inte.substring(7,id_inte.length);
@@ -596,6 +613,7 @@ $(document).ready(function() {
 				return;
 			}
 
+      // 点灭请求
 			$.ajax({
 				type:'POST',
 				url: server_url + 'Entry/dislike/',
@@ -611,6 +629,7 @@ $(document).ready(function() {
 					if(result.result == 'success') {
 						console.log(JSON.stringify(result));
 
+						// 获取ID
 						var id_entry = $('h1[id^=entry-heading-number]').attr('id');
 						id_entry = id_entry.substring(20);
 						$.get(server_url+'Entry/search_inte',
@@ -628,6 +647,8 @@ $(document).ready(function() {
 										}
 									}
 								}
+
+                // 修改点赞和点灭按钮样式
 								var select = '#'+id_inte;
 								$(select).text(like_total);
 								parent_node.css('background-color','#80cbc4');
@@ -665,11 +686,13 @@ $(document).ready(function() {
 		window.open(chrome.runtime.getURL(url));
 	});
 
+  // 点击注册按钮跳转到选项页的注册模块
 	$('#login-btn').click(function(){
 		var url="options-page/options.html?action=login&";
 		window.open(chrome.runtime.getURL(url));
 	});
 
+	// 点击登录按钮跳转到选项页的登录模块
 	$('#signup-btn').click(function(){
 		var url="options-page/options.html?action=signup&";
 		window.open(chrome.runtime.getURL(url));
