@@ -745,7 +745,7 @@ $(document).ready(function() {
 
 		if($(this).hasClass('no-other-inte').toString()=='true'){
 			var html = "<div class='div-otherinte'><p>目前该词条没有其他释义</p><span>可点击右侧按钮添加你的答案</span>"
-			+'<a class="btn-floating btn-tiny waves-light waves-effect add-meaning modal-trigger right" id="addinte-'
+			+'<a class="btn-floating btn-tiny waves-light waves-effect add-meaning modal-trigger right" href="#new-inte-modal" id="addinte-'
 			+id_entry+'"><i class="material-icons">edit</i></a></div>';
 
 			$('#entry-modal-content').append(html);
