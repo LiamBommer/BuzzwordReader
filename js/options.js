@@ -767,6 +767,7 @@ $(document).ready(function() {
 						$('#entry-modal-title').html("没有相关结果");
 						return;
 					}
+					var flag=0;
 					for(i in result.inte) {
 						// "<h5>词条id: "+id_entry+"</h5>" +
 						// "<p id='id-inte-p'> "++"</p>" +
@@ -783,21 +784,19 @@ $(document).ready(function() {
 							} else {
 								like_total = like[0].like_total;
 							}
-
-							var html = '<div class="row"><div class="col s12 m10"><div class="card blue-grey darken-1">'
-							+'<div class="card-content white-text"><span class="card-inte-title">'+result.inte[i].interpretation+'</span><br><br>'
-							+'<i class="material-icons tiny close">find_in_page</i><span class="other-inte-source">'+result.inte[i].resource+'</span><br>'
-							+'<i class="material-icons tiny close">access_time</i><span class="other-inte-daytime">'+result.inte[i].datetime+'</span><br>'
-							+'</div><div class="card-action"><a href="#" class="like other-inte"  id="othermeaning-'+id_entry+"-"+result.inte[i].id_interpretation+'"><i class="tiny material-icons other-close">thumb_up</i>'
-							+'<span class="like-number" id="other_like_total">'+like_total+'</span></a>'
-							+'<a href="#" class="dislike other-inte" id="othermeaning-'+id_entry+"-"+result.inte[i].id_interpretation+'"><i class="tiny material-icons other-close">thumb_down</i></a>'
-							+'<a href="#submit-report-modal" class="other-inte-report report" title="举报"><i class="material-icons">report</i></a>'
-							+'</div></div></div></div>';
+								var html = '<div class="row"><div class="col s12 m10"><div class="card teal lighten-1">'
+								+'<div class="card-content white-text"><span class="card-inte-title">'+result.inte[i].interpretation+'</span><br><br>'
+								+'<i class="material-icons tiny close">find_in_page</i><span class="other-inte-source">'+result.inte[i].resource+'</span><br>'
+								+'<i class="material-icons tiny close">access_time</i><span class="other-inte-daytime">'+result.inte[i].datetime+'</span><br>'
+								+'</div><div class="card-action"><a href="#" class="like other-inte white-text" id="othermeaning-'+id_entry+"-"+result.inte[i].id_interpretation+'"><i class="material-icons other-close">arrow_drop_up</i>'
+								+'<span class="like-number" id="other_like_total">'+like_total+'</span></a>'
+								+'<a href="#" class="dislike other-inte white-text" id="othermeaning-'+id_entry+"-"+result.inte[i].id_interpretation+'"><i class="material-icons other-close">arrow_drop_down</i></a>'
+								+'<a href="#submit-report-modal" class="other-inte-report report white-text" title="举报"><i class="material-icons">report</i></a>'
+								+'</div></div></div></div>';
 
               // 其他释义的显示
 							$('#entry-modal-content').append(html);
 						}
-
 					}
 
 				},
@@ -891,7 +890,7 @@ $(document).ready(function() {
 			this_node.next().html('');
 
 			var html = "<div class='div-otherinte'><p>目前该词条没有释义</p><span>可点击右侧按钮添加新的释义</span>"
-			+'<a class="btn-floating btn-tiny waves-light waves-effect add-meaning modal-trigger right" id="addinte-'
+			+'<a class="btn-floating btn-tiny waves-light waves-effect add-meaning modal-trigger right" href="#new-inte-modal" id="addinte-'
 			+id_entry+'"><i class="material-icons">edit</i></a></div>';
 
 			this_node.next().append(html);
